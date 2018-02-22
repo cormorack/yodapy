@@ -94,6 +94,8 @@ class OOIASSET(object):
         val = reference_designator.split('-')
         values = val[:-2] + ['-'.join(val[-2:])]
 
+        pass
+
 
 
 
