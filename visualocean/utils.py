@@ -3,7 +3,7 @@ from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
 
-__author__ = 'Landung Setiawan'
+import datetime
 
-__all__ = ['core', 'utils']
-
+def datetime_to_string(dt):
+    return dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
