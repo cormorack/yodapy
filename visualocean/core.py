@@ -8,9 +8,13 @@ import requests as r
 import time
 import json
 import datetime
+import pandas as pd
 
-from visualocean.utils import datetime_to_string
-from visualocean.urlbuilder import create_data_url, create_meta_url
+from visualocean.utils import (datetime_to_string,
+                               unix_time_millis,
+                               get_instrument_df,
+                               get_science_data_stream_meta)
+from visualocean.urlbuilder import (create_data_url, create_meta_url)
 
 
 class OOIASSET(object):
@@ -22,10 +26,10 @@ class OOIASSET(object):
         self.method = method
         self.stream = stream
 
-    def get_data_url(self):
+    def _get_data_url(self):
         return create_data_url(self.site, self.node, self.sensor, self.method, self.stream)
 
-    def get_metadata_url(self):
+    def _get_metadata_url(self):
         return create_meta_url(self.site, self.node, self.sensor, self.method, self.stream)
 
     @staticmethod
@@ -40,7 +44,9 @@ class OOIASSET(object):
 
     def request_data(self, begin_date, end_date=None, data_type='NetCDF', limit=None, credfile=''):
         """
-        Function to request the data. It will take some time for NetCDF Data
+        Function to request the data.
+        It will take some time for NetCDF Data.
+        Note that currently we only can get Science data.
 
         :param begin_date:
         :param end_date:
@@ -69,32 +75,55 @@ class OOIASSET(object):
                 raise Exception('Please enter limit for JSON data type. '
                                 'Max limit is 20000 points.')
 
-        data_url = self.get_data_url()
+        data_url = self._get_data_url()
         try:
             with open(credfile, 'r') as f:
                 creds = json.load(f)
 
-            req = r.get(data_url, auth=tuple(creds.values()))
+            req = r.get(data_url,
+                        auth=tuple(creds.values()),
+                        params=params)
             data = req.json()
 
             thredds_url = data['allURLs'][0]
             print(data['allURLs'][1])
             self._check_data_status(data['allURLs'][1])
+            print(thredds_url)
 
         except Exception as e:
             print(e)
 
-
-
     def request_metadata(self):
-        return self.get_metadata_url()
+        return self._get_metadata_url()
 
     @classmethod
-    def from_reference_designator(cls, reference_designator):
+    def from_reference_designator(cls, reference_designator, method=None, stream=None):
+        kw = {
+            'method': method,
+            'stream': stream
+        }
+        keys = ['site', 'node', 'sensor']
         val = reference_designator.split('-')
         values = val[:-2] + ['-'.join(val[-2:])]
+        kw.update(dict(zip(keys, values)))
 
-        pass
+        # Checking for instrument status
+        epochnow = unix_time_millis(datetime.datetime.utcnow())
+        instdf = get_instrument_df(epochnow)
+        desired_data = instdf.loc[instdf['reference_designator'] == reference_designator].to_dict(orient='records')[0]  # noqa
+        if desired_data['status'] != 'Operational':
+            raise Exception('Current data is not operational!')
+
+        # Getting method and stream if not available
+        dsdf = get_science_data_stream_meta(reference_designator, desired_data['region'])
+        if not method:
+            method = dsdf.loc[dsdf['reference_designator'] == reference_designator]['method'].unique()[0]
+            kw['method'] = method
+        if not stream:
+            stream = dsdf.loc[dsdf['reference_designator'] == reference_designator]['stream_name'].unique()[0]  # noqa
+            kw['stream'] = stream
+
+        return cls(**kw)
 
 
 
