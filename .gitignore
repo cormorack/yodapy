@@ -104,3 +104,5 @@ ENV/
 .idea/
 .creds.json
 notebooks
+
+.pytest_cache/

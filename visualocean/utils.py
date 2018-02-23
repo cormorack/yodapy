@@ -3,14 +3,17 @@ from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
 
-import os
 import datetime
+import os
 import re
+from urllib.parse import urljoin, urlsplit
+
+from lxml import etree
+
+import pandas as pd
 
 import requests as r
-import pandas as pd
-from lxml import etree
-from urllib.parse import urlsplit, urljoin
+
 
 def datetime_to_string(dt):
     return dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
@@ -50,8 +53,7 @@ def get_nc_urls(thredds_url):
 
     service_el = ROOT.xpath('//*[contains(@name, "odap")]')[0]
 
-    dataset_urls = [urljoin(domain, urljoin(service_el.attrib['base'], el.attrib['urlPath'])) for el in dataset_el]  # noqa
+    dataset_urls = [urljoin(domain, urljoin(service_el.attrib['base'], el.attrib['urlPath'])) for el in
+                    dataset_el]  # noqa
 
     return dataset_urls
-
-

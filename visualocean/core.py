@@ -3,24 +3,24 @@ from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
 
-import os
-import requests as r
-import time
-import json
 import datetime
-import pandas as pd
-import xarray as xr
+import json
+import os
+import time
 
-from visualocean.utils import (datetime_to_string,
-                               unix_time_millis,
-                               get_instrument_df,
-                               get_science_data_stream_meta,
-                               get_nc_urls)
+import requests as r
+
 from visualocean.urlbuilder import (create_data_url, create_meta_url)
+from visualocean.utils import (datetime_to_string,
+                               get_instrument_df,
+                               get_nc_urls,
+                               get_science_data_stream_meta,
+                               unix_time_millis)
+
+import xarray as xr
 
 
 class OOIASSET(object):
-
     def __init__(self, site, node, sensor, method, stream):
         self.site = site
         self.node = node
@@ -30,7 +30,8 @@ class OOIASSET(object):
         self.thredds_url = None
 
     def __repr__(self):
-        return '<OOIASSET: {}>'.format('-'.join([self.site, self.node, self.sensor, self.method, self.stream]))
+        return '<OOIASSET: {}>'.format(
+            '-'.join([self.site, self.node, self.sensor, self.method, self.stream]))
 
     def _get_data_url(self):
         return create_data_url(self.site, self.node, self.sensor, self.method, self.stream)
@@ -45,7 +46,7 @@ class OOIASSET(object):
         while req.status_code != 200:
             req = r.get(check_complete)
             time.sleep(1)
-        print('Request completed')
+        print('Request completed')  # noqa
 
     def request_data(self, begin_date, end_date=None, data_type='NetCDF', limit=None, credfile=''):
         """
@@ -106,14 +107,14 @@ class OOIASSET(object):
             data = req.json()
 
             self.thredds_url = data['allURLs'][0]
-            print('Please wait while data is compiled.', end='')
-            print(data['allURLs'][1])
+            print('Please wait while data is compiled.', end='')  # noqa
+            print(data['allURLs'][1])  # noqa
             self._check_data_status(data['allURLs'][1])
 
             return self.thredds_url
 
         except Exception as e:
-            print(e)
+            print(e)  # noqa
 
     def request_metadata(self):
         return self._get_metadata_url()
@@ -139,7 +140,9 @@ class OOIASSET(object):
         # Checking for instrument status
         epochnow = unix_time_millis(datetime.datetime.utcnow())
         instdf = get_instrument_df(epochnow)
-        desired_data = instdf.loc[instdf['reference_designator'] == reference_designator].to_dict(orient='records')[0]  # noqa
+        desired_data = \
+        instdf.loc[instdf['reference_designator'] == reference_designator].to_dict(orient='records')[
+            0]  # noqa
         if desired_data['status'] != 'Operational':
             raise Exception('Current data is not operational!')
 
@@ -157,9 +160,3 @@ class OOIASSET(object):
     def to_xarray(self, **kwargs):
         datasets = get_nc_urls(self.thredds_url)
         return xr.open_mfdataset(datasets, **kwargs)
-
-
-
-
-
-
