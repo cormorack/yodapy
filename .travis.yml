@@ -44,9 +44,7 @@ before_install:
 
 # Test source distribution.
 install:
-  - cd $TRAVIS_BUILD_DIR
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install visualocean-${version}.tar.gz && popd
-  - cd $TRAVIS_BUILD_DIR/examples
 
 script:
   - if [[ $TEST_TARGET == 'default' ]]; then
