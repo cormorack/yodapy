@@ -27,7 +27,7 @@ def get_instrument_df(epochsec):
     return df
 
 def get_science_data_stream_meta(reference_designator, region):
-    url = 'http://ooi.visualocean.net/data-streams/export'
+    url = 'http://ooi.visualocean.net/data-streams/science/'
     dsdf = pd.read_csv(os.path.join(url, region))
 
     return dsdf

@@ -26,6 +26,9 @@ class OOIASSET(object):
         self.method = method
         self.stream = stream
 
+    def __repr__(self):
+        return '<OOIASSET: {}>'.format('-'.join([self.site, self.node, self.sensor, self.method, self.stream]))
+
     def _get_data_url(self):
         return create_data_url(self.site, self.node, self.sensor, self.method, self.stream)
 
@@ -62,6 +65,7 @@ class OOIASSET(object):
         # Some checking for datetime and data_type
         if isinstance(begin_date, datetime.datetime):
             begin_date = datetime_to_string(begin_date)
+            params['beginDT'] = begin_date
 
         if end_date:
             if isinstance(end_date, datetime.datetime):
@@ -76,6 +80,20 @@ class OOIASSET(object):
                                 'Max limit is 20000 points.')
 
         data_url = self._get_data_url()
+        with open(credfile, 'r') as f:
+            creds = json.load(f)
+
+        req = r.get(data_url,
+                    auth=tuple(creds.values()),
+                    params=params)
+
+        # Checks and keeps trying if erroring out
+        while req.status_code != 200:
+            req = r.get(data_url,
+                        auth=tuple(creds.values()),
+                        params=params)
+
+        data = req.json()
         try:
             with open(credfile, 'r') as f:
                 creds = json.load(f)
@@ -88,7 +106,8 @@ class OOIASSET(object):
             thredds_url = data['allURLs'][0]
             print(data['allURLs'][1])
             self._check_data_status(data['allURLs'][1])
-            print(thredds_url)
+
+            return thredds_url
 
         except Exception as e:
             print(e)
