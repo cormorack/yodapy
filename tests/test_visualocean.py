@@ -23,7 +23,7 @@ class TestOOIASSET(object):
         self.method = 'streamed'
         self.stream = 'ctdpf_optode_sample'
         self.thredds_url = 'https://opendap.oceanobservatories.org/thredds/catalog/ooi/landungs@uw.edu/20180223T010821-RS01SBPS-PC01A-4A-CTDPFA103-streamed-ctdpf_optode_sample/catalog.html'  # noqa
-
+        self._status_url = 'https://opendap.oceanobservatories.org/async_results/landungs@uw.edu/20180223T010821-RS01SBPS-PC01A-4A-CTDPFA103-streamed-ctdpf_optode_sample'  # noqa
         self.asset = None
 
         self.start = datetime.datetime(2017, 8, 21)
@@ -51,6 +51,7 @@ class TestOOIASSET(object):
     def test_to_xarray(self):
         asset = OOIASSET.from_reference_designator(self.reference_designator)
         asset.thredds_url = self.thredds_url
+        asset._status_url = self._status_url
         ds = asset.to_xarray()
 
         assert isinstance(ds, xr.Dataset)
