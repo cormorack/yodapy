@@ -20,7 +20,7 @@ with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='visualocean',
-    version=0.1,
+    version='0.1-alpha',
     description='Python interface for the OOI Visual Ocean REST API',
     long_description=long_description,
     url='',
