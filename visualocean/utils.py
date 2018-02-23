@@ -34,6 +34,7 @@ def get_instrument_df(epochsec):
 
 
 def get_science_data_stream_meta(reference_designator, region):
+    # For both science and engineering: 'http://ooi.visualocean.net/data-streams/export'
     url = 'http://ooi.visualocean.net/data-streams/science/'
     dsdf = pd.read_csv(os.path.join(url, region))
 

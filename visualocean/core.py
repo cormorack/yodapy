@@ -28,6 +28,7 @@ class OOIASSET(object):
         self.method = method
         self.stream = stream
         self.thredds_url = None
+        self._status_url = None
 
     def __repr__(self):
         return '<OOIASSET: {}>'.format(
@@ -43,7 +44,9 @@ class OOIASSET(object):
     def _check_data_status(url):
         check_complete = os.path.join(url, 'status.txt')
         req = r.get(check_complete)
+
         while req.status_code != 200:
+            print('Your data is still compiling... Please wait.')  # noqa
             req = r.get(check_complete)
             time.sleep(1)
         print('Request completed')  # noqa
@@ -83,20 +86,7 @@ class OOIASSET(object):
                                 'Max limit is 20000 points.')
 
         data_url = self._get_data_url()
-        with open(credfile, 'r') as f:
-            creds = json.load(f)
 
-        req = r.get(data_url,
-                    auth=tuple(creds.values()),
-                    params=params)
-
-        # Checks and keeps trying if erroring out
-        while req.status_code != 200:
-            req = r.get(data_url,
-                        auth=tuple(creds.values()),
-                        params=params)
-
-        data = req.json()
         try:
             with open(credfile, 'r') as f:
                 creds = json.load(f)
@@ -104,12 +94,18 @@ class OOIASSET(object):
             req = r.get(data_url,
                         auth=tuple(creds.values()),
                         params=params)
+
+            # Checks and keeps trying if erroring out
+            while req.status_code != 200:
+                req = r.get(data_url,
+                            auth=tuple(creds.values()),
+                            params=params)
+
             data = req.json()
 
             self.thredds_url = data['allURLs'][0]
-            print('Please wait while data is compiled.', end='')  # noqa
-            print(data['allURLs'][1])  # noqa
-            self._check_data_status(data['allURLs'][1])
+            self._status_url = data['allURLs'][1]
+            print('Please wait while data is compiled.')  # noqa
 
             return self.thredds_url
 
@@ -141,10 +137,9 @@ class OOIASSET(object):
         epochnow = unix_time_millis(datetime.datetime.utcnow())
         instdf = get_instrument_df(epochnow)
         desired_data = \
-        instdf.loc[instdf['reference_designator'] == reference_designator].to_dict(orient='records')[
-            0]  # noqa
+        instdf.loc[instdf['reference_designator'] == reference_designator].to_dict(orient='records')[0]  # noqa
         if desired_data['status'] != 'Operational':
-            raise Exception('Current data is not operational!')
+            raise Warning('Current data is not operational!')
 
         # Getting method and stream if not available
         dsdf = get_science_data_stream_meta(reference_designator, desired_data['region'])
@@ -158,5 +153,6 @@ class OOIASSET(object):
         return cls(**kw)
 
     def to_xarray(self, **kwargs):
+        self._check_data_status(self._status_url)
         datasets = get_nc_urls(self.thredds_url)
         return xr.open_mfdataset(datasets, **kwargs)
