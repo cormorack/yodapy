@@ -1,4 +1,6 @@
 # visualoceanpy
+[![Build Status](https://travis-ci.org/lsetiawan/visualoceanpy.svg?branch=master)](https://travis-ci.org/lsetiawan/visualoceanpy)
+
 Python API to OOI M2M RESTful Web Services
 
 ## Installation
