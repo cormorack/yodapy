@@ -9,11 +9,13 @@ import time
 import json
 import datetime
 import pandas as pd
+import xarray as xr
 
 from visualocean.utils import (datetime_to_string,
                                unix_time_millis,
                                get_instrument_df,
-                               get_science_data_stream_meta)
+                               get_science_data_stream_meta,
+                               get_nc_urls)
 from visualocean.urlbuilder import (create_data_url, create_meta_url)
 
 
@@ -25,6 +27,7 @@ class OOIASSET(object):
         self.sensor = sensor
         self.method = method
         self.stream = stream
+        self.thredds_url = None
 
     def __repr__(self):
         return '<OOIASSET: {}>'.format('-'.join([self.site, self.node, self.sensor, self.method, self.stream]))
@@ -39,7 +42,6 @@ class OOIASSET(object):
     def _check_data_status(url):
         check_complete = os.path.join(url, 'status.txt')
         req = r.get(check_complete)
-        print('Please wait while data is compiled.', end='')
         while req.status_code != 200:
             req = r.get(check_complete)
             time.sleep(1)
@@ -103,11 +105,12 @@ class OOIASSET(object):
                         params=params)
             data = req.json()
 
-            thredds_url = data['allURLs'][0]
+            self.thredds_url = data['allURLs'][0]
+            print('Please wait while data is compiled.', end='')
             print(data['allURLs'][1])
             self._check_data_status(data['allURLs'][1])
 
-            return thredds_url
+            return self.thredds_url
 
         except Exception as e:
             print(e)
@@ -117,6 +120,13 @@ class OOIASSET(object):
 
     @classmethod
     def from_reference_designator(cls, reference_designator, method=None, stream=None):
+        """
+
+        :param reference_designator:
+        :param method:
+        :param stream:
+        :return:
+        """
         kw = {
             'method': method,
             'stream': stream
@@ -144,6 +154,9 @@ class OOIASSET(object):
 
         return cls(**kw)
 
+    def to_xarray(self, **kwargs):
+        datasets = get_nc_urls(self.thredds_url)
+        return xr.open_mfdataset(datasets, **kwargs)
 
 
 
