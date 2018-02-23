@@ -3,3 +3,4 @@ xarray
 geopandas
 seaborn
 rasterio
+lxml

@@ -103,3 +103,4 @@ ENV/
 # Pycharm
 .idea/
 .creds.json
+notebooks
