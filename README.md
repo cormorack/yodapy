@@ -9,6 +9,7 @@ Python API to OOI M2M RESTful Web Services
 git clone https://github.com/lsetiawan/visualoceanpy.git
 cd visualoceanpy
 conda create -n vizocean -c conda-forge --yes python=3.6 --file requirements.txt --file requirements-dev.txt
+source activate vizocean
 pip install -e .
 ```
 
