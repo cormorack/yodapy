@@ -1,6 +1,6 @@
-# visualoceanpy
 [![Build Status](https://travis-ci.org/cormorack/visualoceanpy.svg?branch=master)](https://travis-ci.org/cormorack/visualoceanpy)
 
+# visualoceanpy
 Python API to OOI M2M RESTful Web Services
 
 ## Installation
