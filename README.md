@@ -14,13 +14,11 @@ pip install -e .
 ```
 
 ## Credentials
-To request data, you will need a json file with your user and token. Example:
+To request data, you will need to setup your credential.
 
-```json
-{
-  "user": "someUSER",
-  "token": "TheAwesomeToken"
-}
+```python
+>>> import visualocean
+>>> visualocean.utils.set_credentials_file(username='MyName', token='My cool token')
 ```
 
 ## Example running the program

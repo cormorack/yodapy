@@ -60,6 +60,7 @@ def get_nc_urls(thredds_url):
 
     return dataset_urls
 
+
 def set_credentials_file(username=None, token=None):
     netrc_template = """machine ooinet.oceanobservatories.org
                         login {username}
