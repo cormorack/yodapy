@@ -6,6 +6,7 @@ from __future__ import (absolute_import,
 import datetime
 import os
 import re
+import json
 from urllib.parse import urljoin, urlsplit
 
 from lxml import etree
@@ -58,3 +59,18 @@ def get_nc_urls(thredds_url):
                     dataset_el]  # noqa
 
     return dataset_urls
+
+def set_credentials_file(username=None, token=None):
+    netrc_template = """machine ooinet.oceanobservatories.org
+                        login {username}
+                        password {token}""".format
+    home_dir = os.environ.get('HOME')
+
+    if username and token:
+        fpath = os.path.join(home_dir, '.netrc')
+        with open(fpath, 'w') as f:
+            f.write(netrc_template(username=username,
+                                   token=token))
+        os.chmod(fpath, 0o700)
+    else:
+        raise EnvironmentError('Please enter your ooinet username and token!')

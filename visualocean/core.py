@@ -9,6 +9,7 @@ import os
 import time
 
 import requests as r
+from requests import (Session, Request)
 
 from visualocean.urlbuilder import (create_data_url, create_meta_url)
 from visualocean.utils import (datetime_to_string,
@@ -29,6 +30,7 @@ class OOIASSET(object):
         self.stream = stream
         self.thredds_url = None
         self._status_url = None
+        self.__session = Session()
 
     def __repr__(self):
         return '<OOIASSET: {}>'.format(
@@ -51,7 +53,21 @@ class OOIASSET(object):
             time.sleep(1)
         print('Request completed')  # noqa
 
-    def request_data(self, begin_date, end_date=None, data_type='NetCDF', limit=None, credfile=''):
+    def _check_credential(self):
+        home_dir = os.environ.get('HOME')
+        fpath = os.path.join(home_dir, '.netrc')
+
+        if os.path.exists(fpath):
+            import netrc
+            netrc = netrc.netrc()
+            remoteHostName = 'ooinet.oceanobservatories.org'
+            info = netrc.authenticators(remoteHostName)
+            return info[0], info[2]
+        else:
+            raise EnvironmentError('Please authenticate by using visualocean.utils.set_credentials_file!')
+
+
+    def request_data(self, begin_date, end_date=None, data_type='NetCDF', limit=None):
         """
         Function to request the data.
         It will take some time for NetCDF Data.
@@ -87,30 +103,29 @@ class OOIASSET(object):
 
         data_url = self._get_data_url()
 
-        try:
-            with open(credfile, 'r') as f:
-                creds = json.load(f)
+        # Checks credentials
+        user, token = self._check_credential()
+        status = 404
+        response = None
+        # Checks and keeps trying if erroring out
+        while status != 200:
+            req = Request('GET',
+                          data_url,
+                          auth=(user, token),
+                          params=params)
+            request = self.__session.prepare_request(req)
+            response = self.__session.send(request)
+            status = response.status_code
+            if status == 401:
+                raise ValueError('{} Please re-authenticate!'.format(response.json()['message']))
 
-            req = r.get(data_url,
-                        auth=tuple(creds.values()),
-                        params=params)
+        data = response.json()
 
-            # Checks and keeps trying if erroring out
-            while req.status_code != 200:
-                req = r.get(data_url,
-                            auth=tuple(creds.values()),
-                            params=params)
+        self.thredds_url = data['allURLs'][0]
+        self._status_url = data['allURLs'][1]
+        print('Please wait while data is compiled.')  # noqa
 
-            data = req.json()
-
-            self.thredds_url = data['allURLs'][0]
-            self._status_url = data['allURLs'][1]
-            print('Please wait while data is compiled.')  # noqa
-
-            return self.thredds_url
-
-        except Exception as e:
-            print(e)  # noqa
+        return self.thredds_url
 
     def request_metadata(self):
         return self._get_metadata_url()
