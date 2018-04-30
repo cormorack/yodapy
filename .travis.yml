@@ -44,7 +44,7 @@ before_install:
 
 # Test source distribution.
 install:
-  - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install visualocean-${version}.tar.gz && popd
+  - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install yodapy-${version}.tar.gz && popd
 
 script:
   - if [[ $TEST_TARGET == 'default' ]]; then

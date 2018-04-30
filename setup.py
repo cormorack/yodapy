@@ -19,9 +19,9 @@ with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='visualocean',
+    name='yodapy',
     version='0.1-alpha',
-    description='Python interface for the OOI Visual Ocean REST API',
+    description='Your Ocean Data Access in Python',
     long_description=long_description,
     url='',
     author='Landung Setiawan',
@@ -39,7 +39,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Scientific/Engineering'
     ],
-    keywords='OOI Visual Ocean',
+    keywords=['Ocean', 'Data', 'Access', 'OOI'],
     packages=find_packages(),
     install_requires=install_requires,
 )

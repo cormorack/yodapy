@@ -7,7 +7,7 @@ Your Ocean Data Access in Python
 
 ```bash
 git clone https://github.com/lsetiawan/yodapy.git
-cd visualoceanpy
+cd yodapy
 conda create -n yodapy -c conda-forge --yes python=3.6 --file requirements.txt --file requirements-dev.txt
 source activate yodapy
 pip install -e .
