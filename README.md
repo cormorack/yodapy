@@ -1,15 +1,15 @@
-[![Build Status](https://travis-ci.org/cormorack/visualoceanpy.svg?branch=master)](https://travis-ci.org/cormorack/visualoceanpy)
+[![Build Status](https://travis-ci.org/cormorack/yodapy.svg?branch=master)](https://travis-ci.org/cormorack/yodapy)
 
-# visualoceanpy
-Python API to OOI M2M RESTful Web Services
+# yodapy
+Your Ocean Data Access in Python
 
 ## Installation
 
 ```bash
-git clone https://github.com/lsetiawan/visualoceanpy.git
+git clone https://github.com/lsetiawan/yodapy.git
 cd visualoceanpy
-conda create -n vizocean -c conda-forge --yes python=3.6 --file requirements.txt --file requirements-dev.txt
-source activate vizocean
+conda create -n yodapy -c conda-forge --yes python=3.6 --file requirements.txt --file requirements-dev.txt
+source activate yodapy
 pip install -e .
 ```
 
@@ -17,14 +17,14 @@ pip install -e .
 To request data, you will need to setup your credential.
 
 ```python
->>> import visualocean
->>> visualocean.utils.set_credentials_file(username='MyName', token='My cool token')
+>>> import yodapy
+>>> yodapy.utils.set_credentials_file(username='MyName', token='My cool token')
 ```
 
 ## Example running the program
 
 ```python
-In [1]: from visualocean.core import OOIASSET
+In [1]: from yodapy.core import OOIASSET
 
 In [2]: asset = OOIASSET.from_reference_designator('RS01SBPS-SF01A-2A-CTDPFA102')
 
