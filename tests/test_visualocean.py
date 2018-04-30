@@ -9,7 +9,7 @@ import datetime
 
 import xarray as xr
 
-from visualocean.core import OOIASSET
+from yodapy.core import OOIASSET
 
 
 class TestOOIASSET(object):

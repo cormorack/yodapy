@@ -11,8 +11,8 @@ import time
 import requests as r
 from requests import (Session, Request)
 
-from visualocean.urlbuilder import (create_data_url, create_meta_url)
-from visualocean.utils import (datetime_to_string,
+from yodapy.urlbuilder import (create_data_url, create_meta_url)
+from yodapy.utils import (datetime_to_string,
                                get_instrument_df,
                                get_nc_urls,
                                get_science_data_stream_meta,
