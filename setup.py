@@ -26,6 +26,7 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     description='Your Ocean Data Access in Python',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='',
     author='Landung Setiawan',
     author_email='landungs@uw.edu',
