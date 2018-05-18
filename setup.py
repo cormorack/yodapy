@@ -32,6 +32,7 @@ setup(
     author_email='landungs@uw.edu',
     maintainer='Landung Setiawan',
     maintainer_email='landungs@uw.edu',
+    python_requires='>=3',
     license='BSD',
     classifiers=[
         'Development Status :: 3 - Alpha',
