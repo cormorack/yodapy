@@ -26,11 +26,13 @@ setup(
     cmdclass=versioneer.get_cmdclass(),
     description='Your Ocean Data Access in Python',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='',
     author='Landung Setiawan',
     author_email='landungs@uw.edu',
     maintainer='Landung Setiawan',
     maintainer_email='landungs@uw.edu',
+    python_requires='>=3',
     license='BSD',
     classifiers=[
         'Development Status :: 3 - Alpha',
