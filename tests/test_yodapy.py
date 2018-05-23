@@ -17,8 +17,8 @@ class testOOI():
         self.site = 'Axial Base Shallow Profiler Mooring'
         self.platform = 'Shallow Profiler'
         self.instrument = 'CTD'
-        self.start_date = datetime.datetime(2018, 4, 1)
-        self.end_date = datetime.datetime(2018, 4, 2)
+        self.start_date = datetime.datetime(2018, 1, 1)
+        self.end_date = datetime.datetime(2018, 2, 1)
         self.thredds_url = 'https://opendap.oceanobservatories.org/thredds/catalog/ooi/pshivraj@uw.edu/20180523T175502-RS01SBPS-SF01A-2A-CTDPFA102-streamed-ctdpf_sbe43_sample/catalog.html'  # noqa
         self._status_url = 'https://opendap.oceanobservatories.org/async_results/pshivraj@uw.edu/20180523T175502-RS01SBPS-SF01A-2A-CTDPFA102-streamed-ctdpf_sbe43_sample'  # noqa
 
