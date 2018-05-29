@@ -44,6 +44,7 @@ before_install:
 
 # Test source distribution.
 install:
+  - conda install -c conda-forge codecov pytest-cov
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install yodapy-${version}.tar.gz && popd
 
 script:
@@ -51,6 +52,12 @@ script:
       cp -r tests /tmp && cd /tmp ;
       py.test -vv tests ;
     fi
+    
   - if [[ $TEST_TARGET == 'coding_standards' ]]; then
       flake8 --max-line-length=105 visualocean;
     fi
+   
+  - py.test --cov-report term-missing --cov=yodapy tests/;
+
+after_success:
+  - codecov
