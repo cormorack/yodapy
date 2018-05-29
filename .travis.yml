@@ -43,10 +43,10 @@ before_install:
   - conda config --add channels conda-forge --force
   - conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-dev.txt
   - source activate TEST
+  - pip install coveralls pytest-cov
 
 # Test source distribution.
 install:
-  - conda install -c conda-forge --yes codecov pytest-cov
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install yodapy-${version}.tar.gz && popd
 
 script:
@@ -56,7 +56,7 @@ script:
     fi
     
   - if [[ $TEST_TARGET == 'coding_standards' ]]; then
-      flake8 --max-line-length=105 visualocean;
+      flake8 --max-line-length=105 yodapy;
     fi
    
   - if [[ $TEST_TARGET == 'test_coverage' ]]; then
@@ -64,4 +64,4 @@ script:
     fi
 
 after_success:
-  - codecov
+  - coveralls
