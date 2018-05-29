@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/cormorack/yodapy.svg?branch=master)](https://travis-ci.org/cormorack/yodapy)
 [![Build status](https://ci.appveyor.com/api/projects/status/29rvgs6u8t552ui2?svg=true)](https://ci.appveyor.com/project/lsetiawan/yodapy)
+[![codecov](https://codecov.io/gh/cormorack/yodapy/branch/master/graph/badge.svg)](https://codecov.io/gh/cormorack/yodapy)
+
 # yodapy
 Your Ocean Data Access in Python
 
