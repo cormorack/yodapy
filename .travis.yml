@@ -21,6 +21,8 @@ matrix:
     env: TEST_TARGET=default
   - python: 3.6
     env: TEST_TARGET=coding_standards
+  - python: 3.6
+    env: TEST_TARGET=test_coverage
   allow_failures:
   - python: 3.6
     env: TEST_TARGET=coding_standards
@@ -57,7 +59,9 @@ script:
       flake8 --max-line-length=105 visualocean;
     fi
    
-  - py.test --cov-report term-missing --cov=yodapy tests/;
+  - if [[ $TEST_TARGET == 'test_coverage' ]]; then
+      py.test --cov-report term-missing --cov=yodapy tests/;
+    fi
 
 after_success:
   - codecov
