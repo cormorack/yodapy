@@ -3,11 +3,11 @@ from __future__ import (absolute_import,
                         print_function,
                         unicode_literals)
 
-from yodapy.core import OOIASSET
+from yodapy import datasources
 
 __author__ = 'Landung Setiawan'
 
-__all__ = ['core', 'utils']
+__all__ = ['utils', 'datasources']
 
 from ._version import get_versions
 __version__ = get_versions()['version']

@@ -1,6 +1,5 @@
 requests
+pandas
 xarray
-geopandas
-seaborn
-rasterio
+matplotlib
 lxml
