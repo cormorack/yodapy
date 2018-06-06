@@ -10,8 +10,8 @@ class DataSource:
 
     def __init__(self):
         self._source_name = None
-        self._start_time = None
-        self._end_time = None
+        self._start_date = None
+        self._end_date = None
 
     def __repr__(self):
         return 'Data Source: {0}'.format(self._source_name)
@@ -21,21 +21,21 @@ class DataSource:
 
     @property
     def start_date(self):
-        if self._start_time:
-            return '{:%Y-%m-%d}'.format(self._start_time)
+        if self._start_date:
+            return '{:%Y-%m-%d}'.format(self._start_date)
         return 'Start date can\'t be found.'
 
     @property
     def end_date(self):
-        if self._end_time:
-            return '{:%Y-%m-%d}'.format(self._end_time)
+        if self._end_date:
+            return '{:%Y-%m-%d}'.format(self._end_date)
         return 'End date can\'t be found.'
 
     @property
     def source_name(self):
         return self._source_name
 
-    def request_data(self):
+    def request_data(self, begin_date, end_date):
         pass
 
     def to_xarray(self):

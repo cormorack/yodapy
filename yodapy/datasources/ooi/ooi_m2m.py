@@ -7,12 +7,19 @@ from __future__ import (division,
 import datetime
 import re
 
+from dask.distributed import (Client, as_completed)
 import pandas as pd
+from requests import Session
+import xarray as xr
 
 from yodapy.datasources.datasource import DataSource
 from yodapy.datasources.ooi.m2m import MachineToMachine
-from yodapy.datasources.ooi.helpers import (STREAMS, extract_times)
+from yodapy.datasources.ooi.helpers import (STREAMS,
+                                            extract_times,
+                                            check_data_status)
 from yodapy.datasources.ooi import SOURCE_NAME
+from yodapy.utils.parser import (datetime_to_string,
+                                 get_nc_urls)
 
 
 class OOI(DataSource):
@@ -24,8 +31,11 @@ class OOI(DataSource):
         self._streams = kwargs.get('streams', STREAMS)
 
         streams_range = extract_times()
-        self._start_time = kwargs.get('start_time', streams_range[0])
-        self._end_time = kwargs.get('end_time', streams_range[1])
+        self._start_date = kwargs.get('start_time', streams_range[0])
+        self._end_date = kwargs.get('end_time', streams_range[1])
+
+        self._data_urls = kwargs.get('data_urls')
+        self._session = Session()
 
     def __repr__(self):
         object_repr = """{datasource}
@@ -34,9 +44,10 @@ class OOI(DataSource):
         """.format
 
         date_string = 'Unknown'
-        if self._start_time and self._end_time:
+        if not isinstance(self._start_date, type(pd.NaT)) and not isinstance(
+                self._end_date, type(pd.NaT)):
             date_string = '{start} to {end}'.format(start='{:%Y-%m-%d}'.format(
-                self._start_time), end='{:%Y-%m-%d}'.format(self._end_time))
+                self._start_date), end='{:%Y-%m-%d}'.format(self._end_date))
 
         return object_repr(datasource=super().__repr__(),
                            stream_num=len(self._streams),
@@ -49,6 +60,12 @@ class OOI(DataSource):
     def streams(self):
         return self._streams
 
+    def _do_request(self, st_dict):
+        m2m = MachineToMachine.use_existing_credentials()
+        return m2m.data_requests(session=self._session, stream=st_dict['stream'],
+                                 params=st_dict[
+                                     'params'])
+
     def data_availibility(self):
         """
         Display the OOI Object Streams Data Availibility
@@ -57,6 +74,7 @@ class OOI(DataSource):
             None
 
         """
+        # TODO: Use M2M API to get the actual Data availability!
         import matplotlib.pyplot as plt
         import matplotlib.dates as mdates
 
@@ -77,8 +95,6 @@ class OOI(DataSource):
         ax.xaxis_date()
         ax.axis('tight')
 
-        plt.show()
-
     @classmethod
     def search(cls, region=[], site=[], instrument=[],
                begin_date=datetime.datetime(2000, 1, 1),
@@ -96,7 +112,8 @@ class OOI(DataSource):
             stream_dataset (string): Type of stream dataset.
                                      Either 'Science' or 'Engineering'.
             **kwargs: Other keyword arguments.
-                      To search by reference designator use `reference_designator`.
+                      To search by reference designator use
+                      `reference_designator`.
 
         Returns:
             Pandas DataFrame of the desired data streams.
@@ -138,3 +155,71 @@ class OOI(DataSource):
         return cls(streams=filtered_streams,
                    start_time=filtered_streams.startdt.min(),
                    end_time=filtered_streams.enddt.max())
+
+    def request_data(self,
+                     begin_date=None,
+                     end_date=None,
+                     data_type='netCDF',
+                     limit=None):
+        """
+        Function to request the data.
+        It will take some time for NetCDF Data.
+
+        Args:
+            begin_date (datetime): Desired begin date of data.
+            end_date (datetime): Desired end date of data.
+            data_type (str): Desired data type. Currently `netCDF` by default.
+            limit(int): Data point limit (for JSON `data_type`).
+
+        Returns:
+
+        """
+        params = {
+            'beginDT': datetime_to_string(self._start_date),
+            'endDT': datetime_to_string(self._end_date)
+        }
+
+        # Some checking for datetime and data_type
+        if begin_date:
+            if isinstance(begin_date, datetime.datetime):
+                begin_date = datetime_to_string(begin_date)
+                params['beginDT'] = begin_date
+
+        if end_date:
+            if isinstance(end_date, datetime.datetime):
+                end_date = datetime_to_string(end_date)
+                params['endDT'] = end_date
+
+        if data_type == 'JSON':
+            if isinstance(limit, int):
+                params['limit'] = limit
+            else:
+                raise Exception('Please enter limit for JSON data type. '
+                                'Max limit is 20000 points.')
+
+        stream_list = list(map(lambda x: {'stream': x[1], 'params': params},
+                               self.streams.iterrows()))
+
+        client = Client()
+        futures = client.map(self._do_request, stream_list)
+
+        data_urls = []
+        for future, result in as_completed(futures, with_results=True):
+            data_urls.append(result)
+
+        print('Please wait while data is compiled.')  # noqa
+        self._data_urls = data_urls
+        return self
+
+    def to_xarray(self, **kwargs):
+        dataset_list = []
+        client = Client()
+        futures = client.map(lambda durl: check_data_status(
+            self._session, durl
+        ), self._data_urls)
+
+        for future, result in as_completed(futures, with_results=True):
+            datasets = get_nc_urls(result)
+            dataset_list.append(xr.open_mfdataset(datasets, **kwargs))
+
+        return dataset_list

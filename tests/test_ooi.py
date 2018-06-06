@@ -21,8 +21,21 @@ class TestOOIDataSource:
         self.instrument = ['CTD']
         self.start_date = datetime.datetime(2018, 1, 1)
         self.end_date = datetime.datetime(2018, 2, 1)
-        # self.thredds_url = 'https://opendap.oceanobservatories.org/thredds/catalog/ooi/pshivraj@uw.edu/20180523T175502-RS01SBPS-SF01A-2A-CTDPFA102-streamed-ctdpf_sbe43_sample/catalog.html'  # noqa
-        # self._status_url = 'https://opendap.oceanobservatories.org/async_results/pshivraj@uw.edu/20180523T175502-RS01SBPS-SF01A-2A-CTDPFA102-streamed-ctdpf_sbe43_sample'  # noqa
+        self.data_urls = [{
+            'thredds_url': 'https://opendap.oceanobservatories.org/thredds'
+                           '/catalog/ooi/landungs@uw.edu/20180606T232135'
+                           '-RS03AXPS-PC03A-4A-CTDPFA303-streamed-ctdpf_optode_sample/catalog.html',  # noqa
+            'status_url': 'https://opendap.oceanobservatories.org'
+                          '/async_results/landungs@uw.edu/20180606T232135'
+                          '-RS03AXPS-PC03A-4A-CTDPFA303-streamed-ctdpf_optode_sample'  # noqa
+        }, {
+            'thredds_url': 'https://opendap.oceanobservatories.org/thredds'
+                           '/catalog/ooi/landungs@uw.edu/20180606T232135'
+                           '-RS03AXPS-SF03A-2A-CTDPFA302-streamed-ctdpf_sbe43_sample/catalog.html',  # noqa
+            'status_url': 'https://opendap.oceanobservatories.org'
+                          '/async_results/landungs@uw.edu/20180606T232135'
+                          '-RS03AXPS-SF03A-2A-CTDPFA302-streamed-ctdpf_sbe43_sample'  # noqa
+        }]
 
     def test_search_type(self):
         assert isinstance(self.region, (list, str))
@@ -50,11 +63,15 @@ class TestOOIDataSource:
                                     end_date=self.end_date)
 
         assert isinstance(search_results.data_availibility(), type(None))
-    # def test_request_to_xarray(self):
-    #     thredds_url = self.thredds_url
-    #     _status_url = self._status_url
-    #     request_data = OOI.Requests.to_xarray(thredds_url, _status_url,
-    # **kwargs) # noqa
-    #
-    #     assert isinstance(request_data, list)
-    #     assert all(isinstance(data, xr.Dataset) for data in request_data)
+
+    def test_to_xarray(self):
+        ooi = OOI.search(region=self.region,
+                         site=self.site,
+                         instrument=self.instrument,
+                         begin_date=self.start_date,
+                         end_date=self.end_date)
+        ooi._data_urls = self.data_urls
+
+        dataset_list = ooi.to_xarray()
+        assert isinstance(dataset_list, list)
+        assert all(isinstance(data, xr.Dataset) for data in dataset_list)

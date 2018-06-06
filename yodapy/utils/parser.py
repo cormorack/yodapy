@@ -39,3 +39,21 @@ def unix_time_millis(dt):
 
 def datetime_to_string(dt):
     return dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+
+
+def ooi_instrument_reference_designator(reference_designator):
+    """
+    Parses reference designator into a dictionary containing subsite, node,
+    and sensor.
+
+    Args:
+        reference_designator (str): OOI Instrument Reference Designator
+
+    Returns:
+        Dictionary of the parsed reference designator
+    """
+
+    keys = ['subsite', 'node', 'sensor']
+    val = reference_designator.split('-')
+    values = val[:-2] + ['-'.join(val[-2:])]
+    return dict(zip(keys, values))
