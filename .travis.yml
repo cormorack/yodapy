@@ -37,13 +37,14 @@ before_install:
     fi
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update conda --yes
+
+# Test source distribution.
+install:
   - conda config --set show_channel_urls true
   - conda config --add channels conda-forge --force
   - conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-dev.txt
   - source activate TEST
-
-# Test source distribution.
-install:
+  - pip install coveralls pytest-cov
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install yodapy-${version}.tar.gz && popd
 
 before_script: # configure a headless display to test plot generation
@@ -54,14 +55,13 @@ before_script: # configure a headless display to test plot generation
 script:
   - if [[ $TEST_TARGET == 'default' ]]; then
       cp -r tests /tmp && cd /tmp ;
-      pytest -vv tests ;
+      pytest --cov-report term-missing --cov=yodapy --cov-config .coveragerc -vv tests ;
     fi
     
   - if [[ $TEST_TARGET == 'coding_standards' ]]; then
-      flake8 --max-line-length=105 yodapy;
+      flake8 --max-line-length=105 yodapy ;
     fi
 
-  - pytest --cov-report term-missing --cov=yodapy tests/
-
 after_success:
+  - which coveralls
   - coveralls
