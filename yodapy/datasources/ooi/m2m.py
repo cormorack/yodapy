@@ -15,14 +15,18 @@ from requests import (Session, Request)
 from yodapy.utils.parser import ooi_instrument_reference_designator
 from yodapy.utils.conn import requests_retry_session
 
+
 class MachineToMachine:
     def __init__(self, api_user, api_key):
         self.base_url = 'https://ooinet.oceanobservatories.org/api/m2m/'
         self.api_user = api_user
         self.api_key = api_key
         self.preload_url = urljoin(self.base_url, '12575')
-        self.inv_url = urljoin(self.base_url, os.path.join('12576', 'sensor', 'inv'))
-        self.meta_url = urljoin(self.base_url, os.path.join('12587', 'events', 'deployment', 'inv'))
+        self.inv_url = urljoin(self.base_url,
+                               os.path.join('12576', 'sensor', 'inv'))
+        self.meta_url = urljoin(self.base_url,
+                                os.path.join('12587', 'events',
+                                             'deployment', 'inv'))
 
     @classmethod
     def use_existing_credentials(cls):
@@ -68,10 +72,7 @@ class MachineToMachine:
                     params=params)
                 data = get_req.json()
 
-            return {
-                'thredds_url': data['allURLs'][0],
-                'status_url': data['allURLs'][1]
-            }
+            return data
         except Exception as e:
             print(e)
 
@@ -123,7 +124,7 @@ class MachineToMachine:
 
     def node_inventory(self, subsite, node):
         url = os.path.join(self.inv_url, subsite, node)
-        return ['-'.join((subsite, node, sensor)) for sensor in self.requests(url)]
+        return ['-'.join((subsite, node, sensor)) for sensor in self.requests(url)]  # noqa
 
     def metadata(self, subsite, node, sensor):
         url = os.path.join(self.meta_url, subsite, node, sensor, '-1')
@@ -136,7 +137,7 @@ class MachineToMachine:
         for row in toc:
             rd = row['reference_designator']
             for each in row['streams']:
-                stream_map.setdefault(rd, {}).setdefault(each['method'], set()).add(each['stream'])
+                stream_map.setdefault(rd, {}).setdefault(each['method'], set()).add(each['stream'])  # noqa
         return stream_map
 
     def instruments(self):

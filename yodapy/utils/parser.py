@@ -10,6 +10,7 @@ import re
 from urllib.parse import urljoin, urlsplit
 
 from lxml import etree
+import netCDF4 as nc
 import requests
 
 
@@ -39,6 +40,10 @@ def unix_time_millis(dt):
 
 def datetime_to_string(dt):
     return dt.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+
+
+def seconds_to_date(num):
+    return nc.num2date(num, 'seconds since 1900-01-01')
 
 
 def ooi_instrument_reference_designator(reference_designator):
