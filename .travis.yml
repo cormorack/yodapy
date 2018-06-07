@@ -8,12 +8,6 @@ cache:
   directories:
     - $HOME/miniconda
 
-# Removing the directory will remove the env but leave the cached packages
-# at $HOME/miniconda/pkgs. That is a win-win because when re-creating the
-# env we will download only the new packages.
-# before_cache:
-#   - rm -rf $HOME/miniconda/envs/TEST
-
 matrix:
   fast_finish: true
   include:
@@ -37,14 +31,13 @@ before_install:
     fi
   - export PATH="$HOME/miniconda/bin:$PATH"
   - conda update conda --yes
-
-# Test source distribution.
-install:
   - conda config --set show_channel_urls true
   - conda config --add channels conda-forge --force
   - conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-dev.txt
   - source activate TEST
-  - pip install coveralls pytest-cov
+
+# Test source distribution.
+install:
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install yodapy-${version}.tar.gz && popd
 
 before_script: # configure a headless display to test plot generation
