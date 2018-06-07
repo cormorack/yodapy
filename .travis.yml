@@ -63,5 +63,5 @@ script:
     fi
 
 after_success:
-  - which coveralls
+  - source activate TEST
   - coveralls
