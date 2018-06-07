@@ -4,10 +4,6 @@ sudo: false
 
 dist: trusty
 
-cache:
-  directories:
-    - $HOME/miniconda
-
 matrix:
   fast_finish: true
   include:
@@ -57,4 +53,3 @@ script:
 
 after_success:
   - coveralls
-  - rm -rf $HOME/miniconda/envs/TEST
