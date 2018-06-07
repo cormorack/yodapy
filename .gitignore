@@ -105,4 +105,8 @@ ENV/
 .creds.json
 notebooks
 
+# pytest
 .pytest_cache/
+
+# dask
+dask-worker-space/
