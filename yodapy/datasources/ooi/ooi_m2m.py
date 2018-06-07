@@ -19,6 +19,7 @@ from yodapy.datasources.ooi.helpers import (STREAMS,
                                             check_data_status)
 from yodapy.datasources.ooi import SOURCE_NAME
 from yodapy.utils.parser import (datetime_to_string,
+                                 seconds_to_date,
                                  get_nc_urls)
 
 
@@ -35,6 +36,7 @@ class OOI(DataSource):
         self._end_date = kwargs.get('end_time', streams_range[1])
 
         self._data_urls = kwargs.get('data_urls')
+        self._json_data = None
         self._session = Session()
 
     def __repr__(self):
@@ -61,10 +63,24 @@ class OOI(DataSource):
         return self._streams
 
     def _do_request(self, st_dict):
-        m2m = MachineToMachine.use_existing_credentials()
-        return m2m.data_requests(session=self._session, stream=st_dict['stream'],
-                                 params=st_dict[
-                                     'params'])
+        try:
+            m2m = MachineToMachine.use_existing_credentials()
+            data = m2m.data_requests(session=self._session,
+                                     stream=st_dict['stream'],
+                                     params=st_dict[
+                                         'params'])
+
+            if st_dict['data_type'] == 'netCDF':
+                return {
+                    'thredds_url': data['allURLs'][0],
+                    'status_url': data['allURLs'][1]
+                }
+
+            raw_pd = pd.DataFrame.from_records(data).copy()
+            raw_pd.loc[:, 'time'] = raw_pd['time'].apply(lambda x: seconds_to_date(x))  # noqa
+            return raw_pd
+        except Exception as e:
+            print(e)
 
     def data_availibility(self):
         """
@@ -156,6 +172,9 @@ class OOI(DataSource):
                    start_time=filtered_streams.startdt.min(),
                    end_time=filtered_streams.enddt.max())
 
+    def stream_data(self):
+        pass
+
     def request_data(self,
                      begin_date=None,
                      end_date=None,
@@ -193,11 +212,16 @@ class OOI(DataSource):
         if data_type == 'JSON':
             if isinstance(limit, int):
                 params['limit'] = limit
+                print('Requesting JSON...')
             else:
                 raise Exception('Please enter limit for JSON data type. '
                                 'Max limit is 20000 points.')
+        else:
+            print('Please wait while data is compiled.')
 
-        stream_list = list(map(lambda x: {'stream': x[1], 'params': params},
+        stream_list = list(map(lambda x: {'stream': x[1],
+                                          'params': params,
+                                          'data_type': data_type},
                                self.streams.iterrows()))
 
         client = Client()
@@ -205,13 +229,25 @@ class OOI(DataSource):
 
         data_urls = []
         for future, result in as_completed(futures, with_results=True):
+            print(future)
             data_urls.append(result)
 
-        print('Please wait while data is compiled.')  # noqa
-        self._data_urls = data_urls
+        if data_type == 'netCDF':
+            self._data_urls = data_urls
+        else:
+            self._json_data = data_urls
         return self
 
     def to_xarray(self, **kwargs):
+        """
+        Retrieve the OOI streams data and export to Xarray Datasets.
+
+        Args:
+            **kwargs: Keyword arguments for xarray open_mfdataset.
+
+        Returns:
+            List of xarray datasets
+        """
         dataset_list = []
         client = Client()
         futures = client.map(lambda durl: check_data_status(
