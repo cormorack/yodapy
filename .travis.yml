@@ -11,8 +11,8 @@ cache:
 # Removing the directory will remove the env but leave the cached packages
 # at $HOME/miniconda/pkgs. That is a win-win because when re-creating the
 # env we will download only the new packages.
-before_cache:
-  - rm -rf $HOME/miniconda/envs/TEST
+# before_cache:
+#   - rm -rf $HOME/miniconda/envs/TEST
 
 matrix:
   fast_finish: true
@@ -63,5 +63,5 @@ script:
     fi
 
 after_success:
-  - source activate TEST
   - coveralls
+  - rm -rf $HOME/miniconda/envs/TEST
