@@ -21,8 +21,6 @@ matrix:
     env: TEST_TARGET=default
   - python: 3.6
     env: TEST_TARGET=coding_standards
-  - python: 3.6
-    env: TEST_TARGET=test_coverage
   allow_failures:
   - python: 3.6
     env: TEST_TARGET=coding_standards
@@ -57,16 +55,14 @@ before_script: # configure a headless display to test plot generation
 script:
   - if [[ $TEST_TARGET == 'default' ]]; then
       cp -r tests /tmp && cd /tmp ;
-      py.test -vv tests ;
+      pytest -vv tests ;
     fi
     
   - if [[ $TEST_TARGET == 'coding_standards' ]]; then
       flake8 --max-line-length=105 yodapy;
     fi
    
-  - if [[ $TEST_TARGET == 'test_coverage' ]]; then
-      py.test --cov-report term-missing --cov=yodapy tests/;
-    fi
+  - pytest --cov-report term-missing --cov=yodapy tests/
 
 after_success:
   - coveralls
