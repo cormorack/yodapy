@@ -7,16 +7,15 @@ from __future__ import (division,
 import datetime
 import re
 
-from dask.distributed import (Client, as_completed)
+from dask.distributed import (Client, as_completed, progress)
 import pandas as pd
 from requests import Session
 import xarray as xr
 
 from yodapy.datasources.datasource import DataSource
 from yodapy.datasources.ooi.m2m import MachineToMachine
-from yodapy.datasources.ooi.helpers import (STREAMS,
-                                            extract_times,
-                                            check_data_status)
+from yodapy.datasources.ooi.helpers import (check_data_status,
+                                            create_streams_cache)
 from yodapy.datasources.ooi import SOURCE_NAME
 from yodapy.utils.parser import (datetime_to_string,
                                  seconds_to_date,
@@ -28,15 +27,12 @@ class OOI(DataSource):
         super(OOI, self).__init__()
 
         self._source_name = SOURCE_NAME
+        self._start_date = kwargs.get('start_time')
+        self._end_date = kwargs.get('end_time')
 
-        self._streams = kwargs.get('streams', STREAMS)
-
-        streams_range = extract_times()
-        self._start_date = kwargs.get('start_time', streams_range[0])
-        self._end_date = kwargs.get('end_time', streams_range[1])
-
-        self._data_urls = kwargs.get('data_urls')
-        self._json_data = None
+        self._streams = kwargs.get('streams')
+        self._data_container = None
+        self._data_type = 'netCDF'
         self._session = Session()
 
     def __repr__(self):
@@ -62,19 +58,18 @@ class OOI(DataSource):
     def streams(self):
         return self._streams
 
-    def _do_request(self, st_dict):
+    def _do_request(self, stream, params):
         try:
             m2m = MachineToMachine.use_existing_credentials()
             data = m2m.data_requests(session=self._session,
-                                     stream=st_dict['stream'],
-                                     params=st_dict[
-                                         'params'])
+                                     stream=stream,
+                                     params=params)
 
-            if st_dict['data_type'] == 'netCDF':
-                return {
+            if self._data_type == 'netCDF':
+                return pd.DataFrame.from_records([{
                     'thredds_url': data['allURLs'][0],
                     'status_url': data['allURLs'][1]
-                }
+                }])
 
             raw_pd = pd.DataFrame.from_records(data).copy()
             raw_pd.loc[:, 'time'] = raw_pd['time'].apply(lambda x: seconds_to_date(x))  # noqa
@@ -144,11 +139,11 @@ class OOI(DataSource):
         if isinstance(instrument, str):
             instrument = [instrument]
 
+        streams = create_streams_cache()
+
         try:
             # Only search on available streams and initially just Science
-            df = STREAMS[~STREAMS.stream.isnull() &
-                              STREAMS.stream_dataset.str.match(
-                                  stream_dataset)]
+            df = streams[~streams.stream.isnull() & streams.stream_dataset.str.match(stream_dataset)]  # noqa
         except Exception as e:
             print(e)
 
@@ -172,13 +167,10 @@ class OOI(DataSource):
                    start_time=filtered_streams.startdt.min(),
                    end_time=filtered_streams.enddt.max())
 
-    def stream_data(self):
-        pass
-
     def request_data(self,
                      begin_date=None,
                      end_date=None,
-                     data_type='netCDF',
+                     data_type=None,
                      limit=None):
         """
         Function to request the data.
@@ -209,34 +201,48 @@ class OOI(DataSource):
                 end_date = datetime_to_string(end_date)
                 params['endDT'] = end_date
 
-        if data_type == 'JSON':
+        if data_type:
+            if data_type in ['netCDF', 'JSON']:
+                self._data_type = data_type
+            else:
+                raise Exception('The data_type {} is not a valid, data_type. '
+                                'Please use either netCDF or JSON.'.format(data_type))  # noqa
+
+        if self._data_type == 'JSON':
             if isinstance(limit, int):
                 params['limit'] = limit
                 print('Requesting JSON...')
             else:
                 raise Exception('Please enter limit for JSON data type. '
                                 'Max limit is 20000 points.')
-        else:
-            print('Please wait while data is compiled.')
+        elif self._data_type == 'netCDF':
+            print('Please wait while data is compiled.\n')
 
-        stream_list = list(map(lambda x: {'stream': x[1],
-                                          'params': params,
-                                          'data_type': data_type},
+        stream_list = list(map(lambda x: x[1],
                                self.streams.iterrows()))
 
         client = Client()
-        futures = client.map(self._do_request, stream_list)
+        futures = client.map(lambda st: self._do_request(st, params),
+                             stream_list)
+        progress(futures)
 
         data_urls = []
         for future, result in as_completed(futures, with_results=True):
-            print(future)
             data_urls.append(result)
 
-        if data_type == 'netCDF':
-            self._data_urls = data_urls
-        else:
-            self._json_data = data_urls
+        self._data_container = data_urls
+
         return self
+
+    def raw(self):
+        """
+        Retrieve the raw result when requesting data
+        in a pandas DataFrame format.
+
+        Returns:
+            List of pandas DataFrame.
+        """
+        return self._data_container
 
     def to_xarray(self, **kwargs):
         """
@@ -248,14 +254,22 @@ class OOI(DataSource):
         Returns:
             List of xarray datasets
         """
-        dataset_list = []
-        client = Client()
-        futures = client.map(lambda durl: check_data_status(
-            self._session, durl
-        ), self._data_urls)
+        dataset_list = None
+        # TODO: What to do when it's JSON request, calling on to_xarray.
+        # TODO: Standardize the structure of the netCDF to ensure CF compliance.  # noqa
+        if self._data_type == 'netCDF':
+            dataset_list = []
+            client = Client()
+            futures = client.map(lambda durl: check_data_status(
+                self._session, durl
+            ), self._data_container)
+            progress(futures)
 
-        for future, result in as_completed(futures, with_results=True):
-            datasets = get_nc_urls(result)
-            dataset_list.append(xr.open_mfdataset(datasets, **kwargs))
+            for future, result in as_completed(futures, with_results=True):
+                datasets = get_nc_urls(result)
+                dataset_list.append(xr.open_mfdataset(datasets, **kwargs))
 
         return dataset_list
+
+    def stream_data(self):
+        pass

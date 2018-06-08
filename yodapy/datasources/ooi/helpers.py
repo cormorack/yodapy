@@ -39,23 +39,16 @@ def create_streams_cache(fold_path):
     return rawdf
 
 
-STREAMS = create_streams_cache()
-
-
-def extract_times():
-    return STREAMS.startdt.min().to_pydatetime(), \
-           STREAMS.enddt.max().to_pydatetime()
-
-
-def check_data_status(session, urls, **kwargs):
+def check_data_status(session, urldf, **kwargs):
+    urls = urldf.iloc[0]
     check_complete = os.path.join(urls['status_url'], 'status.txt')
 
     req = None
-    print('Your data ({}) is still compiling... Please wait.'.format(
+    print('\nYour data ({}) is still compiling... Please wait.'.format(
         os.path.basename(urls['status_url'])))
     while not req:
         req = requests_retry_session(session=session, **kwargs).get(
             check_complete)
-    print('Request completed')  # noqa
+    print('\nRequest completed.')  # noqa
 
     return urls['thredds_url']
