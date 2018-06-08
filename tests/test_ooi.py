@@ -21,21 +21,21 @@ class TestOOIDataSource:
         self.instrument = ['CTD']
         self.start_date = datetime.datetime(2018, 1, 1)
         self.end_date = datetime.datetime(2018, 2, 1)
-        self.data_urls = [{
+        self._data_container = [pd.DataFrame.from_records([{
             'thredds_url': 'https://opendap.oceanobservatories.org/thredds'
                            '/catalog/ooi/landungs@uw.edu/20180606T232135'
                            '-RS03AXPS-PC03A-4A-CTDPFA303-streamed-ctdpf_optode_sample/catalog.html',  # noqa
             'status_url': 'https://opendap.oceanobservatories.org'
                           '/async_results/landungs@uw.edu/20180606T232135'
                           '-RS03AXPS-PC03A-4A-CTDPFA303-streamed-ctdpf_optode_sample'  # noqa
-        }, {
+        }]), pd.DataFrame.from_records([{
             'thredds_url': 'https://opendap.oceanobservatories.org/thredds'
                            '/catalog/ooi/landungs@uw.edu/20180606T232135'
                            '-RS03AXPS-SF03A-2A-CTDPFA302-streamed-ctdpf_sbe43_sample/catalog.html',  # noqa
             'status_url': 'https://opendap.oceanobservatories.org'
                           '/async_results/landungs@uw.edu/20180606T232135'
                           '-RS03AXPS-SF03A-2A-CTDPFA302-streamed-ctdpf_sbe43_sample'  # noqa
-        }]
+        }])]
 
     def test_search_type(self):
         assert isinstance(self.region, (list, str))
@@ -65,12 +65,13 @@ class TestOOIDataSource:
         assert isinstance(search_results.data_availibility(), type(None))
 
     def test_to_xarray(self):
+        # TODO: Need smarter test in case OOI Server is down. Need caching of the sample netCDF!  # noqa
         ooi = OOI.search(region=self.region,
                          site=self.site,
                          instrument=self.instrument,
                          begin_date=self.start_date,
                          end_date=self.end_date)
-        ooi._data_urls = self.data_urls
+        ooi._data_container = self._data_container
 
         dataset_list = ooi.to_xarray()
         assert isinstance(dataset_list, list)
