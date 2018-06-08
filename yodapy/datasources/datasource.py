@@ -17,7 +17,7 @@ class DataSource:
         return 'Data Source: {0}'.format(self._source_name)
 
     def __len__(self):
-        pass
+        raise NotImplementedError
 
     @property
     def start_date(self):
@@ -36,7 +36,10 @@ class DataSource:
         return self._source_name
 
     def request_data(self, begin_date, end_date):
-        pass
+        raise NotImplementedError
+
+    def raw(self):
+        raise NotImplementedError
 
     def to_xarray(self):
-        pass
+        raise NotImplementedError

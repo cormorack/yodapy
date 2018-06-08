@@ -10,3 +10,4 @@ coveralls
 pytest-cov
 ipython
 ipykernel
+ipywidgets
