@@ -49,14 +49,15 @@ class MachineToMachine:
     def _availibility_check(self, stream, params):
         availdict = self._stream_availibility(**self.desired_data(stream))
         begin = params['beginDT']
-        end = params['endDT']
-
         if begin < availdict['beginTime']:
             raise Warning('No data is available before {}'.format(availdict[
                                                                  'beginTime']))  # noqa
-        if end > availdict['endTime']:
-            raise Warning('No data is available after {}'.format(availdict[
-                                                                 'endTime']))  # noqa
+
+        if 'endDT' in params:
+            end = params['endDT']
+            if end > availdict['endTime']:
+                raise Warning('No data is available after {}'.format(availdict[
+                                                                     'endTime']))  # noqa
 
     def data_requests(self, session, stream, params, **kwargs):
         data_url = self.create_data_url(**self.desired_data(stream))
@@ -66,10 +67,10 @@ class MachineToMachine:
 
             data = None
             while not data:
-                get_req = requests_retry_session(session=session, **kwargs).get(
-                    data_url,
-                    auth=(self.api_user, self.api_key),
-                    params=params)
+                get_req = requests_retry_session(session=session,
+                                                 **kwargs).get(data_url,
+                                                               auth=(self.api_user, self.api_key),  # noqa
+                                                               params=params)
                 data = get_req.json()
 
             return data
