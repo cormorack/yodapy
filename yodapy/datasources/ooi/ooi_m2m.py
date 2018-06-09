@@ -7,9 +7,15 @@ from __future__ import (division,
 import datetime
 import re
 
-from dask.distributed import (Client, as_completed, progress)
+from dask.distributed import (Client,
+                              as_completed,
+                              progress)
 import pandas as pd
 from requests import Session
+
+from streamz import Stream
+from streamz.dataframe import DataFrame
+
 import xarray as xr
 
 from yodapy.datasources.datasource import DataSource
@@ -58,24 +64,27 @@ class OOI(DataSource):
     def streams(self):
         return self._streams
 
-    def _do_request(self, stream, params):
-        try:
-            m2m = MachineToMachine.use_existing_credentials()
-            data = m2m.data_requests(session=self._session,
-                                     stream=stream,
-                                     params=params)
+    def _do_request(self, stream, params, **kwargs):
+        m2m = MachineToMachine.use_existing_credentials()
+        data = m2m.data_requests(session=self._session,
+                                 stream=stream,
+                                 params=params,
+                                 **kwargs)
 
-            if self._data_type == 'netCDF':
-                return pd.DataFrame.from_records([{
-                    'thredds_url': data['allURLs'][0],
-                    'status_url': data['allURLs'][1]
-                }])
+        if 'status_code' in data:
+            if data['status_code'] != 200:
+                raise Exception('{}'.format(data))
 
-            raw_pd = pd.DataFrame.from_records(data).copy()
-            raw_pd.loc[:, 'time'] = raw_pd['time'].apply(lambda x: seconds_to_date(x))  # noqa
-            return raw_pd
-        except Exception as e:
-            print(e)
+        if self._data_type == 'netCDF':
+            return pd.DataFrame.from_records([{
+                'thredds_url': data['allURLs'][0],
+                'status_url': data['allURLs'][1]
+            }])
+
+        raw_pd = pd.DataFrame.from_records(data).copy()
+        raw_pd.loc[:, 'time'] = raw_pd['time'].apply(
+            lambda x: seconds_to_date(x))  # noqa
+        return raw_pd
 
     def data_availibility(self):
         """
@@ -108,8 +117,8 @@ class OOI(DataSource):
 
     @classmethod
     def search(cls, region=[], site=[], instrument=[],
-               begin_date=datetime.datetime(2000, 1, 1),
-               end_date=datetime.datetime.utcnow(),
+               begin_date=None,
+               end_date=None,
                stream_dataset='Science', **kwargs):
         """
         Search function to find desired data within OOI.
@@ -140,6 +149,7 @@ class OOI(DataSource):
             instrument = [instrument]
 
         streams = create_streams_cache()
+        df = None
 
         try:
             # Only search on available streams and initially just Science
@@ -155,9 +165,17 @@ class OOI(DataSource):
                                                           flags=re.IGNORECASE) &  # noqa
                            availdf.display_name.str.contains(
                                '|'.join(instrument),
-                               flags=re.IGNORECASE) &
-                           (begin_date >= availdf.startdt) &
-                           (end_date <= availdf.enddt)]
+                               flags=re.IGNORECASE)]
+        if begin_date:
+            if isinstance(begin_date, datetime):
+                filtered = filtered[(begin_date >= availdf.startdt)]
+            else:
+                raise TypeError('Please provide datetime object for begin_date.')  # noqa
+        if end_date:
+            if isinstance(end_date, datetime):
+                filtered = filtered[(end_date <= availdf.enddt)]
+            else:
+                raise TypeError('Please provide datetime object for end_date.')  # noqa
         if refd:
             filtered = availdf[availdf.reference_designator.str.contains(
                 '|'.join(refd))]
@@ -168,10 +186,10 @@ class OOI(DataSource):
                    end_time=filtered_streams.enddt.max())
 
     def request_data(self,
-                     begin_date=None,
+                     begin_date,
                      end_date=None,
                      data_type=None,
-                     limit=None):
+                     limit=None, **kwargs):
         """
         Function to request the data.
         It will take some time for NetCDF Data.
@@ -185,10 +203,7 @@ class OOI(DataSource):
         Returns:
 
         """
-        params = {
-            'beginDT': datetime_to_string(self._start_date),
-            'endDT': datetime_to_string(self._end_date)
-        }
+        params = {}
 
         # Some checking for datetime and data_type
         if begin_date:
@@ -212,6 +227,7 @@ class OOI(DataSource):
             if isinstance(limit, int):
                 params['limit'] = limit
                 print('Requesting JSON...')
+                print(params)
             else:
                 raise Exception('Please enter limit for JSON data type. '
                                 'Max limit is 20000 points.')
@@ -219,10 +235,10 @@ class OOI(DataSource):
             print('Please wait while data is compiled.\n')
 
         stream_list = list(map(lambda x: x[1],
-                               self.streams.iterrows()))
+                               self._streams.iterrows()))
 
         client = Client()
-        futures = client.map(lambda st: self._do_request(st, params),
+        futures = client.map(lambda st: self._do_request(st, params, **kwargs),
                              stream_list)
         progress(futures)
 
@@ -271,5 +287,57 @@ class OOI(DataSource):
 
         return dataset_list
 
-    def stream_data(self):
-        pass
+    def _stream_request(self, st_dict):
+        st = st_dict['stream']
+        params = st_dict['params']
+        data = self._do_request(st,
+                                params,
+                                backoff_factor=0)
+        return data
+
+    @staticmethod
+    def _update_params(dt, params):
+        params['beginDT'] = datetime_to_string(dt)
+
+    def stream_data(self, stream_name):
+        # TODO: Figure out streaming all queried data
+        # TODO: Check whether the data is available for streaming
+        self._data_type = 'JSON'
+
+        # get the current time
+        end_date = datetime.datetime.utcnow()
+        begin_date = end_date - datetime.timedelta(seconds=10)
+
+        st = self._streams[self._streams.stream.str.match(stream_name)].iloc[0]
+
+        params = dict()
+        params['beginDT'] = datetime_to_string(begin_date)
+        params['limit'] = 100
+
+        sample_df = self._stream_request(st_dict={'stream': st,
+                                                  'params': params})
+
+        source = Stream()
+
+        # Limited to request every 5s
+        stream_source = source.map(self._stream_request).rate_limit(5.0)
+        # Date updater
+        stream_source.map(lambda x: x['time'].max().to_pydatetime()).sink(lambda x: self._update_params(x, params))  # noqa
+
+        sdf = DataFrame(stream=stream_source, example=sample_df)
+        sdf = sdf.set_index(['time'])
+
+        from tornado import gen
+        from tornado.ioloop import IOLoop
+
+        async def f():
+            while True:
+                await gen.sleep(0.1)
+                rec = {'stream': st,
+                       'params': params}
+                await source.emit(rec,
+                                  asynchronous=True)
+
+        IOLoop.current().add_callback(f)
+
+        return sdf
