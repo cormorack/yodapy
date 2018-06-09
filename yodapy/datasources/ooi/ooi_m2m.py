@@ -167,12 +167,12 @@ class OOI(DataSource):
                                '|'.join(instrument),
                                flags=re.IGNORECASE)]
         if begin_date:
-            if isinstance(begin_date, datetime):
+            if isinstance(begin_date, datetime.datetime):
                 filtered = filtered[(begin_date >= availdf.startdt)]
             else:
                 raise TypeError('Please provide datetime object for begin_date.')  # noqa
         if end_date:
-            if isinstance(end_date, datetime):
+            if isinstance(end_date, datetime.datetime):
                 filtered = filtered[(end_date <= availdf.enddt)]
             else:
                 raise TypeError('Please provide datetime object for end_date.')  # noqa
