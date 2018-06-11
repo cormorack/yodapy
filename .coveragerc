@@ -1,6 +1,8 @@
 [run]
 source = yodapy
-omit = *.ipynb
+omit =
+    # omit _version.py
+    yodapy/_*
 branch = True
 
 [report]
