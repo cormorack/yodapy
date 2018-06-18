@@ -26,7 +26,7 @@ matrix:
     env: TEST_TARGET=default
 
 before_install:
-  - ci/install_travis.sh
+  - ./ci/install_travis.sh
 
 # Test source distribution.
 install:
