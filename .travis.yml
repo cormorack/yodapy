@@ -4,7 +4,6 @@ matrix:
   fast_finish: true
   include:
   - os: osx
-    python: 3.5
     env: TEST_TARGET=default
   - os: linux
     dist: trusty
@@ -23,25 +22,10 @@ matrix:
     python: 3.6
     env: TEST_TARGET=coding_standards
   - os: osx
-    python: 3.5
     env: TEST_TARGET=default
 
 before_install:
-  - |
-    URL="http://bit.ly/miniconda"
-    echo ""
-    if [ ! -f $HOME/miniconda/bin/conda ] ; then
-      echo "Fresh miniconda installation."
-      wget $URL -O miniconda.sh
-      rm -rf $HOME/miniconda
-      bash miniconda.sh -b -p $HOME/miniconda
-    fi
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - conda update conda --yes
-  - conda config --set show_channel_urls true
-  - conda config --add channels conda-forge --force
-  - conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-dev.txt
-  - source activate TEST
+  - ci/install_travis.sh
 
 # Test source distribution.
 install:
