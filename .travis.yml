@@ -1,8 +1,13 @@
 sudo: false
 language: python
+# Default Python version is usually 2.7
+python: 3.6
 
 matrix:
   fast_finish: true
+  exclude:
+  # Exclude the default Python 3.5 build
+  - python: 3.6
   include:
   - os: osx
     env: TEST_TARGET=default
@@ -28,10 +33,10 @@ matrix:
 before_install:
   - pwd
   - chmod +x ./ci/install_travis.sh
+  - ./ci/install_travis.sh
 
 # Test source distribution.
 install:
-  - ./ci/install_travis.sh
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install yodapy-${version}.tar.gz && popd
 
 before_script: # configure a headless display to test plot generation
@@ -41,6 +46,7 @@ before_script: # configure a headless display to test plot generation
 
 script:
   - if [[ $TEST_TARGET == 'default' ]]; then
+      conda env list ;
       cp -r tests /tmp && cd /tmp ;
       pytest --cov-report term-missing --cov=yodapy --cov-config .coveragerc -vv tests ;
     fi
