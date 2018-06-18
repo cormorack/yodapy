@@ -1,35 +1,39 @@
-language: python
-
 sudo: false
-
-dist: trusty
+language: python
+# Default Python version is usually 2.7
+python: 3.6
 
 matrix:
   fast_finish: true
+  exclude:
+  # Exclude the default Python 3.6 build
+  - python: 3.6
   include:
-  - python: 3.6
+  - os: osx
     env: TEST_TARGET=default
-  - python: 3.6
+  - os: linux
+    dist: trusty
+    sudo: false
+    python: 3.6
+    env: TEST_TARGET=default
+  - os: linux
+    dist: trusty
+    sudo: false
+    python: 3.6
     env: TEST_TARGET=coding_standards
   allow_failures:
-  - python: 3.6
+  - os: linux
+    dist: trusty
+    sudo: false
+    python: 3.6
     env: TEST_TARGET=coding_standards
+  - os: osx
+    env: TEST_TARGET=default
 
 before_install:
-  - |
-    URL="http://bit.ly/miniconda"
-    echo ""
-    if [ ! -f $HOME/miniconda/bin/conda ] ; then
-      echo "Fresh miniconda installation."
-      wget $URL -O miniconda.sh
-      rm -rf $HOME/miniconda
-      bash miniconda.sh -b -p $HOME/miniconda
-    fi
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - conda update conda --yes
-  - conda config --set show_channel_urls true
-  - conda config --add channels conda-forge --force
-  - conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION --file requirements.txt --file requirements-dev.txt
+  - pwd
+  - chmod +x ./ci/install_travis.sh
+  - ./ci/install_travis.sh
   - source activate TEST
 
 # Test source distribution.
@@ -43,6 +47,7 @@ before_script: # configure a headless display to test plot generation
 
 script:
   - if [[ $TEST_TARGET == 'default' ]]; then
+      conda env list ;
       cp -r tests /tmp && cd /tmp ;
       pytest --cov-report term-missing --cov=yodapy --cov-config .coveragerc -vv tests ;
     fi
