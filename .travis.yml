@@ -26,10 +26,11 @@ matrix:
     env: TEST_TARGET=default
 
 before_install:
-  - ./ci/install_travis.sh
+  - pwd
 
 # Test source distribution.
 install:
+  - ci/install_travis.sh
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install yodapy-${version}.tar.gz && popd
 
 before_script: # configure a headless display to test plot generation
