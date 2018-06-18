@@ -4,7 +4,7 @@ matrix:
   fast_finish: true
   include:
   - os: osx
-    python: 3.6
+    python: 3.5
     env: TEST_TARGET=default
   - os: linux
     dist: trusty
@@ -22,6 +22,9 @@ matrix:
     sudo: false
     python: 3.6
     env: TEST_TARGET=coding_standards
+  - os: osx
+    python: 3.5
+    env: TEST_TARGET=default
 
 before_install:
   - |
