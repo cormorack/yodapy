@@ -1,18 +1,26 @@
 language: python
 
-sudo: false
-
-dist: trusty
-
 matrix:
   fast_finish: true
   include:
-  - python: 3.6
+  - os: osx
+    python: 3.6
     env: TEST_TARGET=default
-  - python: 3.6
+  - os: linux
+    dist: trusty
+    sudo: false
+    python: 3.6
+    env: TEST_TARGET=default
+  - os: linux
+    dist: trusty
+    sudo: false
+    python: 3.6
     env: TEST_TARGET=coding_standards
   allow_failures:
-  - python: 3.6
+  - os: linux
+    dist: trusty
+    sudo: false
+    python: 3.6
     env: TEST_TARGET=coding_standards
 
 before_install:
