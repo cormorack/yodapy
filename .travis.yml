@@ -6,7 +6,7 @@ python: 3.6
 matrix:
   fast_finish: true
   exclude:
-  # Exclude the default Python 3.5 build
+  # Exclude the default Python 3.6 build
   - python: 3.6
   include:
   - os: osx
@@ -34,6 +34,7 @@ before_install:
   - pwd
   - chmod +x ./ci/install_travis.sh
   - ./ci/install_travis.sh
+  - source activate TEST
 
 # Test source distribution.
 install:
