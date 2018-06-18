@@ -27,10 +27,11 @@ matrix:
 
 before_install:
   - pwd
+  - chmod +x ./ci/install_travis.sh
 
 # Test source distribution.
 install:
-  - ci/install_travis.sh
+  - ./ci/install_travis.sh
   - python setup.py sdist && version=$(python setup.py --version) && pushd dist  && pip install yodapy-${version}.tar.gz && popd
 
 before_script: # configure a headless display to test plot generation
