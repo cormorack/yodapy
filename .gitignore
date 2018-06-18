@@ -110,3 +110,7 @@ notebooks
 
 # dask
 dask-worker-space/
+
+# cpsarason_examples
+examples/example*
+

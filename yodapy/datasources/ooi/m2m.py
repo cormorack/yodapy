@@ -44,7 +44,11 @@ class MachineToMachine:
                                    'yodapy.utils.set_ooi_credentials_file!')
 
     def requests(self, url):
-        return requests.get(url, auth=(self.api_user, self.api_key)).json()
+        req = requests.get(url, auth=(self.api_user, self.api_key))
+        if req.status_code == 200:
+            return req.json()
+        else:
+            raise Exception('{}'.format(req.text))
 
     def _availibility_check(self, stream, params):
         availdict = self._stream_availibility(**self.desired_data(stream))
