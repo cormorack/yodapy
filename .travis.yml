@@ -61,7 +61,7 @@ script:
 
   - if [[ $TEST_TARGET == 'docs' ]]; then
       set -e ;
-      conda install doctr ;
+      conda install --yes doctr ;
       pushd docs ;
       make clean html linkcheck ;
       popd ;
