@@ -4,6 +4,12 @@ sudo: false
 
 dist: trusty
 
+env:
+  global:
+    # Doctr deploy key for cormorack/yodapy
+    - secure: "hnQJ45kvtEwUZjbbKbjBNDCDnJsp+fCy8ioKw2GV43+S9IpJVV4vqJwsdjPRjdQFB8nVdQTRmfAGPDjqzxO5OACPDBLi7kvl7IpKvZCRW43CVCT9z/bHTCKB5fdqJJgpV0laS9sbvncyjeKMA9l8hvwzyOFLRZ6zYORrBXO3VEieMGRmwTHp9ztbmpJiBTBvzRf3m2xqak9f2/P9JecBELJAfy7Zvcwx8TXOvevmcniJRxPFqgr9iHHAyCU7Agw10j3+rqTOxWEw6iiyD73ZE5sRN3Lf1K2BqehdVAdpdxZpLbdccdTOOm5RpW3OtKhMCGDxOgXhSf1B+kDP/a7ZNAC717QXSp6VXofTkYhE1wvLvj9LTE8sAcWkpItZ8qLYDdmbjPfb5sGhxQhKwUWl8t+DRovTJBi5ogQNOe9V2RMrK79Wpx472GwplsWe+ZHjJ8C6Yyt7F+SruCHmGQr+XmQKgEjDT48gY1Icso7DcpFCvIFrjB2Iw/KsOU2G1BkDdHrseurXGG5V4jriWJFW5XnzrajJYXjAy5cVfuTBoyvzTXM+QM54NhzFNyhnaNKYVhCHb3QZka2BHA8ck79+jMRT7S0pZC31DvqaBEDwEIGORjhxtAYRmfC/KlvuJHmW5yMldMdDC3T6e0O1t3IZvkTF8+gZF3tMr4VZseX2OhE="
+
+
 matrix:
   fast_finish: true
   include:
@@ -11,6 +17,8 @@ matrix:
     env: TEST_TARGET=default
   - python: 3.6
     env: TEST_TARGET=coding_standards
+  - python: 3.6
+    env: TEST_TARGET=docs
   allow_failures:
   - python: 3.6
     env: TEST_TARGET=coding_standards
@@ -49,6 +57,16 @@ script:
     
   - if [[ $TEST_TARGET == 'coding_standards' ]]; then
       flake8 --max-line-length=105 yodapy ;
+    fi
+
+  - if [[ $TEST_TARGET == 'docs' ]]; then
+      set -e ;
+      conda install --yes doctr ;
+      pushd docs ;
+      make clean html linkcheck ;
+      popd ;
+      python -m doctr deploy --sync .;
+      python -m doctr deploy --sync --no-require-master --built-docs docs/build/html "docs-$TRAVIS_BRANCH" ;
     fi
 
 after_success:
