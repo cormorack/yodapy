@@ -1,4 +1,7 @@
+docs-master/_modules/index.html
+docs-master/_modules/yodapy/datasources/ooi/ooi_m2m.html
 docs-master/_sources/index.rst.txt
+docs-master/_sources/modules.rst.txt
 docs-master/_static/ajax-loader.gif
 docs-master/_static/alabaster.css
 docs-master/_static/basic.css
@@ -24,6 +27,8 @@ docs-master/_static/up.png
 docs-master/_static/websupport.js
 docs-master/genindex.html
 docs-master/index.html
+docs-master/modules.html
 docs-master/objects.inv
+docs-master/py-modindex.html
 docs-master/search.html
 docs-master/searchindex.js
