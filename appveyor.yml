@@ -1,37 +1,37 @@
-environment:
-  matrix:
-    - TARGET_ARCH: x64
-      CONDA_PY: 27
-      CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
+# CI on Windows via appveyor
+# This file was based on Olivier Grisel's python-appveyor-demo
+# Copied from xarray's example
+branches:
+  except:
+    - gh-pages
 
-platform:
-    - x64
+environment:
+
+  matrix:
+    - PYTHON: "C:\\Python36-conda64"
+      PYTHON_VERSION: "3.6"
+      PYTHON_ARCH: "64"
+      CONDA_ENV: "py36-windows"
 
 install:
-    # If there is a newer build queued for the same PR, cancel this one.
-    # The AppVeyor 'rollout builds' option is supposed to serve the same
-    # purpose but it is problematic because it tends to cancel builds pushed
-    # directly to master instead of just PR builds (or the converse).
-    - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
-         https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
-         Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
-           throw "There are newer queued builds for this pull request, failing early." }
+  # Install miniconda Python
+  - "powershell ./ci/install_python.ps1"
 
-    # Add path, activate `conda` and update conda.
-    - cmd: set "PATH=%CONDA_INSTALL_LOCN%\\Scripts;%CONDA_INSTALL_LOCN%\\Library\\bin;%PATH%"
-    - cmd: call %CONDA_INSTALL_LOCN%\Scripts\activate.bat
-    - cmd: conda config --set always_yes yes --set changeps1 no --set show_channel_urls true
-    - cmd: conda update conda
-    - cmd: conda config --add channels conda-forge --force
+  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # done from inside the powershell script as it would require to restart
+  # the parent CMD process).
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 
-    - cmd: set PYTHONUNBUFFERED=1
+  # install yodapy and dependencies
+  - "conda update conda --yes"
+  - "conda config --set show_channel_urls true"
+  - "conda config --add channels conda-forge --force"
+  - "conda create --yes -n TEST python=%PYTHON_VERSION% --file requirements.txt --file requirements-dev.txt"
+  - "activate TEST"
+  - "conda list"
+  - "python setup.py install"
 
-    - cmd: conda install conda-build
-    - cmd: conda info --all
-    - cmd: conda list
-
-# Skip .NET project specific build phase.
-build: off
+build: false
 
 test_script:
-    - "pytest -vv tests"
+- "pytest -vv tests"
