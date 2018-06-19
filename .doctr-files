@@ -1,4 +1,7 @@
+./_modules/index.html
+./_modules/yodapy/datasources/ooi/ooi_m2m.html
 ./_sources/index.rst.txt
+./_sources/modules.rst.txt
 ./_static/ajax-loader.gif
 ./_static/alabaster.css
 ./_static/basic.css
@@ -24,6 +27,8 @@
 ./_static/websupport.js
 ./genindex.html
 ./index.html
+./modules.html
 ./objects.inv
+./py-modindex.html
 ./search.html
 ./searchindex.js
