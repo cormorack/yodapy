@@ -1,3 +1,4 @@
+alabaster
 pytest
 flake8
 flake8-builtins
@@ -8,6 +9,8 @@ flake8-print
 flake8-quotes
 coveralls
 pytest-cov
+nbsphinx
+sphinx
 ipython
 ipykernel
 ipywidgets
