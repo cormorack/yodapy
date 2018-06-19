@@ -34,4 +34,4 @@ install:
 build: off
 
 test_script:
-    - "conda build conda.recipe"
+    - "pytest -vv tests"
