@@ -7,7 +7,7 @@ from __future__ import (division,
 
 import os
 
-HOME_DIR = os.environ.get('HOME')
+HOME_DIR = os.path.expanduser('~')
 
 
 def create_folder(source_name):
