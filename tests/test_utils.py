@@ -32,8 +32,7 @@ def test_set_ooi_credentials_file():
     creds.set_ooi_credentials_file(username=username,
                                    token=token)
 
-    home_dir = os.environ.get('HOME')
-    fpath = os.path.join(home_dir, '.netrc')
+    fpath = os.path.join(HOME_DIR, '.netrc')
 
     assert os.path.exists(fpath)
 
