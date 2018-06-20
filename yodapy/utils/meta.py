@@ -8,16 +8,16 @@ from __future__ import (division,
 import os
 
 HOME_DIR = os.path.expanduser('~')
+YODAPY_PATH = os.path.join(HOME_DIR, '.yodapy')
 
 
 def create_folder(source_name):
-    yodapy_pth = os.path.join(HOME_DIR, '.yodapy')
 
     fold_name = source_name.lower()
-    fold_path = os.path.join(yodapy_pth, fold_name)
+    fold_path = os.path.join(YODAPY_PATH, fold_name)
 
-    if not os.path.exists(yodapy_pth):
-        os.mkdir(yodapy_pth)
+    if not os.path.exists(YODAPY_PATH):
+        os.mkdir(YODAPY_PATH)
 
     if not os.path.exists(fold_path):
         os.mkdir(fold_path)
