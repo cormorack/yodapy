@@ -14,6 +14,8 @@ from yodapy.utils import (conn,
                           creds,
                           meta,
                           parser)
+from yodapy.utils.meta import (HOME_DIR,
+                               YODAPY_PATH)
 
 
 def test_request_retry_session():
@@ -48,12 +50,10 @@ def test_create_folder():
     source_name = 'OOI'
     res_path = meta.create_folder(source_name=source_name)
 
-    home_dir = os.environ.get('HOME')
-    yodapy_pth = os.path.join(home_dir, '.yodapy')
     fold_name = source_name.lower()
-    fold_path = os.path.join(yodapy_pth, fold_name)
+    fold_path = os.path.join(YODAPY_PATH, fold_name)
 
-    assert os.path.exists(yodapy_pth)
+    assert os.path.exists(YODAPY_PATH)
     assert os.path.exists(fold_path)
     assert res_path == fold_path
 
@@ -108,3 +108,15 @@ def test_ooi_instrument_reference_designator():
     assert rddict == {'subsite': 'RS03ASHS',
                       'node': 'MJ03B',
                       'sensor': '07-TMPSFA301'}
+
+
+def test_build_url():
+    base_url = 'https://ooinet.oceanobservatories.org/api/m2m'
+    preload_url = parser.build_url(base_url, '12575')
+    inv_url = parser.build_url(base_url, '12576', 'sensor', 'inv')
+    meta_url = parser.build_url(base_url, '12587', 'events',
+                                'deployment', 'inv')
+
+    assert preload_url == f'{base_url}/12575'
+    assert inv_url == f'{base_url}/12576/sensor/inv'
+    assert meta_url == f'{base_url}/12587/events/deployment/inv'
