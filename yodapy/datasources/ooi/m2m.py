@@ -9,7 +9,7 @@ import os
 
 import requests
 
-from yodapy.utils.meta import HOME_DIR
+from yodapy.utils.files import CREDENTIALS_FILE
 from yodapy.utils.parser import (build_url,
                                  ooi_instrument_reference_designator)
 from yodapy.utils.conn import requests_retry_session
@@ -27,14 +27,12 @@ class MachineToMachine:
 
     @classmethod
     def use_existing_credentials(cls):
-        fpath = os.path.join(HOME_DIR, '.netrc')
 
-        if os.path.exists(fpath):
-            import netrc
-            netrc = netrc.netrc()
-            remoteHostName = 'ooinet.oceanobservatories.org'
-            info = netrc.authenticators(remoteHostName)
-            return cls(info[0], info[2])
+        if os.path.exists(CREDENTIALS_FILE):
+            import json
+            with open(CREDENTIALS_FILE) as f:
+                creds = json.load(f)['ooi']
+                return cls(creds['username'], creds['api_key'])
         else:
             raise EnvironmentError('Please authenticate by using '
                                    'yodapy.utils.set_ooi_credentials_file!')
