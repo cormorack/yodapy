@@ -6,6 +6,7 @@ from __future__ import (absolute_import,
 import datetime
 
 import pandas as pd
+import pytest
 
 import xarray as xr
 
@@ -63,6 +64,7 @@ class TestOOIDataSource:
 
         assert isinstance(search_results.data_availibility(), type(None))
 
+    @pytest.mark.skip(reason='Inconsistent connection to data.')
     def test_to_xarray(self):
         # TODO: Need smarter test in case OOI Server is down. Need caching of the sample netCDF!  # noqa
         ooi = OOI.search(region=self.region,

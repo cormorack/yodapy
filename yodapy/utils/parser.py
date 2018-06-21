@@ -62,3 +62,7 @@ def ooi_instrument_reference_designator(reference_designator):
     val = reference_designator.split('-')
     values = val[:-2] + ['-'.join(val[-2:])]
     return dict(zip(keys, values))
+
+
+def build_url(*args):
+    return '/'.join(args)

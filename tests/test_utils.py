@@ -5,15 +5,19 @@ from __future__ import (division,
                         print_function,
                         unicode_literals)
 
+import json
 import datetime
 import os
 
 from requests import Session
 
 from yodapy.utils import (conn,
-                          creds,
                           meta,
-                          parser)
+                          parser,
+                          set_credentials_file)
+from yodapy.utils.files import (HOME_DIR,
+                                YODAPY_DIR,
+                                CREDENTIALS_FILE)
 
 
 def test_request_retry_session():
@@ -24,36 +28,29 @@ def test_request_retry_session():
     assert req.status_code == 200
 
 
-def test_set_ooi_credentials_file():
+def test_set_credentials_file():
+
     username = 'testuser'
     token = 'te$tT0k3n'
-    creds.set_ooi_credentials_file(username=username,
-                                   token=token)
+    set_credentials_file(data_source='ooi',
+                         username=username,
+                         token=token)
 
-    home_dir = os.environ.get('HOME')
-    fpath = os.path.join(home_dir, '.netrc')
-
-    assert os.path.exists(fpath)
-
-    import netrc
-    netrc = netrc.netrc()
-    remote_host_name = 'ooinet.oceanobservatories.org'
-    info = netrc.authenticators(remote_host_name)
-
-    assert info[0] == username
-    assert info[2] == token
+    assert os.path.exists(CREDENTIALS_FILE)
+    with open(CREDENTIALS_FILE) as f:
+        creds = json.load(f)['ooi']
+    assert creds['username'] == username
+    assert creds['api_key'] == token
 
 
 def test_create_folder():
     source_name = 'OOI'
     res_path = meta.create_folder(source_name=source_name)
 
-    home_dir = os.environ.get('HOME')
-    yodapy_pth = os.path.join(home_dir, '.yodapy')
     fold_name = source_name.lower()
-    fold_path = os.path.join(yodapy_pth, fold_name)
+    fold_path = os.path.join(YODAPY_DIR, fold_name)
 
-    assert os.path.exists(yodapy_pth)
+    assert os.path.exists(YODAPY_DIR)
     assert os.path.exists(fold_path)
     assert res_path == fold_path
 
@@ -108,3 +105,15 @@ def test_ooi_instrument_reference_designator():
     assert rddict == {'subsite': 'RS03ASHS',
                       'node': 'MJ03B',
                       'sensor': '07-TMPSFA301'}
+
+
+def test_build_url():
+    base_url = 'https://ooinet.oceanobservatories.org/api/m2m'
+    preload_url = parser.build_url(base_url, '12575')
+    inv_url = parser.build_url(base_url, '12576', 'sensor', 'inv')
+    meta_url = parser.build_url(base_url, '12587', 'events',
+                                'deployment', 'inv')
+
+    assert preload_url == f'{base_url}/12575'
+    assert inv_url == f'{base_url}/12576/sensor/inv'
+    assert meta_url == f'{base_url}/12587/events/deployment/inv'
