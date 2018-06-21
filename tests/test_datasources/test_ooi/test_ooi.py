@@ -52,7 +52,6 @@ class TestOOIDataSource:
                                     begin_date=self.start_date,
                                     end_date=self.end_date)
 
-        print(search_results.streams)
         assert isinstance(search_results, OOI)
         assert len(search_results) == 2
 
