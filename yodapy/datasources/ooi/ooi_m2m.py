@@ -60,9 +60,13 @@ class OOI(DataSource):
     def __len__(self):
         return len(self._streams)
 
-    @property
-    def streams(self):
+    def list_streams(self, sel=None):
+        if sel:
+            self._streams = self._streams[self._streams.stream_name.str.match(sel)]
         return self._streams
+
+    def list_request_urls(self):
+        return self._data_container
 
     def _do_request(self, stream, params, **kwargs):
         m2m = MachineToMachine.use_existing_credentials()
