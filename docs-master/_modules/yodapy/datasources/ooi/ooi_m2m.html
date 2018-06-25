@@ -114,10 +114,7 @@
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">==</span> <span class="s1">&#39;netCDF&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">([{</span>
-                <span class="s1">&#39;thredds_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-                <span class="s1">&#39;status_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-            <span class="p">}])</span>
+            <span class="k">return</span> <span class="n">data</span>
 
         <span class="n">raw_pd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">raw_pd</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw_pd</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
