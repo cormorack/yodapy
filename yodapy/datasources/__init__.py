@@ -5,4 +5,4 @@ from __future__ import (division,
                         print_function,
                         unicode_literals)
 
-from yodapy.datasources.ooi.ooi_m2m import OOI
+from yodapy.datasources.ooi import OOI

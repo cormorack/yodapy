@@ -1,0 +1,1315 @@
+reference_designator,name,start_depth,end_depth,current_status,preferred_stream,preferred_parameter,location
+CE01ISSM-MFC31-00-CPMENG000,Platform Controller,25,25,Engineering,,,
+CE01ISSM-MFD35-00-DCLENG000,Data Concentrator Logger (DCL),25,25,Engineering,,,
+CE01ISSM-MFD35-01-VEL3DD000,3-D Single Point Velocity Meter,25,25,,vel3d_cd_dcl_velocity_data,1085,Multi-Function Node
+CE01ISSM-MFD35-02-PRESFA000,Seafloor Pressure,25,25,,presf_abc_dcl_tide_measurement,3250,Multi-Function Node
+CE01ISSM-MFD35-04-ADCPTM000,Velocity Profiler (600kHz),25,25,,adcp_velocity_earth,,Multi-Function Node
+CE01ISSM-MFD35-05-PCO2WB000,pCO2 Water,25,25,,pco2w_abc_dcl_instrument,931,Multi-Function Node
+CE01ISSM-MFD35-06-PHSEND000,Seawater pH,25,25,,phsen_abcdef_dcl_instrument,2767,Multi-Function Node
+CE01ISSM-MFD37-00-DCLENG000,Data Concentrator Logger (DCL),25,25,Engineering,,,
+CE01ISSM-MFD37-01-OPTAAD000,Spectrophotometer,25,25,,optaa_dj_dcl_instrument,20,Multi-Function Node
+CE01ISSM-MFD37-03-CTDBPC000,CTD,25,25,,ctdbp_cdef_dcl_instrument,6,Multi-Function Node
+CE01ISSM-MFD37-03-DOSTAD000,Dissolved Oxygen,25,25,,dosta_abcdjm_ctdbp_dcl_instrument,14,Multi-Function Node
+CE01ISSM-MFD37-06-CAMDSA000,Digital Still Camera,25,25,Camera,,,Multi-Function Node
+CE01ISSM-MFD37-07-ZPLSCC000,Bio-acoustic Sonar (Coastal),25,25,,zplsc_c_instrument,3745,Multi-Function Node
+CE01ISSM-RID16-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE01ISSM-RID16-01-OPTAAD000,Spectrophotometer,7,7,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+CE01ISSM-RID16-02-FLORTD000,3-Wavelength Fluorometer,7,7,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+CE01ISSM-RID16-03-CTDBPC000,CTD,7,7,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+CE01ISSM-RID16-03-DOSTAD000,Dissolved Oxygen,7,7,,dosta_abcdjm_ctdbp_dcl_instrument,14,Near Surface Instrument Frame
+CE01ISSM-RID16-04-VELPTA000,Single Point Velocity Meter,7,7,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+CE01ISSM-RID16-05-PCO2WB000,pCO2 Water,7,7,,pco2w_abc_dcl_instrument,931,Near Surface Instrument Frame
+CE01ISSM-RID16-06-PHSEND000,Seawater pH,7,7,,phsen_abcdef_dcl_instrument,2767,Near Surface Instrument Frame
+CE01ISSM-RID16-07-NUTNRB000,Nitrate,7,7,,nutnr_b_dcl_conc_instrument,315,Near Surface Instrument Frame
+CE01ISSM-RID16-08-SPKIRB000,Spectral Irradiance,7,7,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+CE01ISSM-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+CE01ISSM-SBD17-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE01ISSM-SBD17-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CE01ISSM-SBD17-04-VELPTA000,Single Point Velocity Meter,1,1,,velpt_ab_dcl_instrument,1154,Bottom of Buoy
+CE01ISSM-SBD17-06-CTDBPC000,CTD,1,1,,ctdbp_cdef_dcl_instrument,6,
+CE01ISSM-SBD17-06-FLORTD000,3-Wavelength Fluorometer,1,1,,flort_dj_dcl_instrument,22,
+CE01ISSP-SP001-00-SPPENG000,Profiler Controller,0,25,Engineering,,,
+CE01ISSP-SP001-02-DOSTAJ000,Dissolved Oxygen,0,25,,dosta_abcdjm_cspp_instrument,14,Surface Piercing Profiler
+CE01ISSP-SP001-04-OPTAAJ000,Spectrophotometer,0,25,,optaa_dj_cspp_instrument,20,Surface Piercing Profiler
+CE01ISSP-SP001-05-VELPTJ000,Single Point Velocity Meter,0,25,,velpt_j_cspp_instrument,1154,Surface Piercing Profiler
+CE01ISSP-SP001-06-NUTNRJ000,Nitrate,0,25,,nutnr_j_cspp_instrument,18,Surface Piercing Profiler
+CE01ISSP-SP001-07-SPKIRJ000,Spectral Irradiance,0,25,,spkir_abj_cspp_instrument,2766,Surface Piercing Profiler
+CE01ISSP-SP001-08-FLORTJ000,3-Wavelength Fluorometer,0,25,,flort_dj_cspp_instrument,22,Surface Piercing Profiler
+CE01ISSP-SP001-09-CTDPFJ000,CTD,0,25,,ctdpf_j_cspp_instrument,4,Surface Piercing Profiler
+CE01ISSP-SP001-10-PARADJ000,Photosynthetically Available Radiation,0,25,,parad_j_cspp_instrument,3236,Surface Piercing Profiler
+CE02SHBP-LJ01D-05-ADCPTB104,Velocity Profiler (300kHz),80,80,,adcp_velocity_earth,,Low-Power JBox
+CE02SHBP-LJ01D-06-CTDBPN106,CTD,80,80,,ctdbp_no_sample,908,Low-Power JBox
+CE02SHBP-LJ01D-06-DOSTAD106,Dissolved Oxygen,80,80,,ctdbp_no_sample,908,Low-Power JBox
+CE02SHBP-LJ01D-07-VEL3DC108,3-D Single Point Velocity Meter,80,80,,vel3d_cd_velocity_data,1085,Low-Power JBox
+CE02SHBP-LJ01D-08-OPTAAD106,Spectrophotometer,80,80,,optaa_sample,20,Low-Power JBox
+CE02SHBP-LJ01D-09-PCO2WB103,pCO2 Water,80,80,,pco2w_b_sami_data_record,931,Low-Power JBox
+CE02SHBP-LJ01D-10-PHSEND103,Seawater pH,80,80,,phsen_data_record,939,Low-Power JBox
+CE02SHBP-LJ01D-11-HYDBBA106,Broadband Acoustic Receiver (Hydrophone),80,80,,antelope_metadata,,Low-Power JBox
+CE02SHBP-MJ01C-07-ZPLSCB101,Bio-acoustic Sonar (Coastal),80,80,,zplsc_c_instrument,3745,Medium-Power Jbox
+CE02SHBP-MJ01C-08-CAMDSB107,Digital Still Camera,80,80,Camera,,,Medium-Power Jbox
+CE02SHSM-RIC21-00-CPMENG000,Platform Controller,7,7,Engineering,,,
+CE02SHSM-RID26-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE02SHSM-RID26-01-ADCPTA000,Velocity Profiler (600kHz),7,7,,adcp_velocity_earth,,Near Surface Instrument Frame
+CE02SHSM-RID26-04-VELPTA000,Single Point Velocity Meter,7,7,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+CE02SHSM-RID26-06-PHSEND000,Seawater pH,7,7,,phsen_abcdef_dcl_instrument,2767,Near Surface Instrument Frame
+CE02SHSM-RID26-07-NUTNRB000,Nitrate,7,7,,nutnr_b_dcl_conc_instrument,315,Near Surface Instrument Frame
+CE02SHSM-RID26-08-SPKIRB000,Spectral Irradiance,7,7,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+CE02SHSM-RID27-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE02SHSM-RID27-01-OPTAAD000,Spectrophotometer,7,7,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+CE02SHSM-RID27-02-FLORTD000,3-Wavelength Fluorometer,7,7,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+CE02SHSM-RID27-03-CTDBPC000,CTD,7,7,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+CE02SHSM-RID27-04-DOSTAD000,Dissolved Oxygen,7,7,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+CE02SHSM-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+CE02SHSM-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE02SHSM-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CE02SHSM-SBD11-02-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CE02SHSM-SBD11-04-VELPTA000,Single Point Velocity Meter,1,1,,velpt_ab_dcl_instrument,1154,Bottom of Buoy
+CE02SHSM-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-3,-3,,metbk_a_dcl_instrument,1053,Buoy Tower
+CE02SHSM-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE02SHSM-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CE02SHSM-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+CE02SHSM-SBD12-05-WAVSSA000,Surface Wave Spectra,0,0,,wavss_a_dcl_statistics,2777,"Buoy Well, center of Mass"
+CE02SHSM-SBD12-08-FDCHPA000,Direct Covariance Flux,-3,-3,,fdchp_a_dcl_instrument,3351,Buoy Tower
+CE02SHSP-SP001-00-SPPENG000,Profiler Controller,0,80,Engineering,,,
+CE02SHSP-SP001-01-DOSTAJ000,Dissolved Oxygen,0,80,,dosta_abcdjm_cspp_instrument,14,Surface Piercing Profiler
+CE02SHSP-SP001-02-VELPTJ000,Single Point Velocity Meter,0,80,,velpt_j_cspp_instrument,1154,Surface Piercing Profiler
+CE02SHSP-SP001-04-OPTAAJ000,Spectrophotometer,0,80,,optaa_dj_cspp_instrument,20,Surface Piercing Profiler
+CE02SHSP-SP001-05-NUTNRJ000,Nitrate,0,80,,nutnr_j_cspp_instrument,18,Surface Piercing Profiler
+CE02SHSP-SP001-06-SPKIRJ000,Spectral Irradiance,0,80,,spkir_abj_cspp_instrument,2766,Surface Piercing Profiler
+CE02SHSP-SP001-07-FLORTJ000,3-Wavelength Fluorometer,0,80,,flort_dj_cspp_instrument,22,Surface Piercing Profiler
+CE02SHSP-SP001-08-CTDPFJ000,CTD,0,80,,ctdpf_j_cspp_instrument,4,
+CE02SHSP-SP001-09-PARADJ000,Photosynthetically Available Radiation,0,80,,parad_j_cspp_instrument,3236,
+CE02SHSP-SP002-00-SPPENG000,Profiler Controller,0,80,Engineering,,,
+CE02SHSP-SP002-01-DOSTAJ000,Dissolved Oxygen,0,80,,dosta_abcdjm_cspp_instrument,14,Surface Piercing Profiler
+CE02SHSP-SP002-02-VELPTJ000,Single Point Velocity Meter,0,80,,velpt_j_cspp_instrument,1154,Surface Piercing Profiler
+CE02SHSP-SP002-04-OPTAAJ000,Spectrophotometer,0,80,,optaa_dj_cspp_instrument,20,Surface Piercing Profiler
+CE02SHSP-SP002-05-NUTNRJ000,Nitrate,0,80,,nutnr_j_cspp_instrument,18,Surface Piercing Profiler
+CE02SHSP-SP002-06-SPKIRJ000,Spectral Irradiance,0,80,,spkir_abj_cspp_instrument,2766,Surface Piercing Profiler
+CE02SHSP-SP002-07-FLORTJ000,3-Wavelength Fluorometer,0,80,,flort_dj_cspp_instrument,22,Surface Piercing Profiler
+CE02SHSP-SP002-08-CTDPFJ000,CTD,0,80,,ctdpf_j_cspp_instrument,4,
+CE02SHSP-SP002-09-PARADJ000,Photosynthetically Available Radiation,0,80,,parad_j_cspp_instrument,3236,
+CE04OSBP-LJ01C-05-ADCPSI103,Velocity Profiler (75 kHz),580,580,,adcp_velocity_earth,,Low-Power JBox
+CE04OSBP-LJ01C-06-CTDBPO108,CTD,580,580,,ctdbp_no_sample,908,Low-Power JBox
+CE04OSBP-LJ01C-06-DOSTAD108,Dissolved Oxygen,580,580,,ctdbp_no_sample,908,Low-Power JBox
+CE04OSBP-LJ01C-07-VEL3DC107,3-D Single Point Velocity Meter,580,580,,vel3d_cd_velocity_data,1085,Low-Power JBox
+CE04OSBP-LJ01C-08-OPTAAC104,Spectrophotometer,580,580,,optaa_sample,20,Low-Power JBox
+CE04OSBP-LJ01C-09-PCO2WB104,pCO2 Water,580,580,,pco2w_b_sami_data_record,931,Low-Power JBox
+CE04OSBP-LJ01C-10-PHSEND107,Seawater pH,580,580,,phsen_data_record,939,Low-Power JBox
+CE04OSBP-LJ01C-11-HYDBBA105,Broadband Acoustic Receiver (Hydrophone),580,580,,antelope_metadata,,Low-Power JBox
+CE04OSBP-LV01C-06-CAMDSB106,Digital Still Camera,500,500,Camera,,,Low-Voltage Node
+CE04OSPD-DP01B-00-ENG000000,Mobile Asset Controller,175,500,Engineering,,,
+CE04OSPD-DP01B-01-CTDPFL105,CTD,175,500,Recovered Only,,,Deep Profiler
+CE04OSPD-DP01B-02-VEL3DA105,3-D Single Point Velocity Meter,175,500,Recovered Only,,,Deep Profiler
+CE04OSPD-DP01B-03-FLCDRA103,CDOM Fluorometer,175,500,Recovered Only,,,Deep Profiler
+CE04OSPD-DP01B-04-FLNTUA103,2-Wavelength Fluorometer,175,500,Recovered Only,,,Deep Profiler
+CE04OSPD-DP01B-06-DOSTAD105,Dissolved Oxygen,175,500,Recovered Only,,,Deep Profiler
+CE04OSPS-PC01B-05-ZPLSCB102,Bio-acoustic Sonar (Coastal),200,200,,zplsc_c_instrument,3745,Mid-Water Platform
+CE04OSPS-PC01B-4A-CTDPFA109,CTD,200,200,,ctdpf_optode_sample,908,Mid-Water Platform
+CE04OSPS-PC01B-4A-DOSTAD109,Dissolved Oxygen,200,200,,ctdpf_optode_sample,908,Mid-Water Platform
+CE04OSPS-PC01B-4B-PHSENA106,Seawater pH,200,200,,phsen_data_record,939,Mid-Water Platform
+CE04OSPS-PC01B-4D-PCO2WA105,pCO2 Water,200,200,,pco2w_b_sami_data_record,931,Mid-Water Platform
+CE04OSPS-SF01B-2A-CTDPFA107,CTD,20,200,,ctdpf_sbe43_sample,908,Shallow Profiler
+CE04OSPS-SF01B-2A-DOFSTA107,Dissolved Oxygen,20,200,,ctdpf_sbe43_sample,908,Shallow Profiler
+CE04OSPS-SF01B-2B-PHSENA108,Seawater pH,20,200,,phsen_data_record,939,Shallow Profiler
+CE04OSPS-SF01B-3A-FLORTD104,3-Wavelength Fluorometer,20,200,,flort_d_data_record,22,Shallow Profiler
+CE04OSPS-SF01B-3B-OPTAAD105,Spectrophotometer,20,200,,optaa_sample,20,Shallow Profiler
+CE04OSPS-SF01B-3C-PARADA102,Photosynthetically Available Radiation,20,200,,parad_sa_sample,192,Shallow Profiler
+CE04OSPS-SF01B-3D-SPKIRA102,Spectral Irradiance,20,200,,spkir_data_record,2645,Shallow Profiler
+CE04OSPS-SF01B-4A-NUTNRA102,Nitrate,20,200,,nutnr_a_sample,18,Shallow Profiler
+CE04OSPS-SF01B-4B-VELPTD106,Single Point Velocity Meter,20,200,,velpt_velocity_data,3230,Shallow Profiler
+CE04OSPS-SF01B-4F-PCO2WA102,pCO2 Water,20,200,,pco2w_b_sami_data_record,931,Shallow Profiler
+CE04OSSM-RIC21-00-CPMENG000,Platform Controller,7,7,Engineering,,,
+CE04OSSM-RID26-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE04OSSM-RID26-01-ADCPTC000,Velocity Profiler (300kHz),7,7,,adcp_velocity_earth,,Near Surface Instrument Frame
+CE04OSSM-RID26-04-VELPTA000,Single Point Velocity Meter,7,7,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+CE04OSSM-RID26-06-PHSEND000,Seawater pH,7,7,,phsen_abcdef_dcl_instrument,2767,Near Surface Instrument Frame
+CE04OSSM-RID26-07-NUTNRB000,Nitrate,7,7,,nutnr_b_dcl_conc_instrument,315,Near Surface Instrument Frame
+CE04OSSM-RID26-08-SPKIRB000,Spectral Irradiance,7,7,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+CE04OSSM-RID27-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE04OSSM-RID27-01-OPTAAD000,Spectrophotometer,7,7,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+CE04OSSM-RID27-02-FLORTD000,3-Wavelength Fluorometer,7,7,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+CE04OSSM-RID27-03-CTDBPC000,CTD,7,7,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+CE04OSSM-RID27-04-DOSTAD000,Dissolved Oxygen,7,7,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+CE04OSSM-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+CE04OSSM-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE04OSSM-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CE04OSSM-SBD11-02-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CE04OSSM-SBD11-04-VELPTA000,Single Point Velocity Meter,1,1,,velpt_ab_dcl_instrument,1154,Bottom of Buoy
+CE04OSSM-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-3,-3,,metbk_a_dcl_instrument,1053,Buoy Tower
+CE04OSSM-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE04OSSM-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CE04OSSM-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+CE04OSSM-SBD12-05-WAVSSA000,Surface Wave Spectra,0,0,,wavss_a_dcl_statistics,2777,"Buoy Well, center of Mass"
+CE05MOAS-GL247-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL247-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL247-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL247-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL247-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL247-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL311-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL311-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL311-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL311-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL311-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL311-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL312-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL312-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL312-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL312-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL312-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL312-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL319-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL319-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL319-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL319-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL319-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL319-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL320-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL320-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL320-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL320-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL320-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL320-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL326-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL326-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL326-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL326-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL326-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL326-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL327-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL327-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL327-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL327-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL327-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL327-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL381-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL381-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL381-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL381-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL381-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL381-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL382-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL382-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL382-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL382-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL382-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL382-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL383-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL383-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL383-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL383-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL383-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL383-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL384-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL384-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL384-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL384-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL384-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL384-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE05MOAS-GL386-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CE05MOAS-GL386-01-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CE05MOAS-GL386-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CE05MOAS-GL386-03-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CE05MOAS-GL386-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CE05MOAS-GL386-05-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CE06ISSM-MFC31-00-CPMENG000,Platform Controller,29,29,Engineering,,,
+CE06ISSM-MFD35-00-DCLENG000,Data Concentrator Logger (DCL),29,29,Engineering,,,
+CE06ISSM-MFD35-01-VEL3DD000,3-D Single Point Velocity Meter,29,29,,vel3d_cd_dcl_velocity_data,1085,Multi-Function Node
+CE06ISSM-MFD35-02-PRESFA000,Seafloor Pressure,29,29,,presf_abc_dcl_tide_measurement,3250,Multi-Function Node
+CE06ISSM-MFD35-04-ADCPTM000,Velocity Profiler (600kHz),29,29,,adcp_velocity_earth,,Multi-Function Node
+CE06ISSM-MFD35-05-PCO2WB000,pCO2 Water,29,29,,pco2w_abc_dcl_instrument,931,Multi-Function Node
+CE06ISSM-MFD35-06-PHSEND000,Seawater pH,29,29,,phsen_abcdef_dcl_instrument,2767,Multi-Function Node
+CE06ISSM-MFD37-00-DCLENG000,Data Concentrator Logger (DCL),29,29,Engineering,,,
+CE06ISSM-MFD37-01-OPTAAD000,Spectrophotometer,29,29,,optaa_dj_dcl_instrument,20,Multi-Function Node
+CE06ISSM-MFD37-03-CTDBPC000,CTD,29,29,,ctdbp_cdef_dcl_instrument,6,Multi-Function Node
+CE06ISSM-MFD37-03-DOSTAD000,Dissolved Oxygen,29,29,,dosta_abcdjm_ctdbp_dcl_instrument,14,Multi-Function Node
+CE06ISSM-MFD37-06-CAMDSA000,Digital Still Camera,29,29,Camera,,,Multi-Function Node
+CE06ISSM-MFD37-07-ZPLSCC000,Bio-acoustic Sonar (Coastal),29,29,,zplsc_c_instrument,3745,Multi-Function Node
+CE06ISSM-RID16-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE06ISSM-RID16-01-OPTAAD000,Spectrophotometer,7,7,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+CE06ISSM-RID16-02-FLORTD000,3-Wavelength Fluorometer,7,7,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+CE06ISSM-RID16-03-CTDBPC000,CTD,7,7,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+CE06ISSM-RID16-03-DOSTAD000,Dissolved Oxygen,7,7,,dosta_abcdjm_ctdbp_dcl_instrument,14,Near Surface Instrument Frame
+CE06ISSM-RID16-04-VELPTA000,Single Point Velocity Meter,7,7,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+CE06ISSM-RID16-05-PCO2WB000,pCO2 Water,7,7,,pco2w_abc_dcl_instrument,931,Near Surface Instrument Frame
+CE06ISSM-RID16-06-PHSEND000,Seawater pH,7,7,,phsen_abcdef_dcl_instrument,2767,Near Surface Instrument Frame
+CE06ISSM-RID16-07-NUTNRB000,Nitrate,7,7,,nutnr_b_dcl_conc_instrument,315,Near Surface Instrument Frame
+CE06ISSM-RID16-08-SPKIRB000,Spectral Irradiance,7,7,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+CE06ISSM-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+CE06ISSM-SBD17-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE06ISSM-SBD17-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CE06ISSM-SBD17-04-VELPTA000,Single Point Velocity Meter,1,1,,velpt_ab_dcl_instrument,1154,Bottom of Buoy
+CE06ISSM-SBD17-06-CTDBPC000,CTD,1,1,,ctdbp_cdef_dcl_instrument,6,
+CE06ISSM-SBD17-06-FLORTD000,3-Wavelength Fluorometer,1,1,,flort_dj_dcl_instrument,22,
+CE06ISSP-SP001-00-SPPENG000,Profiler Controller,0,29,Engineering,,,
+CE06ISSP-SP001-02-DOSTAJ000,Dissolved Oxygen,0,29,,dosta_abcdjm_cspp_instrument,14,Surface Piercing Profiler
+CE06ISSP-SP001-04-OPTAAJ000,Spectrophotometer,0,29,,optaa_dj_cspp_instrument,20,Surface Piercing Profiler
+CE06ISSP-SP001-05-VELPTJ000,Single Point Velocity Meter,0,29,,velpt_j_cspp_instrument,1154,Surface Piercing Profiler
+CE06ISSP-SP001-06-NUTNRJ000,Nitrate,0,29,,nutnr_j_cspp_instrument,18,Surface Piercing Profiler
+CE06ISSP-SP001-07-SPKIRJ000,Spectral Irradiance,0,29,,spkir_abj_cspp_instrument,2766,Surface Piercing Profiler
+CE06ISSP-SP001-08-FLORTJ000,3-Wavelength Fluorometer,0,29,,flort_dj_cspp_instrument,22,Surface Piercing Profiler
+CE06ISSP-SP001-09-CTDPFJ000,CTD,0,29,,ctdpf_j_cspp_instrument,4,Surface Piercing Profiler
+CE06ISSP-SP001-10-PARADJ000,Photosynthetically Available Radiation,0,29,,parad_j_cspp_instrument,3236,Surface Piercing Profiler
+CE07SHSM-MFC31-00-CPMENG000,Platform Controller,87,87,Engineering,,,
+CE07SHSM-MFD35-00-DCLENG000,Data Concentrator Logger (DCL),87,87,Engineering,,,
+CE07SHSM-MFD35-01-VEL3DD000,3-D Single Point Velocity Meter,87,87,,vel3d_cd_dcl_velocity_data,1085,Multi-Function Node
+CE07SHSM-MFD35-02-PRESFB000,Seafloor Pressure,87,87,,presf_abc_dcl_tide_measurement,3250,Multi-Function Node
+CE07SHSM-MFD35-04-ADCPTC000,Velocity Profiler (300kHz),87,87,,adcp_velocity_earth,,Multi-Function Node
+CE07SHSM-MFD35-05-PCO2WB000,pCO2 Water,87,87,,pco2w_abc_dcl_instrument,931,Multi-Function Node
+CE07SHSM-MFD35-06-PHSEND000,Seawater pH,87,87,,phsen_abcdef_dcl_instrument,2767,Multi-Function Node
+CE07SHSM-MFD37-00-DCLENG000,Data Concentrator Logger (DCL),87,87,Engineering,,,
+CE07SHSM-MFD37-01-OPTAAD000,Spectrophotometer,87,87,,optaa_dj_dcl_instrument,20,Multi-Function Node
+CE07SHSM-MFD37-03-CTDBPC000,CTD,87,87,,ctdbp_cdef_dcl_instrument,6,Multi-Function Node
+CE07SHSM-MFD37-03-DOSTAD000,Dissolved Oxygen,87,87,,dosta_abcdjm_ctdbp_dcl_instrument,14,Multi-Function Node
+CE07SHSM-MFD37-06-CAMDSA000,Digital Still Camera,87,87,Camera,,,Multi-Function Node
+CE07SHSM-MFD37-07-ZPLSCC000,Bio-acoustic Sonar (Coastal),87,87,,zplsc_c_instrument,3745,Multi-Function Node
+CE07SHSM-RIC21-00-CPMENG000,Platform Controller,7,7,Engineering,,,
+CE07SHSM-RID26-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE07SHSM-RID26-01-ADCPTA000,Velocity Profiler (600kHz),7,7,,adcp_velocity_earth,,Near Surface Instrument Frame
+CE07SHSM-RID26-04-VELPTA000,Single Point Velocity Meter,7,7,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+CE07SHSM-RID26-06-PHSEND000,Seawater pH,7,7,,phsen_abcdef_dcl_instrument,2767,Near Surface Instrument Frame
+CE07SHSM-RID26-07-NUTNRB000,Nitrate,7,7,,nutnr_b_dcl_conc_instrument,315,Near Surface Instrument Frame
+CE07SHSM-RID26-08-SPKIRB000,Spectral Irradiance,7,7,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+CE07SHSM-RID27-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE07SHSM-RID27-01-OPTAAD000,Spectrophotometer,7,7,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+CE07SHSM-RID27-02-FLORTD000,3-Wavelength Fluorometer,7,7,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+CE07SHSM-RID27-03-CTDBPC000,CTD,7,7,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+CE07SHSM-RID27-04-DOSTAD000,Dissolved Oxygen,7,7,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+CE07SHSM-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+CE07SHSM-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE07SHSM-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CE07SHSM-SBD11-02-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CE07SHSM-SBD11-04-VELPTA000,Single Point Velocity Meter,1,1,,velpt_ab_dcl_instrument,1154,Bottom of Buoy
+CE07SHSM-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-3,-3,,metbk_a_dcl_instrument,1053,Buoy Tower
+CE07SHSM-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE07SHSM-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CE07SHSM-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+CE07SHSM-SBD12-05-WAVSSA000,Surface Wave Spectra,0,0,,wavss_a_dcl_statistics,2777,"Buoy Well, center of Mass"
+CE07SHSP-SP001-00-SPPENG000,Profiler Controller,0,87,Engineering,,,
+CE07SHSP-SP001-01-DOSTAJ000,Dissolved Oxygen,0,87,,dosta_abcdjm_cspp_instrument,14,Surface Piercing Profiler
+CE07SHSP-SP001-02-VELPTJ000,Single Point Velocity Meter,0,87,,velpt_j_cspp_instrument,1154,Surface Piercing Profiler
+CE07SHSP-SP001-04-OPTAAJ000,Spectrophotometer,0,87,,optaa_dj_cspp_instrument,20,Surface Piercing Profiler
+CE07SHSP-SP001-05-NUTNRJ000,Nitrate,0,87,,nutnr_j_cspp_instrument,18,Surface Piercing Profiler
+CE07SHSP-SP001-06-SPKIRJ000,Spectral Irradiance,0,87,,spkir_abj_cspp_instrument,2766,Surface Piercing Profiler
+CE07SHSP-SP001-07-FLORTJ000,3-Wavelength Fluorometer,0,87,,flort_dj_cspp_instrument,22,Surface Piercing Profiler
+CE07SHSP-SP001-08-CTDPFJ000,CTD,0,87,,ctdpf_j_cspp_instrument,4,Surface Piercing Profiler
+CE07SHSP-SP001-09-PARADJ000,Photosynthetically Available Radiation,0,87,,parad_j_cspp_instrument,3236,Surface Piercing Profiler
+CE09OSPM-SBS01-00-STCENG000,Platform Controller,0,0,Engineering,,,
+CE09OSPM-SBS01-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,
+CE09OSPM-WFP01-00-WFPENG000,Profiler Controller,15,540,Engineering,,,
+CE09OSPM-WFP01-01-VEL3DK000,3-D Single Point Velocity Meter,15,540,,vel3d_k_wfp_stc_instrument,3233,
+CE09OSPM-WFP01-02-DOFSTK000,Dissolved Oxygen,15,540,,dofst_k_wfp_instrument,1965,
+CE09OSPM-WFP01-03-CTDPFK000,CTD,15,540,,ctdpf_ckl_wfp_instrument,1960,
+CE09OSPM-WFP01-04-FLORTK000,3-Wavelength Fluorometer,15,540,,flort_kn_stc_imodem_instrument,22,
+CE09OSPM-WFP01-05-PARADK000,Photosynthetically Available Radiation,15,540,,parad_k__stc_imodem_instrument,1657,
+CE09OSSM-MFC31-00-CPMENG000,Platform Controller,540,540,Engineering,,,
+CE09OSSM-MFD35-00-DCLENG000,Data Concentrator Logger (DCL),540,540,Engineering,,,
+CE09OSSM-MFD35-01-VEL3DD000,3-D Single Point Velocity Meter,540,540,,vel3d_cd_dcl_velocity_data,1085,Multi-Function Node
+CE09OSSM-MFD35-02-PRESFC000,Seafloor Pressure,540,540,,presf_abc_dcl_tide_measurement,3250,Multi-Function Node
+CE09OSSM-MFD35-04-ADCPSJ000,Velocity Profiler (75 kHz),540,540,,adcp_velocity_earth,,Multi-Function Node
+CE09OSSM-MFD35-05-PCO2WB000,pCO2 Water,540,540,,pco2w_abc_dcl_instrument,931,Multi-Function Node
+CE09OSSM-MFD35-06-PHSEND000,Seawater pH,540,540,,phsen_abcdef_dcl_instrument,2767,Multi-Function Node
+CE09OSSM-MFD37-00-DCLENG000,Data Concentrator Logger (DCL),540,540,Engineering,,,
+CE09OSSM-MFD37-01-OPTAAC000,Spectrophotometer,540,540,,optaa_dj_dcl_instrument,20,Multi-Function Node
+CE09OSSM-MFD37-03-CTDBPE000,CTD,540,540,,ctdbp_cdef_dcl_instrument,6,Multi-Function Node
+CE09OSSM-MFD37-03-DOSTAD000,Dissolved Oxygen,540,540,,dosta_abcdjm_ctdbp_dcl_instrument,14,Multi-Function Node
+CE09OSSM-MFD37-06-CAMDSA000,Digital Still Camera,540,540,Camera,,,Multi-Function Node
+CE09OSSM-MFD37-07-ZPLSCC000,Bio-acoustic Sonar (Coastal),540,540,,zplsc_c_instrument,3745,Multi-Function Node
+CE09OSSM-RIC21-00-CPMENG000,Platform Controller,7,7,Engineering,,,
+CE09OSSM-RID26-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE09OSSM-RID26-01-ADCPTC000,Velocity Profiler (300kHz),7,7,,adcp_velocity_earth,,Near Surface Instrument Frame
+CE09OSSM-RID26-04-VELPTA000,Single Point Velocity Meter,7,7,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+CE09OSSM-RID26-06-PHSEND000,Seawater pH,7,7,,phsen_abcdef_dcl_instrument,2767,Near Surface Instrument Frame
+CE09OSSM-RID26-07-NUTNRB000,Nitrate,7,7,,nutnr_b_dcl_conc_instrument,315,Near Surface Instrument Frame
+CE09OSSM-RID26-08-SPKIRB000,Spectral Irradiance,7,7,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+CE09OSSM-RID27-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CE09OSSM-RID27-01-OPTAAD000,Spectrophotometer,7,7,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+CE09OSSM-RID27-02-FLORTD000,3-Wavelength Fluorometer,7,7,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+CE09OSSM-RID27-03-CTDBPC000,CTD,7,7,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+CE09OSSM-RID27-04-DOSTAD000,Dissolved Oxygen,7,7,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+CE09OSSM-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+CE09OSSM-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE09OSSM-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CE09OSSM-SBD11-02-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CE09OSSM-SBD11-04-VELPTA000,Single Point Velocity Meter,1,1,,velpt_ab_dcl_instrument,1154,Bottom of Buoy
+CE09OSSM-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-3,-3,,metbk_a_dcl_instrument,1053,Buoy Tower
+CE09OSSM-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CE09OSSM-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CE09OSSM-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+CE09OSSM-SBD12-05-WAVSSA000,Surface Wave Spectra,0,0,,wavss_a_dcl_statistics,2777,"Buoy Well, center of Mass"
+CP01CNPM-RII01-02-ADCPTG010,Velocity Profiler (150kHz),70,70,,adcps_jln_stc_instrument,,Instrument Frame
+CP01CNPM-SBS01-00-STCENG000,Platform Controller,0,0,Engineering,,,
+CP01CNPM-SBS01-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP01CNPM-WFP01-00-WFPENG000,Profiler Controller,15,70,Engineering,,,Wire Following Profiler Body
+CP01CNPM-WFP01-01-VEL3DK000,3-D Single Point Velocity Meter,15,70,,vel3d_k_wfp_stc_instrument,3233,Wire Following Profiler Body
+CP01CNPM-WFP01-02-DOFSTK000,Dissolved Oxygen,15,70,,dofst_k_wfp_instrument,1965,Wire Following Profiler Body
+CP01CNPM-WFP01-03-CTDPFK000,CTD,15,70,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+CP01CNPM-WFP01-04-FLORTK000,3-Wavelength Fluorometer,15,70,,flort_kn_stc_imodem_instrument,22,Wire Following Profiler Body
+CP01CNPM-WFP01-05-PARADK000,Photosynthetically Available Radiation,15,70,,parad_k__stc_imodem_instrument,1657,Wire Following Profiler Body
+CP01CNSM-MFC31-00-CPMENG000,Platform Controller,133,133,Engineering,,,
+CP01CNSM-MFD35-00-DCLENG000,Data Concentrator Logger (DCL),133,133,Engineering,,,
+CP01CNSM-MFD35-01-ADCPTF000,Velocity Profiler (150kHz),133,133,,adcpt_acfgm_pd8_dcl_instrument,,Multi-Function Node
+CP01CNSM-MFD35-02-PRESFB000,Seafloor Pressure,133,133,,presf_abc_dcl_tide_measurement,3250,Multi-Function Node
+CP01CNSM-MFD35-04-VELPTA000,Single Point Velocity Meter,133,133,,velpt_ab_dcl_instrument,1154,Multi-Function Node
+CP01CNSM-MFD35-05-PCO2WB000,pCO2 Water,133,133,,pco2w_abc_dcl_instrument,931,Multi-Function Node
+CP01CNSM-MFD35-06-PHSEND000,Seawater pH,133,133,,phsen_abcdef_dcl_instrument,2767,Multi-Function Node
+CP01CNSM-MFD37-00-DCLENG000,Data Concentrator Logger (DCL),133,133,Engineering,,,
+CP01CNSM-MFD37-01-OPTAAD000,Spectrophotometer,133,133,,optaa_dj_dcl_instrument,20,Multi-Function Node
+CP01CNSM-MFD37-03-CTDBPD000,CTD,133,133,,ctdbp_cdef_dcl_instrument,6,Multi-Function Node
+CP01CNSM-MFD37-04-DOSTAD000,Dissolved Oxygen,133,133,,dosta_abcdjm_dcl_instrument,14,Multi-Function Node
+CP01CNSM-MFD37-07-ZPLSCC000,Bio-acoustic Sonar (Coastal),133,133,,zplsc_c_instrument,3745,Multi-Function Node
+CP01CNSM-RIC21-00-CPMENG000,Platform Controller,7,7,Engineering,,,
+CP01CNSM-RID26-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CP01CNSM-RID26-04-VELPTA000,Single Point Velocity Meter,7,7,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+CP01CNSM-RID26-06-PHSEND000,Seawater pH,7,7,,phsen_abcdef_dcl_instrument,2767,Near Surface Instrument Frame
+CP01CNSM-RID26-07-NUTNRB000,Nitrate,7,7,,nutnr_b_dcl_conc_instrument,315,Near Surface Instrument Frame
+CP01CNSM-RID26-08-SPKIRB000,Spectral Irradiance,7,7,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+CP01CNSM-RID27-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CP01CNSM-RID27-01-OPTAAD000,Spectrophotometer,7,7,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+CP01CNSM-RID27-02-FLORTD000,3-Wavelength Fluorometer,7,7,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+CP01CNSM-RID27-03-CTDBPC000,CTD,7,7,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+CP01CNSM-RID27-04-DOSTAD000,Dissolved Oxygen,7,7,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+CP01CNSM-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+CP01CNSM-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CP01CNSM-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP01CNSM-SBD11-02-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CP01CNSM-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-3,-3,,metbk_a_dcl_instrument,1053,Buoy Tower
+CP01CNSM-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CP01CNSM-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CP01CNSM-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+CP01CNSM-SBD12-05-WAVSSA000,Surface Wave Spectra,0,0,,wavss_a_dcl_statistics,2777,"Buoy Well, center of Mass"
+CP01CNSM-SBD12-06-METBKA000,Bulk Meteorology Instrument Package,-3,-3,,metbk_a_dcl_instrument,1053,Buoy Tower
+CP01CNSM-SBD12-08-FDCHPA000,Direct Covariance Flux,-3,-3,,fdchp_a_dcl_instrument,3351,Buoy Tower
+CP01CNSP-SP001-00-SPPENG000,Profiler Controller,0,100,Engineering,,,
+CP01CNSP-SP001-02-OPTAAJ000,Spectrophotometer,0,100,Suspended,optaa_dj_cspp_instrument,20,Surface Piercing Profiler
+CP01CNSP-SP001-03-NUTNRJ000,Nitrate,0,100,Suspended,nutnr_j_cspp_instrument,18,Surface Piercing Profiler
+CP01CNSP-SP001-05-VELPTJ000,Single Point Velocity Meter,0,100,Suspended,velpt_j_cspp_instrument,1154,Surface Piercing Profiler
+CP01CNSP-SP001-06-DOSTAJ000,Dissolved Oxygen,0,100,Suspended,dosta_abcdjm_cspp_instrument,14,Surface Piercing Profiler
+CP01CNSP-SP001-07-SPKIRJ000,Spectral Irradiance,0,100,Suspended,spkir_abj_cspp_instrument,2766,Surface Piercing Profiler
+CP01CNSP-SP001-08-CTDPFJ000,CTD,0,100,Suspended,ctdpf_j_cspp_instrument,4,Surface Piercing Profiler
+CP01CNSP-SP001-09-FLORTJ000,3-Wavelength Fluorometer,0,100,Suspended,flort_dj_cspp_instrument,22,Surface Piercing Profiler
+CP01CNSP-SP001-10-PARADJ000,Photosynthetically Available Radiation,0,100,Suspended,parad_j_cspp_instrument,3236,Surface Piercing Profiler
+CP02PMCI-RII01-02-ADCPTG010,Velocity Profiler (150kHz),104,104,,adcps_jln_stc_instrument,,Sensor cage
+CP02PMCI-SBS01-00-STCENG000,Platform Controller,0,0,Engineering,,,
+CP02PMCI-SBS01-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP02PMCI-WFP01-00-WFPENG000,Profiler Controller,15,104,Engineering,,,
+CP02PMCI-WFP01-01-VEL3DK000,3-D Single Point Velocity Meter,15,104,,vel3d_k_wfp_stc_instrument,3233,Wire Following Profiler Body
+CP02PMCI-WFP01-02-DOFSTK000,Dissolved Oxygen,15,104,,dofst_k_wfp_instrument,1965,Wire Following Profiler Body
+CP02PMCI-WFP01-03-CTDPFK000,CTD,15,104,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+CP02PMCI-WFP01-04-FLORTK000,3-Wavelength Fluorometer,15,104,,flort_kn_stc_imodem_instrument,22,Wire Following Profiler Body
+CP02PMCI-WFP01-05-PARADK000,Photosynthetically Available Radiation,15,104,,parad_k__stc_imodem_instrument,1657,Wire Following Profiler Body
+CP02PMCO-RII01-02-ADCPTG010,Velocity Profiler (150kHz),125,125,,adcps_jln_stc_instrument,,Sensor cage
+CP02PMCO-SBS01-00-STCENG000,Platform Controller,0,0,Engineering,,,
+CP02PMCO-SBS01-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP02PMCO-WFP01-00-WFPENG000,Profiler Controller,15,125,Engineering,,,
+CP02PMCO-WFP01-01-VEL3DK000,3-D Single Point Velocity Meter,15,125,,vel3d_k_wfp_stc_instrument,3233,Wire Following Profiler Body
+CP02PMCO-WFP01-02-DOFSTK000,Dissolved Oxygen,15,125,,dofst_k_wfp_instrument,1965,Wire Following Profiler Body
+CP02PMCO-WFP01-03-CTDPFK000,CTD,15,125,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+CP02PMCO-WFP01-04-FLORTK000,3-Wavelength Fluorometer,15,125,,flort_kn_stc_imodem_instrument,22,Wire Following Profiler Body
+CP02PMCO-WFP01-05-PARADK000,Photosynthetically Available Radiation,15,125,,parad_k__stc_imodem_instrument,1657,Wire Following Profiler Body
+CP02PMUI-RII01-02-ADCPTG010,Velocity Profiler (150kHz),70,70,,adcps_jln_stc_instrument,,Sensor cage
+CP02PMUI-SBS01-00-STCENG000,Platform Controller,0,0,Engineering,,,
+CP02PMUI-SBS01-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP02PMUI-WFP01-00-WFPENG000,Profiler Controller,15,70,Engineering,,,
+CP02PMUI-WFP01-01-VEL3DK000,3-D Single Point Velocity Meter,15,70,,vel3d_k_wfp_stc_instrument,3233,Wire Following Profiler Body
+CP02PMUI-WFP01-02-DOFSTK000,Dissolved Oxygen,15,70,,dofst_k_wfp_instrument,1965,Wire Following Profiler Body
+CP02PMUI-WFP01-03-CTDPFK000,CTD,15,70,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+CP02PMUI-WFP01-04-FLORTK000,3-Wavelength Fluorometer,15,70,,flort_kn_stc_imodem_instrument,22,Wire Following Profiler Body
+CP02PMUI-WFP01-05-PARADK000,Photosynthetically Available Radiation,15,70,,parad_k__stc_imodem_instrument,1657,Wire Following Profiler Body
+CP02PMUO-RII01-02-ADCPSL010,Velocity Profiler (75 kHz),425,425,,adcps_jln_stc_instrument,,Sensor cage
+CP02PMUO-SBS01-00-STCENG000,Platform Controller,0,0,Engineering,,,
+CP02PMUO-SBS01-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP02PMUO-WFP01-00-WFPENG000,Profiler Controller,15,425,Engineering,,,
+CP02PMUO-WFP01-01-VEL3DK000,3-D Single Point Velocity Meter,15,425,,vel3d_k_wfp_stc_instrument,3233,Wire Following Profiler Body
+CP02PMUO-WFP01-02-DOFSTK000,Dissolved Oxygen,15,425,,dofst_k_wfp_instrument,1965,Wire Following Profiler Body
+CP02PMUO-WFP01-03-CTDPFK000,CTD,15,425,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+CP02PMUO-WFP01-04-FLORTK000,3-Wavelength Fluorometer,15,425,,flort_kn_stc_imodem_instrument,22,Wire Following Profiler Body
+CP02PMUO-WFP01-05-PARADK000,Photosynthetically Available Radiation,15,425,,parad_k__stc_imodem_instrument,1657,Wire Following Profiler Body
+CP03ISPM-RII01-02-ADCPTG010,Velocity Profiler (150kHz),70,70,,adcps_jln_stc_instrument,,Instrument Frame
+CP03ISPM-SBS01-00-STCENG000,Platform Controller,0,0,Engineering,,,
+CP03ISPM-SBS01-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP03ISPM-WFP01-00-WFPENG000,Profiler Controller,15,70,Engineering,,,Wire Following Profiler Body
+CP03ISPM-WFP01-01-VEL3DK000,3-D Single Point Velocity Meter,15,70,,vel3d_k_wfp_stc_instrument,3233,Wire Following Profiler Body
+CP03ISPM-WFP01-02-DOFSTK000,Dissolved Oxygen,15,70,,dofst_k_wfp_instrument,1965,Wire Following Profiler Body
+CP03ISPM-WFP01-03-CTDPFK000,CTD,15,70,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+CP03ISPM-WFP01-04-FLORTK000,3-Wavelength Fluorometer,15,70,,flort_kn_stc_imodem_instrument,22,Wire Following Profiler Body
+CP03ISPM-WFP01-05-PARADK000,Photosynthetically Available Radiation,15,70,,parad_k__stc_imodem_instrument,1657,Wire Following Profiler Body
+CP03ISSM-MFC31-00-CPMENG000,Platform Controller,91.5,91.5,Engineering,,,
+CP03ISSM-MFD35-00-DCLENG000,Data Concentrator Logger (DCL),91.5,91.5,Engineering,,,
+CP03ISSM-MFD35-01-ADCPTF000,Velocity Profiler (150kHz),91.5,91.5,,adcpt_acfgm_pd8_dcl_instrument,,Multi-Function Node
+CP03ISSM-MFD35-02-PRESFB000,Seafloor Pressure,91.5,91.5,,presf_abc_dcl_tide_measurement,3250,Multi-Function Node
+CP03ISSM-MFD35-04-VELPTA000,Single Point Velocity Meter,91.5,91.5,,velpt_ab_dcl_instrument,1154,Multi-Function Node
+CP03ISSM-MFD35-05-PCO2WB000,pCO2 Water,91.5,91.5,,pco2w_abc_dcl_instrument,931,Multi-Function Node
+CP03ISSM-MFD35-06-PHSEND000,Seawater pH,91.5,91.5,,phsen_abcdef_dcl_instrument,2767,Multi-Function Node
+CP03ISSM-MFD37-00-DCLENG000,Data Concentrator Logger (DCL),91.5,91.5,Engineering,,,
+CP03ISSM-MFD37-01-OPTAAD000,Spectrophotometer,91.5,91.5,,optaa_dj_dcl_instrument,20,Multi-Function Node
+CP03ISSM-MFD37-03-CTDBPD000,CTD,91.5,91.5,,ctdbp_cdef_dcl_instrument,6,Multi-Function Node
+CP03ISSM-MFD37-04-DOSTAD000,Dissolved Oxygen,91.5,91.5,,dosta_abcdjm_dcl_instrument,14,Multi-Function Node
+CP03ISSM-MFD37-07-ZPLSCC000,Bio-acoustic Sonar (Coastal),91.5,91.5,,zplsc_c_instrument,3745,Multi-Function Node
+CP03ISSM-RIC21-00-CPMENG000,Platform Controller,7,7,Engineering,,,
+CP03ISSM-RID26-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CP03ISSM-RID26-04-VELPTA000,Single Point Velocity Meter,7,7,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+CP03ISSM-RID26-06-PHSEND000,Seawater pH,7,7,,phsen_abcdef_dcl_instrument,2767,Near Surface Instrument Frame
+CP03ISSM-RID26-07-NUTNRB000,Nitrate,7,7,,nutnr_b_dcl_full_instrument,18,Near Surface Instrument Frame
+CP03ISSM-RID26-08-SPKIRB000,Spectral Irradiance,7,7,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+CP03ISSM-RID27-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CP03ISSM-RID27-01-OPTAAD000,Spectrophotometer,7,7,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+CP03ISSM-RID27-02-FLORTD000,3-Wavelength Fluorometer,7,7,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+CP03ISSM-RID27-03-CTDBPC000,CTD,7,7,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+CP03ISSM-RID27-04-DOSTAD000,Dissolved Oxygen,7,7,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+CP03ISSM-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+CP03ISSM-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CP03ISSM-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP03ISSM-SBD11-02-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CP03ISSM-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-3,-3,,metbk_a_dcl_instrument,1053,Buoy Tower
+CP03ISSM-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CP03ISSM-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CP03ISSM-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+CP03ISSP-SP001-00-SPPENG000,Profiler Controller,0,80,Engineering,,,
+CP03ISSP-SP001-02-OPTAAJ000,Spectrophotometer,0,80,Suspended,optaa_dj_cspp_instrument,20,Surface Piercing Profiler
+CP03ISSP-SP001-03-NUTNRJ000,Nitrate,0,80,Suspended,nutnr_j_cspp_instrument,18,Surface Piercing Profiler
+CP03ISSP-SP001-05-VELPTJ000,Single Point Velocity Meter,0,80,Suspended,velpt_j_cspp_instrument,1154,Surface Piercing Profiler
+CP03ISSP-SP001-06-DOSTAJ000,Dissolved Oxygen,0,80,Suspended,dosta_abcdjm_cspp_instrument,14,Surface Piercing Profiler
+CP03ISSP-SP001-07-SPKIRJ000,Spectral Irradiance,0,80,Suspended,spkir_abj_cspp_instrument,2766,Surface Piercing Profiler
+CP03ISSP-SP001-08-CTDPFJ000,CTD,0,80,Suspended,ctdpf_j_cspp_instrument,4,Surface Piercing Profiler
+CP03ISSP-SP001-09-FLORTJ000,3-Wavelength Fluorometer,0,80,Suspended,flort_dj_cspp_instrument,22,Surface Piercing Profiler
+CP03ISSP-SP001-10-PARADJ000,Photosynthetically Available Radiation,0,80,Suspended,parad_j_cspp_instrument,3236,Surface Piercing Profiler
+CP04OSPM-RII01-02-ADCPSL010,Velocity Profiler (75 kHz),425,425,,adcps_jln_stc_instrument,,Sensor cage
+CP04OSPM-SBS01-00-STCENG000,Platform Controller,0,0,Engineering,,,
+CP04OSPM-SBS11-02-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP04OSPM-WFP01-00-WFPENG000,Profiler Controller,15,427,Engineering,,,
+CP04OSPM-WFP01-01-VEL3DK000,3-D Single Point Velocity Meter,15,427,,vel3d_k_wfp_stc_instrument,3233,Wire Following Profiler Body
+CP04OSPM-WFP01-02-DOFSTK000,Dissolved Oxygen,15,427,,dofst_k_wfp_instrument,1965,Wire Following Profiler Body
+CP04OSPM-WFP01-03-CTDPFK000,CTD,15,427,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+CP04OSPM-WFP01-04-FLORTK000,3-Wavelength Fluorometer,15,427,,flort_kn_stc_imodem_instrument,22,Wire Following Profiler Body
+CP04OSPM-WFP01-05-PARADK000,Photosynthetically Available Radiation,15,427,,parad_k__stc_imodem_instrument,1657,Wire Following Profiler Body
+CP04OSSM-MFC31-00-CPMENG000,Platform Controller,450,450,Engineering,,,
+CP04OSSM-MFD35-00-DCLENG000,Data Concentrator Logger (DCL),450,450,Engineering,,,
+CP04OSSM-MFD35-01-ADCPSJ000,Velocity Profiler (75 kHz),450,450,,adcpt_acfgm_pd8_dcl_instrument,,Multi-Function Node
+CP04OSSM-MFD35-02-PRESFC000,Seafloor Pressure,450,450,,presf_abc_dcl_tide_measurement,3250,Multi-Function Node
+CP04OSSM-MFD35-04-VELPTB000,Single Point Velocity Meter,450,450,,velpt_ab_dcl_instrument,1154,Multi-Function Node
+CP04OSSM-MFD35-05-PCO2WB000,pCO2 Water,450,450,,pco2w_abc_dcl_instrument,931,Multi-Function Node
+CP04OSSM-MFD35-06-PHSEND000,Seawater pH,450,450,,phsen_abcdef_dcl_instrument,2767,Multi-Function Node
+CP04OSSM-MFD37-00-DCLENG000,Data Concentrator Logger (DCL),450,450,Engineering,,,
+CP04OSSM-MFD37-01-OPTAAD000,Spectrophotometer,450,450,,optaa_dj_dcl_instrument,20,Multi-Function Node
+CP04OSSM-MFD37-03-CTDBPE000,CTD,450,450,,ctdbp_cdef_dcl_instrument,6,Multi-Function Node
+CP04OSSM-MFD37-04-DOSTAD000,Dissolved Oxygen,450,450,,dosta_abcdjm_dcl_instrument,14,Multi-Function Node
+CP04OSSM-MFD37-07-ZPLSCC000,Bio-acoustic Sonar (Coastal),450,450,,zplsc_c_instrument,3745,Multi-Function Node
+CP04OSSM-RIC21-00-CPMENG000,Platform Controller,7,7,Engineering,,,
+CP04OSSM-RID26-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CP04OSSM-RID26-04-VELPTA000,Single Point Velocity Meter,7,7,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+CP04OSSM-RID26-06-PHSEND000,Seawater pH,7,7,,phsen_abcdef_dcl_instrument,2767,Near Surface Instrument Frame
+CP04OSSM-RID26-07-NUTNRB000,Nitrate,7,7,,nutnr_b_dcl_full_instrument,18,Near Surface Instrument Frame
+CP04OSSM-RID26-08-SPKIRB000,Spectral Irradiance,7,7,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+CP04OSSM-RID27-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
+CP04OSSM-RID27-01-OPTAAD000,Spectrophotometer,7,7,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+CP04OSSM-RID27-02-FLORTD000,3-Wavelength Fluorometer,7,7,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+CP04OSSM-RID27-03-CTDBPC000,CTD,7,7,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+CP04OSSM-RID27-04-DOSTAD000,Dissolved Oxygen,7,7,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+CP04OSSM-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+CP04OSSM-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CP04OSSM-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+CP04OSSM-SBD11-02-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CP04OSSM-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-3,-3,,metbk_a_dcl_instrument,1053,Buoy Tower
+CP04OSSM-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+CP04OSSM-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+CP04OSSM-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+CP05MOAS-A6263-00-ENG000000,Mobile Asset Controller,0,600,Engineering,,,
+CP05MOAS-A6263-01-FLORTN000,3-Wavelength Fluorometer,0,600,,flort_kn_auv_instrument,,
+CP05MOAS-A6263-02-DOSTAN000,Dissolved Oxygen,0,600,,dosta_ln_auv_instrument,940,
+CP05MOAS-A6263-03-CTDAVN000,CTD,0,600,,ctdav_n_auv_instrument,4,
+CP05MOAS-A6263-04-NUTNRN000,Nitrate,0,600,,nutnr_n_auv_instrument,315,
+CP05MOAS-A6263-05-ADCPAN000,Velocity Profiler (600kHz),0,600,,adcpa_n_auv_instrument,,
+CP05MOAS-A6263-06-PARADN000,Photosynthetically Available Radiation,0,600,,parad_n_auv_instrument,3726,
+CP05MOAS-A6264-00-ENG000000,Mobile Asset Controller,0,600,Engineering,,,
+CP05MOAS-A6264-01-FLORTN000,3-Wavelength Fluorometer,0,600,,flort_kn_auv_instrument,,
+CP05MOAS-A6264-02-DOSTAN000,Dissolved Oxygen,0,600,,dosta_ln_auv_instrument,940,
+CP05MOAS-A6264-03-CTDAVN000,CTD,0,600,,ctdav_n_auv_instrument,4,
+CP05MOAS-A6264-04-NUTNRN000,Nitrate,0,600,,nutnr_n_auv_instrument,315,
+CP05MOAS-A6264-05-ADCPAN000,Velocity Profiler (600kHz),0,600,,adcpa_n_auv_instrument,,
+CP05MOAS-A6264-06-PARADN000,Photosynthetically Available Radiation,0,600,,parad_n_auv_instrument,3726,
+CP05MOAS-GL335-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL335-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL335-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL335-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL335-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL335-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL336-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL336-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL336-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL336-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL336-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL336-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL339-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL339-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL339-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL339-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL339-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL339-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL340-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL340-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL340-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL340-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL340-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL340-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL374-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL374-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL374-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL374-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL374-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL374-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL375-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+CP05MOAS-GL375-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,Lost,adcpa_n_auv_instrument,,
+CP05MOAS-GL375-02-FLORTM000,3-Wavelength Fluorometer,0,1000,Lost,flort_m_glider_instrument,1485,
+CP05MOAS-GL375-03-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL375-04-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL375-05-PARADM000,Photosynthetically Available Radiation,0,1000,Lost,parad_m_glider_instrument,7986,
+CP05MOAS-GL376-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL376-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL376-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL376-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL376-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL376-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL379-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL379-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL379-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL379-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL379-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL379-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL380-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL380-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL380-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL380-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL380-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL380-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL387-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL387-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL387-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL387-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL387-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL387-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL388-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL388-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL388-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL388-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL388-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL388-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-GL389-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+CP05MOAS-GL389-01-ADCPAM000,Velocity Profiler (600kHz),0,1000,,adcpa_n_auv_instrument,,
+CP05MOAS-GL389-02-FLORTM000,3-Wavelength Fluorometer,0,1000,,flort_m_glider_instrument,1485,
+CP05MOAS-GL389-03-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-GL389-04-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-GL389-05-PARADM000,Photosynthetically Available Radiation,0,1000,,parad_m_glider_instrument,7986,
+CP05MOAS-PG564-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+CP05MOAS-PG564-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-PG564-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-PG564-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+CP05MOAS-PG564-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+CP05MOAS-PG564-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+CP05MOAS-PG564-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+CP05MOAS-PG583-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+CP05MOAS-PG583-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+CP05MOAS-PG583-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+CP05MOAS-PG583-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+CP05MOAS-PG583-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+CP05MOAS-PG583-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+CP05MOAS-PG583-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GA01SUMO-RID16-00-DCLENG000,Data Concentrator Logger (DCL),12,12,Engineering,,,
+GA01SUMO-RID16-01-OPTAAD000,Spectrophotometer,12,12,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+GA01SUMO-RID16-02-FLORTD000,3-Wavelength Fluorometer,12,12,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+GA01SUMO-RID16-03-CTDBPF000,CTD,12,12,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+GA01SUMO-RID16-04-VELPTA000,Single Point Velocity Meter,12,12,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+GA01SUMO-RID16-05-PCO2WB000,pCO2 Water,12,12,,pco2w_abc_dcl_instrument,931,Near Surface Instrument Frame
+GA01SUMO-RID16-06-DOSTAD000,Dissolved Oxygen,12,12,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+GA01SUMO-RID16-07-NUTNRB000,Nitrate,12,12,,nutnr_b_dcl_full_instrument,18,Near Surface Instrument Frame
+GA01SUMO-RID16-08-SPKIRB000,Spectral Irradiance,12,12,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+GA01SUMO-RII11-02-ADCPSN010,Velocity Profiler (75 kHz),500,500,,adcps_jln_stc_instrument,,Sensor cage
+GA01SUMO-RII11-02-CTDBPP031,CTD (40m),40,40,,ctdbp_p_dcl_instrument,,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDBPP032,CTD (80 m),80,80,,ctdbp_p_dcl_instrument,6,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDBPP033,CTD (130 m),130,130,,ctdbp_p_dcl_instrument,6,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOQ011,CTD (20 m),20,20,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOQ012,CTD (60 m),60,60,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOQ013,CTD (100 m),100,100,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOQ014,CTD (180 m),180,180,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOQ015,CTD (250 m),250,250,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOQ016,CTD (350 m),350,350,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOQ017,CTD (500 m),500,500,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOQ031,CTD (40 m),40,40,,ctdmo_ghqr_imodem_instrument,2927,
+GA01SUMO-RII11-02-CTDMOQ033,CTD (130 m),130,130,,ctdmo_ghqr_imodem_instrument,2927,
+GA01SUMO-RII11-02-CTDMOR018,CTD (750 m),750,750,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOR019,CTD (1000 m),1000,1000,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-CTDMOR020,CTD (1500 m),1500,1500,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GA01SUMO-RII11-02-DOSTAD031,Dissolved Oxygen (40m),40,40,,dosta_abcdjm_ctdbp_p_dcl_instrument,3794,Fixed on Inductive Wire
+GA01SUMO-RII11-02-DOSTAD032,Dissolved Oxygen (80 m),80,80,,dosta_abcdjm_ctdbp_p_dcl_instrument,3794,Fixed on Inductive Wire
+GA01SUMO-RII11-02-DOSTAD033,Dissolved Oxygen (130 m),130,130,,dosta_abcdjm_ctdbp_p_dcl_instrument,3794,Fixed on Inductive Wire
+GA01SUMO-RII11-02-FLORDG031,2-Wavelength Fluorometer (40m),40,40,,flord_g_ctdbp_p_dcl_instrument,22,Fixed on Inductive Wire
+GA01SUMO-RII11-02-FLORDG032,2-Wavelength Fluorometer (80 m),80,80,,flord_g_ctdbp_p_dcl_instrument,22,Fixed on Inductive Wire
+GA01SUMO-RII11-02-FLORDG033,2-Wavelength Fluorometer (130 m),130,130,,flord_g_ctdbp_p_dcl_instrument,22,Fixed on Inductive Wire
+GA01SUMO-RII11-02-PCO2WC051,pCO2 Water (40m),40,40,,pco2w_abc_imodem_instrument,931,Fixed on Inductive Wire
+GA01SUMO-RII11-02-PCO2WC052,pCO2 Water (80 m),80,80,,pco2w_abc_imodem_instrument,931,Fixed on Inductive Wire
+GA01SUMO-RII11-02-PCO2WC053,pCO2 Water (130 m),130,130,,pco2w_abc_imodem_instrument,931,Fixed on Inductive Wire
+GA01SUMO-RII11-02-PHSENE041,Seawater pH (20 m),20,20,,phsen_abcdef_imodem_instrument,2767,Fixed on Inductive Wire
+GA01SUMO-RII11-02-PHSENE042,Seawater pH (100 m),100,100,,phsen_abcdef_imodem_instrument,2767,Fixed on Inductive Wire
+GA01SUMO-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+GA01SUMO-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+GA01SUMO-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+GA01SUMO-SBD11-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+GA01SUMO-SBD11-04-DOSTAD000,Dissolved Oxygen,1,1,,dosta_abcdjm_dcl_instrument,14,Bottom of Buoy
+GA01SUMO-SBD11-05-SPKIRB000,Spectral Irradiance,-5,-5,,spkir_abj_dcl_instrument,2766,Buoy Tower
+GA01SUMO-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-5,-5,,metbk_a_dcl_instrument,1053,Buoy Tower
+GA01SUMO-SBD11-08-NUTNRB000,Nitrate,1,1,,nutnr_b_dcl_full_instrument,18,Bottom of Buoy
+GA01SUMO-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+GA01SUMO-SBD12-01-OPTAAD000,Spectrophotometer,1,1,,optaa_dj_dcl_instrument,20,Bottom of Buoy
+GA01SUMO-SBD12-02-FLORTD000,3-Wavelength Fluorometer,1,1,,flort_dj_dcl_instrument,22,Bottom of Buoy
+GA01SUMO-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+GA01SUMO-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+GA01SUMO-SBD12-05-WAVSSA000,Surface Wave Spectra,0,0,,wavss_a_dcl_statistics,2777,"Buoy Well, center of Mass"
+GA01SUMO-SBD12-06-METBKA000,Bulk Meteorology Instrument Package,-5,-5,,metbk_a_dcl_instrument,1053,Buoy Tower
+GA02HYPM-MPM01-02-ZPLSGA009,Bio-acoustic Sonar (Global),150,150,,,,Mid-Water Platform
+GA02HYPM-MPM01-02-ZPLSGA010,Bio-acoustic Sonar (Global),150,150,,,,Mid-Water Platform
+GA02HYPM-RIM01-00-SIOENG000,Platform Controller,5034,5034,Engineering,,,
+GA02HYPM-RIM01-02-CTDMOG039,CTD,164,164,,ctdmo_ghqr_sio_mule_instrument,2927,
+GA02HYPM-WFP02-00-WFPENG000,Profiler Controller,310,2573,Engineering,,,
+GA02HYPM-WFP02-01-FLORDL000,2-Wavelength Fluorometer,310,2573,,flord_l_wfp_instrument,22,Wire Following Profiler Body
+GA02HYPM-WFP02-03-DOSTAL000,Dissolved Oxygen,310,2573,,dosta_ln_wfp_instrument,14,Wire Following Profiler Body
+GA02HYPM-WFP02-04-CTDPFL000,CTD,310,2573,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+GA02HYPM-WFP02-05-VEL3DL000,3-D Single Point Velocity Meter,310,2573,,vel3d_l_wfp_instrument,3487,Wire Following Profiler Body
+GA02HYPM-WFP03-00-WFPENG000,Profiler Controller,2600,5023,Engineering,,,
+GA02HYPM-WFP03-01-FLORDL000,2-Wavelength Fluorometer,2600,5023,,flord_l_wfp_instrument,22,Wire Following Profiler Body
+GA02HYPM-WFP03-03-DOSTAL000,Dissolved Oxygen,2600,5023,,dosta_ln_wfp_instrument,14,Wire Following Profiler Body
+GA02HYPM-WFP03-04-CTDPFL000,CTD,2600,5023,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+GA02HYPM-WFP03-05-VEL3DL000,3-D Single Point Velocity Meter,2600,5023,,vel3d_l_wfp_instrument,3487,Wire Following Profiler Body
+GA03FLMA-RIM01-00-SIOENG000,Platform Controller,1510,1510,Engineering,,,
+GA03FLMA-RIM01-02-ADCPSL003,Velocity Profiler (75 kHz),500,500,,adcps_jln_sio_mule_instrument,,ADCP Float
+GA03FLMA-RIM01-02-CTDMOG040,CTD (30 m),30,30,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOG041,CTD (40 m),40,40,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOG042,CTD (60 m),60,60,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOG043,CTD (90 m),90,90,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOG044,CTD (130 m),130,130,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOG045,CTD (180 m),180,180,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOG046,CTD (250 m),250,250,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOG047,CTD (350 m),350,350,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOG048,CTD (500 m),500,500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOH049,CTD (750 m),750,750,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOH050,CTD (1000 m),1000,1000,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIM01-02-CTDMOH051,CTD (1500 m),1500,1500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMA-RIS01-00-SIOENG000,Platform Controller,30,30,Engineering,,,
+GA03FLMA-RIS01-03-DOSTAD000,Dissolved Oxygen,30,30,,dosta_abcdjm_sio_instrument,14,Sensor cage
+GA03FLMA-RIS01-04-PHSENF000,Seawater pH,30,30,,phsen_abcdef_sio_mule_instrument,2767,Sensor cage
+GA03FLMA-RIS01-05-FLORTD000,3-Wavelength Fluorometer,30,30,,flort_dj_sio_instrument,22,Sensor cage
+GA03FLMB-RIM01-00-SIOENG000,Platform Controller,1500,1500,Engineering,,,
+GA03FLMB-RIM01-02-ADCPSL007,Velocity Profiler (75 kHz),500,500,,adcps_jln_sio_mule_instrument,,ADCP Float
+GA03FLMB-RIM01-02-CTDMOG060,CTD (30 m),30,30,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOG061,CTD (40 m),40,40,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOG062,CTD (60 m),60,60,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOG063,CTD (90 m),90,90,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOG064,CTD (130 m),130,130,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOG065,CTD (180 m),180,180,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOG066,CTD (250 m),250,250,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOG067,CTD (350 m),350,350,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOG068,CTD (500 m),500,500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOH069,CTD (750 m),750,750,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOH070,CTD (1000 m),1000,1000,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIM01-02-CTDMOH071,CTD (1500 m),1500,1500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GA03FLMB-RIS01-00-SIOENG000,Platform Controller,30,30,Engineering,,,
+GA03FLMB-RIS01-03-DOSTAD000,Dissolved Oxygen,30,30,,dosta_abcdjm_sio_instrument,14,Sensor cage
+GA03FLMB-RIS01-04-PHSENF000,Seawater pH,30,30,,phsen_abcdef_sio_mule_instrument,2767,Sensor cage
+GA03FLMB-RIS01-05-FLORTD000,3-Wavelength Fluorometer,30,30,,flort_dj_sio_instrument,22,Sensor cage
+GA05MOAS-GL364-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GA05MOAS-GL364-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GA05MOAS-GL364-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-GL364-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GA05MOAS-GL470-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GA05MOAS-GL470-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GA05MOAS-GL470-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-GL470-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GA05MOAS-GL493-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GA05MOAS-GL493-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GA05MOAS-GL493-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-GL493-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GA05MOAS-GL494-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GA05MOAS-GL494-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GA05MOAS-GL494-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-GL494-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GA05MOAS-GL495-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GA05MOAS-GL495-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GA05MOAS-GL495-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-GL495-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GA05MOAS-GL496-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GA05MOAS-GL496-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GA05MOAS-GL496-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-GL496-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GA05MOAS-GL538-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GA05MOAS-GL538-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GA05MOAS-GL538-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-GL538-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GA05MOAS-PG562-00-ENG000000,Mobile Asset Controller,0,200,Lost,,,
+GA05MOAS-PG562-01-CTDGVM000,CTD,0,200,Lost,ctdgv_m_glider_instrument,1528,
+GA05MOAS-PG562-02-DOSTAM000,Dissolved Oxygen,0,200,Lost,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-PG562-03-FLORTM000,3-Wavelength Fluorometer,0,200,Lost,flort_m_glider_instrument,1485,
+GA05MOAS-PG562-04-FLORTO000,3-Wavelength Fluorometer,0,200,Lost,flort_m_glider_instrument,1485,
+GA05MOAS-PG562-05-NUTNRM000,Nitrate,0,200,Lost,nutnr_m_glider_instrument,3704,
+GA05MOAS-PG562-06-PARADM000,Photosynthetically Available Radiation,0,200,Lost,parad_m_glider_instrument,7986,
+GA05MOAS-PG563-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GA05MOAS-PG563-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GA05MOAS-PG563-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-PG563-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GA05MOAS-PG563-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GA05MOAS-PG563-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GA05MOAS-PG563-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GA05MOAS-PG578-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GA05MOAS-PG578-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GA05MOAS-PG578-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-PG578-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GA05MOAS-PG578-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GA05MOAS-PG578-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GA05MOAS-PG578-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GA05MOAS-PG580-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GA05MOAS-PG580-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GA05MOAS-PG580-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GA05MOAS-PG580-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GA05MOAS-PG580-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GA05MOAS-PG580-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GA05MOAS-PG580-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GI01SUMO-RID16-00-DCLENG000,Data Concentrator Logger (DCL),12,12,Engineering,,,
+GI01SUMO-RID16-01-OPTAAD000,Spectrophotometer,12,12,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+GI01SUMO-RID16-02-FLORTD000,3-Wavelength Fluorometer,12,12,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+GI01SUMO-RID16-03-CTDBPF000,CTD,12,12,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+GI01SUMO-RID16-04-VELPTA000,Single Point Velocity Meter,12,12,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+GI01SUMO-RID16-05-PCO2WB000,pCO2 Water,12,12,,pco2w_abc_dcl_instrument,931,Near Surface Instrument Frame
+GI01SUMO-RID16-06-DOSTAD000,Dissolved Oxygen,12,12,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+GI01SUMO-RID16-07-NUTNRB000,Nitrate,12,12,,nutnr_b_dcl_full_instrument,18,Near Surface Instrument Frame
+GI01SUMO-RID16-08-SPKIRB000,Spectral Irradiance,12,12,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+GI01SUMO-RII11-02-ADCPSN010,Velocity Profiler (75 kHz),500,500,,adcps_jln_stc_instrument,,Sensor cage
+GI01SUMO-RII11-02-CTDBPP031,CTD (40m),40,40,,ctdbp_p_dcl_instrument,6,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDBPP032,CTD (80 m),80,80,,ctdbp_p_dcl_instrument,6,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDBPP033,CTD (130 m),130,130,,ctdbp_p_dcl_instrument,6,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOQ011,CTD (20 m),20,20,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOQ012,CTD (60 m),60,60,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOQ013,CTD (100 m),100,100,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOQ014,CTD (180 m),180,180,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOQ015,CTD (250 m),250,250,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOQ016,CTD (350 m),350,350,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOQ017,CTD (500 m),500,500,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOQ031,CTD (40 m),40,40,,ctdmo_ghqr_imodem_instrument,2927,
+GI01SUMO-RII11-02-CTDMOQ033,CTD (130 m),130,130,,ctdmo_ghqr_imodem_instrument,2927,
+GI01SUMO-RII11-02-CTDMOR018,CTD (750 m),750,750,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOR019,CTD (1000 m),1000,1000,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-CTDMOR020,CTD (1500 m),1500,1500,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GI01SUMO-RII11-02-DOSTAD031,Dissolved Oxygen (40m),40,40,,dosta_abcdjm_ctdbp_p_dcl_instrument,3794,Fixed on Inductive Wire
+GI01SUMO-RII11-02-DOSTAD032,Dissolved Oxygen (80 m),80,80,,dosta_abcdjm_ctdbp_p_dcl_instrument,3794,Fixed on Inductive Wire
+GI01SUMO-RII11-02-DOSTAD033,Dissolved Oxygen (130 m),130,130,,dosta_abcdjm_ctdbp_p_dcl_instrument,3794,Fixed on Inductive Wire
+GI01SUMO-RII11-02-FLORDG031,2-Wavelength Fluorometer (40m),40,40,,flord_g_ctdbp_p_dcl_instrument,22,Fixed on Inductive Wire
+GI01SUMO-RII11-02-FLORDG032,2-Wavelength Fluorometer (80 m),80,80,,flord_g_ctdbp_p_dcl_instrument,22,Fixed on Inductive Wire
+GI01SUMO-RII11-02-FLORDG033,2-Wavelength Fluorometer (130 m),130,130,,flord_g_ctdbp_p_dcl_instrument,22,Fixed on Inductive Wire
+GI01SUMO-RII11-02-PCO2WC051,pCO2 Water (40m),40,40,,pco2w_abc_imodem_instrument,931,Fixed on Inductive Wire
+GI01SUMO-RII11-02-PCO2WC052,pCO2 Water (80 m),80,80,,pco2w_abc_imodem_instrument,931,Fixed on Inductive Wire
+GI01SUMO-RII11-02-PCO2WC053,pCO2 Water (130 m),130,130,,pco2w_abc_imodem_instrument,931,Fixed on Inductive Wire
+GI01SUMO-RII11-02-PHSENE041,Seawater pH (20 m),20,20,,phsen_abcdef_imodem_instrument,2767,Fixed on Inductive Wire
+GI01SUMO-RII11-02-PHSENE042,Seawater pH (100 m),100,100,,phsen_abcdef_imodem_instrument,2767,Fixed on Inductive Wire
+GI01SUMO-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+GI01SUMO-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+GI01SUMO-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+GI01SUMO-SBD11-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+GI01SUMO-SBD11-04-DOSTAD000,Dissolved Oxygen,1,1,,dosta_abcdjm_dcl_instrument,14,Bottom of Buoy
+GI01SUMO-SBD11-05-SPKIRB000,Spectral Irradiance,-5,-5,,spkir_abj_dcl_instrument,2766,Buoy Tower
+GI01SUMO-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-5,-5,,metbk_a_dcl_instrument,1053,Buoy Tower
+GI01SUMO-SBD11-08-NUTNRB000,Nitrate,1,1,,nutnr_b_dcl_full_instrument,18,Bottom of Buoy
+GI01SUMO-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+GI01SUMO-SBD12-01-OPTAAD000,Spectrophotometer,1,1,,optaa_dj_dcl_instrument,20,Bottom of Buoy
+GI01SUMO-SBD12-02-FLORTD000,3-Wavelength Fluorometer,1,1,,flort_dj_dcl_instrument,22,Bottom of Buoy
+GI01SUMO-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+GI01SUMO-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+GI01SUMO-SBD12-05-WAVSSA000,Surface Wave Spectra,0,0,,wavss_a_dcl_statistics,2777,"Buoy Well, center of Mass"
+GI01SUMO-SBD12-06-METBKA000,Bulk Meteorology Instrument Package,-5,-5,,metbk_a_dcl_instrument,1053,Buoy Tower
+GI01SUMO-SBD12-08-FDCHPA000,Direct Covariance Flux,-5,-5,,fdchp_a_dcl_instrument,3351,Buoy Tower
+GI02HYPM-MPM01-02-ZPLSGA009,Bio-acoustic Sonar (Global),150,150,,,,Mid-Water Platform
+GI02HYPM-MPM01-02-ZPLSGA010,Bio-acoustic Sonar (Global),150,150,,,,Mid-Water Platform
+GI02HYPM-RIM01-00-SIOENG000,Platform Controller,2600,2600,Engineering,,,
+GI02HYPM-RIM01-02-CTDMOG039,CTD,164,164,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI02HYPM-WFP02-00-WFPENG000,Profiler Controller,240,2592,Engineering,,,
+GI02HYPM-WFP02-01-FLORDL000,2-Wavelength Fluorometer,240,2592,,flord_l_wfp_instrument,22,Wire Following Profiler Body
+GI02HYPM-WFP02-03-DOSTAL000,Dissolved Oxygen,240,2592,,dosta_ln_wfp_instrument,14,Wire Following Profiler Body
+GI02HYPM-WFP02-04-CTDPFL000,CTD,240,2592,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+GI02HYPM-WFP02-05-VEL3DL000,3-D Single Point Velocity Meter,240,2592,,vel3d_l_wfp_instrument,3487,Wire Following Profiler Body
+GI03FLMA-RI000-00-CTDMOH000,CTD (1700 m),1700,1700,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RI000-00-CTDMOH100,CTD (2600 m),2600,2600,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RI000-00-CTDMOH400,CTD (2300 m),2300,2300,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RI000-00-CTDMOH700,CTD (2000 m),2000,2000,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RI000-00-VELPTB000,Single Point Velocity Meter (1700 m),1700,1700,Recovered Only,,,Fixed on Inductive Wire
+GI03FLMA-RI000-00-VELPTB100,Single Point Velocity Meter (2600 m),2600,2600,Recovered Only,,,Fixed on Inductive Wire
+GI03FLMA-RI000-00-VELPTB400,Single Point Velocity Meter (2300 m),2300,2300,Recovered Only,,,Fixed on Inductive Wire
+GI03FLMA-RI000-00-VELPTB700,Single Point Velocity Meter (2000 m),2000,2000,Recovered Only,,,Fixed on Inductive Wire
+GI03FLMA-RIM01-00-SIOENG000,Platform Controller,1510,1510,Engineering,,,
+GI03FLMA-RIM01-02-ADCPSL003,Velocity Profiler (75 kHz),500,500,,adcps_jln_sio_mule_instrument,,ADCP Float
+GI03FLMA-RIM01-02-CTDMOG040,CTD (30 m),30,30,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOG041,CTD (40 m),40,40,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOG042,CTD (60 m),60,60,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOG043,CTD (90 m),90,90,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOG044,CTD (130 m),130,130,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOG045,CTD (180 m),180,180,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOG046,CTD (250 m),250,250,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOG047,CTD (350 m),350,350,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOG048,CTD (500 m),500,500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOH049,CTD (750 m),750,750,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOH050,CTD (1000 m),1000,1000,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIM01-02-CTDMOH051,CTD (1500 m),1500,1500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMA-RIS01-00-SIOENG000,Platform Controller,30,30,Engineering,,,
+GI03FLMA-RIS01-03-DOSTAD000,Dissolved Oxygen,30,30,,dosta_abcdjm_sio_instrument,14,Sensor cage
+GI03FLMA-RIS01-04-PHSENF000,Seawater pH,30,30,,phsen_abcdef_sio_mule_instrument,2767,Sensor cage
+GI03FLMA-RIS01-05-FLORTD000,3-Wavelength Fluorometer,30,30,,flort_dj_sio_instrument,22,Sensor cage
+GI03FLMB-RI000-00-CTDMOH000,CTD (1800 m),1800,1800,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RI000-00-CTDMOH100,CTD (2700 m),2700,2700,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RI000-00-CTDMOH400,CTD (2400 m),2400,2400,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RI000-00-CTDMOH700,CTD (2100 m),2100,2100,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RI000-00-VELPTB000,Single Point Velocity Meter (1800 m),1800,1800,Recovered Only,,,Fixed on Inductive Wire
+GI03FLMB-RI000-00-VELPTB100,Single Point Velocity Meter (2700 m),2700,2700,Recovered Only,,,Fixed on Inductive Wire
+GI03FLMB-RI000-00-VELPTB400,Single Point Velocity Meter (2400 m),2400,2400,Recovered Only,,,Fixed on Inductive Wire
+GI03FLMB-RI000-00-VELPTB700,Single Point Velocity Meter (2100 m),2100,2100,Recovered Only,,,Fixed on Inductive Wire
+GI03FLMB-RIM01-00-SIOENG000,Platform Controller,1510,1510,Engineering,,,
+GI03FLMB-RIM01-02-ADCPSL007,Velocity Profiler (75 kHz),500,500,,adcps_jln_sio_mule_instrument,,ADCP Float
+GI03FLMB-RIM01-02-CTDMOG060,CTD (30 m),30,30,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOG061,CTD (40 m),40,40,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOG062,CTD (60 m),60,60,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOG063,CTD (90 m),90,90,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOG064,CTD (130 m),130,130,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOG065,CTD (180 m),180,180,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOG066,CTD (250 m),250,250,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOG067,CTD (350 m),350,350,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOG068,CTD (500 m),500,500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOH069,CTD (750 m),750,750,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOH070,CTD (1000 m),1000,1000,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIM01-02-CTDMOH071,CTD (1500 m),1500,1500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GI03FLMB-RIS01-00-SIOENG000,Platform Controller,30,30,Engineering,,,
+GI03FLMB-RIS01-03-DOSTAD000,Dissolved Oxygen,30,30,,dosta_abcdjm_sio_instrument,14,Sensor cage
+GI03FLMB-RIS01-04-PHSENF000,Seawater pH,30,30,,phsen_abcdef_sio_mule_instrument,2767,Sensor cage
+GI03FLMB-RIS01-05-FLORTD000,3-Wavelength Fluorometer,30,30,,flort_dj_sio_instrument,22,Sensor cage
+GI05MOAS-GL469-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GI05MOAS-GL469-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GI05MOAS-GL469-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-GL469-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GI05MOAS-GL477-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GI05MOAS-GL477-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GI05MOAS-GL477-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-GL477-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GI05MOAS-GL478-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GI05MOAS-GL478-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GI05MOAS-GL478-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-GL478-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GI05MOAS-GL484-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GI05MOAS-GL484-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GI05MOAS-GL484-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-GL484-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GI05MOAS-GL485-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GI05MOAS-GL485-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GI05MOAS-GL485-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-GL485-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GI05MOAS-GL486-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GI05MOAS-GL486-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GI05MOAS-GL486-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-GL486-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GI05MOAS-GL493-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GI05MOAS-GL493-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GI05MOAS-GL493-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-GL493-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GI05MOAS-GL495-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GI05MOAS-GL495-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GI05MOAS-GL495-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-GL495-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GI05MOAS-GL559-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GI05MOAS-GL559-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GI05MOAS-GL559-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-GL559-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GI05MOAS-PG528-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GI05MOAS-PG528-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GI05MOAS-PG528-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-PG528-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GI05MOAS-PG528-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GI05MOAS-PG528-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GI05MOAS-PG528-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GI05MOAS-PG564-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GI05MOAS-PG564-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GI05MOAS-PG564-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-PG564-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GI05MOAS-PG564-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GI05MOAS-PG564-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GI05MOAS-PG564-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GI05MOAS-PG577-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GI05MOAS-PG577-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GI05MOAS-PG577-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-PG577-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GI05MOAS-PG577-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GI05MOAS-PG577-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GI05MOAS-PG577-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GI05MOAS-PG581-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GI05MOAS-PG581-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GI05MOAS-PG581-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GI05MOAS-PG581-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GI05MOAS-PG581-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GI05MOAS-PG581-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GI05MOAS-PG581-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GP02HYPM-MPM01-02-ZPLSGA009,Bio-acoustic Sonar (Global),150,150,,,,Mid-Water Platform
+GP02HYPM-MPM01-02-ZPLSGA010,Bio-acoustic Sonar (Global),150,150,,,,Mid-Water Platform
+GP02HYPM-RIM01-00-SIOENG000,Platform Controller,4042,4042,Engineering,,,
+GP02HYPM-RIM01-02-CTDMOG039,CTD,164,164,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP02HYPM-WFP02-00-WFPENG000,Profiler Controller,310,2093,Engineering,,,
+GP02HYPM-WFP02-01-FLORDL000,2-Wavelength Fluorometer,310,2093,,flord_l_wfp_instrument,22,Wire Following Profiler Body
+GP02HYPM-WFP02-03-DOSTAL000,Dissolved Oxygen,310,2093,,dosta_ln_wfp_instrument,14,Wire Following Profiler Body
+GP02HYPM-WFP02-04-CTDPFL000,CTD,310,2093,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+GP02HYPM-WFP02-05-VEL3DL000,3-D Single Point Velocity Meter,310,2093,,vel3d_l_wfp_instrument,3487,Wire Following Profiler Body
+GP02HYPM-WFP03-00-WFPENG000,Profiler Controller,2100,4038,Engineering,,,
+GP02HYPM-WFP03-01-FLORDL000,2-Wavelength Fluorometer,2100,4038,,flord_l_wfp_instrument,22,Wire Following Profiler Body
+GP02HYPM-WFP03-03-DOSTAL000,Dissolved Oxygen,2100,4038,,dosta_ln_wfp_instrument,14,Wire Following Profiler Body
+GP02HYPM-WFP03-04-CTDPFL000,CTD,2100,4038,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+GP02HYPM-WFP03-05-VEL3DL000,3-D Single Point Velocity Meter,2100,4038,,vel3d_l_wfp_instrument,3487,Wire Following Profiler Body
+GP03FLMA-RIM01-00-SIOENG000,Platform Controller,1510,1510,Engineering,,,
+GP03FLMA-RIM01-02-ADCPSL003,Velocity Profiler (75 kHz),500,500,,adcps_jln_sio_mule_instrument,,ADCP Float
+GP03FLMA-RIM01-02-CTDMOG040,CTD (30 m),30,30,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOG041,CTD (40 m),40,40,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOG042,CTD (60 m),60,60,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOG043,CTD (90 m),90,90,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOG044,CTD (130 m),130,130,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOG045,CTD (180 m),180,180,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOG046,CTD (250 m),250,250,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOG047,CTD (350 m),350,350,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOG048,CTD (500 m),500,500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOH049,CTD (750 m),750,750,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOH050,CTD (1000 m),1000,1000,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIM01-02-CTDMOH051,CTD (1500 m),1500,1500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMA-RIS01-00-SIOENG000,Platform Controller,30,30,Engineering,,,
+GP03FLMA-RIS01-03-DOSTAD000,Dissolved Oxygen,30,30,,dosta_abcdjm_sio_instrument,14,Sensor cage
+GP03FLMA-RIS01-04-PHSENF000,Seawater pH,30,30,,phsen_abcdef_sio_mule_instrument,2767,Sensor cage
+GP03FLMA-RIS01-05-FLORTD000,3-Wavelength Fluorometer,30,30,,flort_dj_sio_instrument,22,Sensor cage
+GP03FLMB-RIM01-00-SIOENG000,Platform Controller,1510,1510,Engineering,,,
+GP03FLMB-RIM01-02-ADCPSL007,Velocity Profiler (75 kHz),500,500,,adcps_jln_sio_mule_instrument,,ADCP Float
+GP03FLMB-RIM01-02-CTDMOG060,CTD (30 m),30,30,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOG061,CTD (40 m),40,40,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOG062,CTD (60 m),60,60,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOG063,CTD (90 m),90,90,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOG064,CTD (130 m),130,130,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOG065,CTD (180 m),180,180,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOG066,CTD (250 m),250,250,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOG067,CTD (350 m),350,350,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOG068,CTD (500 m),500,500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOH069,CTD (750 m),750,750,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOH070,CTD (1000 m),1000,1000,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIM01-02-CTDMOH071,CTD (1500 m),1500,1500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GP03FLMB-RIS01-00-SIOENG000,Platform Controller,30,30,Engineering,,,
+GP03FLMB-RIS01-03-DOSTAD000,Dissolved Oxygen,30,30,,dosta_abcdjm_sio_instrument,14,Sensor cage
+GP03FLMB-RIS01-04-PHSENF000,Seawater pH,30,30,,phsen_abcdef_sio_mule_instrument,2767,Sensor cage
+GP03FLMB-RIS01-05-FLORTD000,3-Wavelength Fluorometer,30,30,,flort_dj_sio_instrument,22,Sensor cage
+GP05MOAS-GL276-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GP05MOAS-GL276-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GP05MOAS-GL276-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL276-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-GL361-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GP05MOAS-GL361-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GP05MOAS-GL361-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL361-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GP05MOAS-GL362-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GP05MOAS-GL362-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GP05MOAS-GL362-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL362-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GP05MOAS-GL363-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GP05MOAS-GL363-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GP05MOAS-GL363-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL363-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-GL364-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GP05MOAS-GL364-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GP05MOAS-GL364-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL364-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-GL365-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GP05MOAS-GL365-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GP05MOAS-GL365-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL365-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-GL453-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GP05MOAS-GL453-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GP05MOAS-GL453-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL453-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-GL523-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GP05MOAS-GL523-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GP05MOAS-GL523-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL523-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-GL525-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GP05MOAS-GL525-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GP05MOAS-GL525-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL525-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-GL537-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GP05MOAS-GL537-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GP05MOAS-GL537-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-GL537-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-PG514-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GP05MOAS-PG514-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-PG514-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-PG514-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GP05MOAS-PG514-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GP05MOAS-PG514-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GP05MOAS-PG514-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GP05MOAS-PG515-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GP05MOAS-PG515-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-PG515-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-PG515-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GP05MOAS-PG515-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GP05MOAS-PG515-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GP05MOAS-PG515-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GP05MOAS-PG575-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GP05MOAS-PG575-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-PG575-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-PG575-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GP05MOAS-PG575-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GP05MOAS-PG575-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GP05MOAS-PG575-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GP05MOAS-PG576-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GP05MOAS-PG576-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GP05MOAS-PG576-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GP05MOAS-PG576-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GP05MOAS-PG576-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GP05MOAS-PG576-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GP05MOAS-PG576-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GS01SUMO-RID16-00-DCLENG000,Data Concentrator Logger (DCL),12,12,Engineering,,,
+GS01SUMO-RID16-01-OPTAAD000,Spectrophotometer,12,12,,optaa_dj_dcl_instrument,20,Near Surface Instrument Frame
+GS01SUMO-RID16-02-FLORTD000,3-Wavelength Fluorometer,12,12,,flort_dj_dcl_instrument,22,Near Surface Instrument Frame
+GS01SUMO-RID16-03-CTDBPF000,CTD,12,12,,ctdbp_cdef_dcl_instrument,6,Near Surface Instrument Frame
+GS01SUMO-RID16-04-VELPTA000,Single Point Velocity Meter,12,12,,velpt_ab_dcl_instrument,1154,Near Surface Instrument Frame
+GS01SUMO-RID16-05-PCO2WB000,pCO2 Water,12,12,,pco2w_abc_dcl_instrument,931,Near Surface Instrument Frame
+GS01SUMO-RID16-06-DOSTAD000,Dissolved Oxygen,12,12,,dosta_abcdjm_dcl_instrument,14,Near Surface Instrument Frame
+GS01SUMO-RID16-07-NUTNRB000,Nitrate,12,12,,nutnr_b_dcl_full_instrument,18,Near Surface Instrument Frame
+GS01SUMO-RID16-08-SPKIRB000,Spectral Irradiance,12,12,,spkir_abj_dcl_instrument,2766,Near Surface Instrument Frame
+GS01SUMO-RII11-02-ADCPSN010,Velocity Profiler (75 kHz),500,500,,adcps_jln_stc_instrument,,Sensor cage
+GS01SUMO-RII11-02-CTDBPP031,CTD (40m),40,40,,ctdbp_cdef_dcl_instrument,6,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDBPP032,CTD (80 m),80,80,,ctdbp_p_dcl_instrument,6,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDBPP033,CTD (130 m),130,130,,ctdbp_p_dcl_instrument,6,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOQ011,CTD (20 m),20,20,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOQ012,CTD (60 m),60,60,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOQ013,CTD (100 m),100,100,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOQ014,CTD (180 m),180,180,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOQ015,CTD (250 m),250,250,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOQ016,CTD (350 m),350,350,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOQ017,CTD (500 m),500,500,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOQ031,CTD (40 m),40,40,,ctdmo_ghqr_imodem_instrument,2927,
+GS01SUMO-RII11-02-CTDMOQ033,CTD (130 m),130,130,,ctdmo_ghqr_imodem_instrument,2927,
+GS01SUMO-RII11-02-CTDMOR018,CTD (750 m),750,750,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOR019,CTD (1000 m),1000,1000,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-CTDMOR020,CTD (1500 m),1500,1500,,ctdmo_ghqr_imodem_instrument,2927,Fixed on Inductive Wire
+GS01SUMO-RII11-02-DOSTAD031,Dissolved Oxygen (40m),40,40,,dosta_abcdjm_ctdbp_p_dcl_instrument,3794,Fixed on Inductive Wire
+GS01SUMO-RII11-02-DOSTAD032,Dissolved Oxygen (80 m),80,80,,dosta_abcdjm_ctdbp_p_dcl_instrument,3794,Fixed on Inductive Wire
+GS01SUMO-RII11-02-DOSTAD033,Dissolved Oxygen (130 m),130,130,,dosta_abcdjm_ctdbp_p_dcl_instrument,3794,Fixed on Inductive Wire
+GS01SUMO-RII11-02-FLORDG031,2-Wavelength Fluorometer (40m),40,40,,flord_g_ctdbp_p_dcl_instrument,22,Fixed on Inductive Wire
+GS01SUMO-RII11-02-FLORDG032,2-Wavelength Fluorometer (80 m),80,80,,flord_g_ctdbp_p_dcl_instrument,22,Fixed on Inductive Wire
+GS01SUMO-RII11-02-FLORDG033,2-Wavelength Fluorometer (130 m),130,130,,flord_g_ctdbp_p_dcl_instrument,22,Fixed on Inductive Wire
+GS01SUMO-RII11-02-PCO2WC051,pCO2 Water (40m),40,40,,pco2w_abc_imodem_instrument,931,Fixed on Inductive Wire
+GS01SUMO-RII11-02-PCO2WC052,pCO2 Water (80 m),80,80,,pco2w_abc_imodem_instrument,931,Fixed on Inductive Wire
+GS01SUMO-RII11-02-PCO2WC053,pCO2 Water (130 m),130,130,,pco2w_abc_imodem_instrument,931,Fixed on Inductive Wire
+GS01SUMO-RII11-02-PHSENE041,Seawater pH (20 m),20,20,,phsen_abcdef_imodem_instrument,2767,Fixed on Inductive Wire
+GS01SUMO-RII11-02-PHSENE042,Seawater pH (100 m),100,100,,phsen_abcdef_imodem_instrument,2767,Fixed on Inductive Wire
+GS01SUMO-SBC11-00-CPMENG000,Platform Controller,0,0,Engineering,,,
+GS01SUMO-SBD11-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+GS01SUMO-SBD11-01-MOPAK0000,3-Axis Motion Pack,0,0,Engineering,,,"Buoy Well, center of Mass"
+GS01SUMO-SBD11-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+GS01SUMO-SBD11-04-DOSTAD000,Dissolved Oxygen,1,1,,dosta_abcdjm_dcl_instrument,14,Bottom of Buoy
+GS01SUMO-SBD11-05-SPKIRB000,Spectral Irradiance,-5,-5,,spkir_abj_dcl_instrument,2766,Buoy Tower
+GS01SUMO-SBD11-06-METBKA000,Bulk Meteorology Instrument Package,-5,-5,,metbk_a_dcl_instrument,1053,Buoy Tower
+GS01SUMO-SBD11-08-NUTNRB000,Nitrate,1,1,,nutnr_b_dcl_full_instrument,18,Bottom of Buoy
+GS01SUMO-SBD12-00-DCLENG000,Data Concentrator Logger (DCL),0,0,Engineering,,,
+GS01SUMO-SBD12-01-OPTAAD000,Spectrophotometer,1,1,,optaa_dj_dcl_instrument,20,Bottom of Buoy
+GS01SUMO-SBD12-02-FLORTD000,3-Wavelength Fluorometer,1,1,,flort_dj_dcl_instrument,22,Bottom of Buoy
+GS01SUMO-SBD12-03-HYDGN0000,Hydrogen Sensor,0,0,Engineering,,,Buoy Well
+GS01SUMO-SBD12-04-PCO2AA000,pCO2 Air-Sea,0,0,,pco2a_a_dcl_instrument_water,1003,"Buoy Well (1 probe in air, 1 probe in water)"
+GS01SUMO-SBD12-05-WAVSSA000,Surface Wave Spectra,0,0,,wavss_a_dcl_statistics,2777,"Buoy Well, center of Mass"
+GS01SUMO-SBD12-06-METBKA000,Bulk Meteorology Instrument Package,-5,-5,,metbk_a_dcl_instrument,1053,Buoy Tower
+GS01SUMO-SBD12-08-FDCHPA000,Direct Covariance Flux,-5,-5,,fdchp_a_dcl_instrument,3351,Buoy Tower
+GS02HYPM-MPM01-02-ZPLSGA009,Bio-acoustic Sonar (Global),150,150,,,,Mid-Water Platform
+GS02HYPM-MPM01-02-ZPLSGA010,Bio-acoustic Sonar (Global),150,150,,,,Mid-Water Platform
+GS02HYPM-RIM01-00-SIOENG000,Platform Controller,4634,4634,Engineering,,,
+GS02HYPM-RIM01-02-CTDMOG039,CTD,164,164,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS02HYPM-WFP02-00-WFPENG000,Profiler Controller,300,2373,Engineering,,,
+GS02HYPM-WFP02-01-FLORDL000,2-Wavelength Fluorometer,300,2373,,flord_l_wfp_instrument,22,Wire Following Profiler Body
+GS02HYPM-WFP02-03-DOSTAL000,Dissolved Oxygen,300,2373,,dosta_ln_wfp_instrument,14,Wire Following Profiler Body
+GS02HYPM-WFP02-04-CTDPFL000,CTD,300,2373,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+GS02HYPM-WFP02-05-VEL3DL000,3-D Single Point Velocity Meter,300,2373,,vel3d_l_wfp_instrument,3487,Wire Following Profiler Body
+GS02HYPM-WFP03-00-WFPENG000,Profiler Controller,2100,4623,Engineering,,,
+GS02HYPM-WFP03-01-FLORDL000,2-Wavelength Fluorometer,2100,4623,,flord_l_wfp_instrument,22,Wire Following Profiler Body
+GS02HYPM-WFP03-03-DOSTAL000,Dissolved Oxygen,2100,4623,,dosta_ln_wfp_instrument,14,Wire Following Profiler Body
+GS02HYPM-WFP03-04-CTDPFL000,CTD,2100,4623,,ctdpf_ckl_wfp_instrument,1960,Wire Following Profiler Body
+GS02HYPM-WFP03-05-VEL3DL000,3-D Single Point Velocity Meter,2100,4623,,vel3d_l_wfp_instrument,3487,Wire Following Profiler Body
+GS03FLMA-RIM01-00-SIOENG000,Platform Controller,1510,1510,Engineering,,,
+GS03FLMA-RIM01-02-ADCPSL003,Velocity Profiler (75 kHz),500,500,,adcps_jln_sio_mule_instrument,,ADCP Float
+GS03FLMA-RIM01-02-CTDMOG040,CTD (30 m),30,30,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOG041,CTD (40 m),40,40,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOG042,CTD (60 m),60,60,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOG043,CTD (90 m),90,90,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOG044,CTD (130 m),130,130,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOG045,CTD (180 m),180,180,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOG046,CTD (250 m),250,250,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOG047,CTD (350 m),350,350,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOG048,CTD (500 m),500,500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOH049,CTD (750 m),750,750,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOH050,CTD (1000 m),1000,1000,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIM01-02-CTDMOH051,CTD (1500 m),1500,1500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMA-RIS01-00-SIOENG000,Platform Controller,30,30,Engineering,,,
+GS03FLMA-RIS01-03-DOSTAD000,Dissolved Oxygen,30,30,,dosta_abcdjm_sio_instrument,14,Sensor cage
+GS03FLMA-RIS01-04-PHSENF000,Seawater pH,30,30,,phsen_abcdef_sio_mule_instrument,2767,Sensor cage
+GS03FLMA-RIS01-05-FLORTD000,3-Wavelength Fluorometer,30,30,,flort_dj_sio_instrument,22,Sensor cage
+GS03FLMB-RIM01-00-SIOENG000,Platform Controller,1510,1510,Engineering,,,
+GS03FLMB-RIM01-02-ADCPSL007,Velocity Profiler (75 kHz),500,500,,adcps_jln_sio_mule_instrument,,ADCP Float
+GS03FLMB-RIM01-02-CTDMOG060,CTD (30 m),30,30,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOG061,CTD (40 m),40,40,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOG062,CTD (60 m),60,60,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOG063,CTD (90 m),90,90,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOG064,CTD (130 m),130,130,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOG065,CTD (180 m),180,180,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOG066,CTD (250 m),250,250,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOG067,CTD (350 m),350,350,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOG068,CTD (500 m),500,500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOH069,CTD (750 m),750,750,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOH070,CTD (1000 m),1000,1000,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIM01-02-CTDMOH071,CTD (1500 m),1500,1500,,ctdmo_ghqr_sio_mule_instrument,2927,Fixed on Inductive Wire
+GS03FLMB-RIS01-00-SIOENG000,Platform Controller,30,30,Engineering,,,
+GS03FLMB-RIS01-03-DOSTAD000,Dissolved Oxygen,30,30,,dosta_abcdjm_sio_instrument,14,Sensor cage
+GS03FLMB-RIS01-04-PHSENF000,Seawater pH,30,30,,phsen_abcdef_sio_mule_instrument,2767,Sensor cage
+GS03FLMB-RIS01-05-FLORTD000,3-Wavelength Fluorometer,30,30,,flort_dj_sio_instrument,22,Sensor cage
+GS05MOAS-GL484-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GS05MOAS-GL484-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GS05MOAS-GL484-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GS05MOAS-GL484-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GS05MOAS-GL485-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GS05MOAS-GL485-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GS05MOAS-GL485-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GS05MOAS-GL485-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GS05MOAS-GL486-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GS05MOAS-GL486-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GS05MOAS-GL486-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GS05MOAS-GL486-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GS05MOAS-GL524-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GS05MOAS-GL524-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GS05MOAS-GL524-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GS05MOAS-GL524-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GS05MOAS-GL560-00-ENG000000,Mobile Asset Controller,0,1000,Engineering,,,
+GS05MOAS-GL560-01-FLORDM000,2-Wavelength Fluorometer,0,1000,,flord_m_glider_instrument,1538,
+GS05MOAS-GL560-02-DOSTAM000,Dissolved Oxygen,0,1000,,dosta_abcdjm_glider_instrument,2750,
+GS05MOAS-GL560-04-CTDGVM000,CTD,0,1000,,ctdgv_m_glider_instrument,1528,
+GS05MOAS-GL561-00-ENG000000,Mobile Asset Controller,0,1000,Lost,,,
+GS05MOAS-GL561-01-FLORDM000,2-Wavelength Fluorometer,0,1000,Lost,flord_m_glider_instrument,1538,
+GS05MOAS-GL561-02-DOSTAM000,Dissolved Oxygen,0,1000,Lost,dosta_abcdjm_glider_instrument,2750,
+GS05MOAS-GL561-04-CTDGVM000,CTD,0,1000,Lost,ctdgv_m_glider_instrument,1528,
+GS05MOAS-PG565-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GS05MOAS-PG565-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GS05MOAS-PG565-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GS05MOAS-PG565-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GS05MOAS-PG565-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GS05MOAS-PG565-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GS05MOAS-PG565-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+GS05MOAS-PG566-00-ENG000000,Mobile Asset Controller,0,200,Engineering,,,
+GS05MOAS-PG566-01-CTDGVM000,CTD,0,200,,ctdgv_m_glider_instrument,1528,
+GS05MOAS-PG566-02-DOSTAM000,Dissolved Oxygen,0,200,,dosta_abcdjm_glider_instrument,2750,
+GS05MOAS-PG566-03-FLORTM000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GS05MOAS-PG566-04-FLORTO000,3-Wavelength Fluorometer,0,200,,flort_m_glider_instrument,1485,
+GS05MOAS-PG566-05-NUTNRM000,Nitrate,0,200,,nutnr_m_glider_instrument,3704,
+GS05MOAS-PG566-06-PARADM000,Photosynthetically Available Radiation,0,200,,parad_m_glider_instrument,7986,
+RS01SBPD-DP01A-00-ENG000000,Mobile Asset Controller,200,2905,Engineering,,,
+RS01SBPD-DP01A-01-CTDPFL104,CTD,200,2905,Recovered Only,,,Deep Profiler
+RS01SBPD-DP01A-02-VEL3DA103,3-D Single Point Velocity Meter,200,2905,Recovered Only,,,Deep Profiler
+RS01SBPD-DP01A-03-FLCDRA102,CDOM Fluorometer,200,2905,Recovered Only,,,Deep Profiler
+RS01SBPD-DP01A-04-FLNTUA102,2-Wavelength Fluorometer,200,2905,Recovered Only,,,Deep Profiler
+RS01SBPD-DP01A-05-OPTAAC102,Spectrophotometer,200,2905,Recovered Only,,,Deep Profiler
+RS01SBPD-DP01A-06-DOSTAD104,Dissolved Oxygen,200,2905,Recovered Only,,,Deep Profiler
+RS01SBPS-PC01A-05-ADCPTD102,Velocity Profiler (150kHz),200,200,,adcp_velocity_earth,,Mid-Water Platform
+RS01SBPS-PC01A-06-VADCPA101,5-Beam Velocity Profiler (600 kHz),200,200,,adcp_velocity_earth,3823,Mid-Water Platform
+RS01SBPS-PC01A-07-CAMDSC102,Digital Still Camera,200,200,Camera,,,Mid-Water Platform
+RS01SBPS-PC01A-08-HYDBBA103,Broadband Acoustic Receiver (Hydrophone),200,200,,antelope_metadata,,Mid-Water Platform
+RS01SBPS-PC01A-4A-CTDPFA103,CTD,200,200,,ctdpf_optode_sample,908,Mid-Water Platform
+RS01SBPS-PC01A-4A-DOSTAD103,Dissolved Oxygen,200,200,,ctdpf_optode_sample,908,Mid-Water Platform
+RS01SBPS-PC01A-4B-PHSENA102,Seawater pH,200,200,,phsen_data_record,939,Mid-Water Platform
+RS01SBPS-PC01A-4C-FLORDD103,2-Wavelength Fluorometer,200,200,,flort_d_data_record,22,Mid-Water Platform
+RS01SBPS-SF01A-2A-CTDPFA102,CTD,5,200,,ctdpf_sbe43_sample,908,Shallow Profiler
+RS01SBPS-SF01A-2A-DOFSTA102,Dissolved Oxygen,5,200,,ctdpf_sbe43_sample,908,Shallow Profiler
+RS01SBPS-SF01A-2D-PHSENA101,Seawater pH,5,200,,phsen_data_record,939,Shallow Profiler
+RS01SBPS-SF01A-3A-FLORTD101,3-Wavelength Fluorometer,5,200,,flort_d_data_record,22,Shallow Profiler
+RS01SBPS-SF01A-3B-OPTAAD101,Spectrophotometer,5,200,,optaa_sample,20,Shallow Profiler
+RS01SBPS-SF01A-3C-PARADA101,Photosynthetically Available Radiation,5,200,,parad_sa_sample,192,Shallow Profiler
+RS01SBPS-SF01A-3D-SPKIRA101,Spectral Irradiance,5,200,,spkir_data_record,2645,Shallow Profiler
+RS01SBPS-SF01A-4A-NUTNRA101,Nitrate,5,200,,nutnr_a_sample,18,Shallow Profiler
+RS01SBPS-SF01A-4B-VELPTD102,Single Point Velocity Meter,5,200,,velpt_velocity_data,3230,Shallow Profiler
+RS01SBPS-SF01A-4F-PCO2WA101,pCO2 Water,5,200,,pco2w_a_sami_data_record,931,Shallow Profiler
+RS01SLBS-LJ01A-05-HPIESA101,"Horizontal Electric Field, Pressure and Inverted Echo Sounder",2906,2906,,horizontal_electric_field,,Located Off Jbox
+RS01SLBS-LJ01A-09-HYDBBA102,Broadband Acoustic Receiver (Hydrophone),2905,2905,,antelope_metadata,,Located Off Jbox
+RS01SLBS-LJ01A-10-ADCPTE101,Velocity Profiler (150kHz),2905,2905,,adcp_velocity_earth,,Located Off Jbox
+RS01SLBS-LJ01A-11-OPTAAC103,Spectrophotometer,2924,2924,,optaa_sample,20,Located Off Jbox
+RS01SLBS-LJ01A-12-CTDPFB101,CTD,2924,2924,,ctdpf_optode_sample,908,Located Off Jbox
+RS01SLBS-LJ01A-12-DOSTAD101,Dissolved Oxygen,2924,2924,,ctdpf_optode_sample,908,Located Off Jbox
+RS01SLBS-MJ01A-05-HYDLFA101,Low Frequency Acoustic Receiver (Hydrophone),2906,2906,,antelope_metadata,,co-located with Seismometer
+RS01SLBS-MJ01A-05-OBSBBA102,Broadband Ocean Bottom Seismometer,2906,2906,,antelope_metadata,,Located Off Jbox
+RS01SLBS-MJ01A-06-PRESTA101,Tidal Seafloor Pressure,2906,2906,,prest_real_time,891,Located Off Jbox
+RS01SLBS-MJ01A-12-VEL3DB101,3-D Single Point Velocity Meter,2906,2906,,vel3d_b_sample,878,Located Off Jbox
+RS01SUM1-LJ01B-05-HYDLFA104,Low Frequency Acoustic Receiver (Hydrophone),779,779,,antelope_metadata,,co-located with Seismometer
+RS01SUM1-LJ01B-05-OBSBBA101,Broadband Ocean Bottom Seismometer,779,779,,antelope_metadata,,Located Off Jbox
+RS01SUM1-LJ01B-06-OBSSPA103,Short-Period Ocean Bottom Seismometer,779,779,,antelope_metadata,,Located Off Jbox
+RS01SUM1-LJ01B-07-OBSSPA102,Short-Period Ocean Bottom Seismometer,779,779,,antelope_metadata,,Located Off Jbox
+RS01SUM1-LJ01B-08-OBSSPA101,Short-Period Ocean Bottom Seismometer,779,779,,antelope_metadata,,Located Off Jbox
+RS01SUM1-LJ01B-09-PRESTB102,Tidal Seafloor Pressure,779,779,,prest_real_time,891,Located Off Jbox
+RS01SUM1-LJ01B-12-VEL3DB104,3-D Single Point Velocity Meter,779,779,,vel3d_b_sample,878,Located Off Jbox
+RS01SUM2-MJ01B-00-FLOBNC101,Benthic Fluid Flow,811,811,Recovered Only,,,
+RS01SUM2-MJ01B-00-FLOBNM101,Benthic Fluid Flow,811,811,Recovered Only,,,
+RS01SUM2-MJ01B-00-OSMOIA101,Osmosis-Based Water Sampler,811,811,Recovered Only,,,Located Off Jbox
+RS01SUM2-MJ01B-05-CAMDSB103,Digital Still Camera,811,811,Camera,,,Located Off Jbox
+RS01SUM2-MJ01B-06-MASSPA101,Mass Spectrometer,811,811,,massp_rga_sample,,Located Off Jbox
+RS01SUM2-MJ01B-12-ADCPSK101,Velocity Profiler (75 kHz),811,811,,adcp_velocity_earth,,Located Off Jbox
+RS03ASHS-MJ03B-00-OSMOIA301,Osmosis-Based Water Sampler,1552,1552,Recovered Only,,,Located Off Jbox
+RS03ASHS-MJ03B-05-OBSSPA302,Short-Period Ocean Bottom Seismometer,1552,1552,,antelope_metadata,,Located Off Jbox
+RS03ASHS-MJ03B-06-OBSSPA301,Short-Period Ocean Bottom Seismometer,1552,1552,,antelope_metadata,,Located Off Jbox
+RS03ASHS-MJ03B-07-TMPSFA301,Diffuse Vent Fluid 3-D Temperature Array,1552,1552,,tmpsf_sample,2630,Located Off Jbox
+RS03ASHS-MJ03B-09-BOTPTA304,Bottom Pressure and Tilt,1552,1552,,botpt_nano_sample,848,Located Off Jbox
+RS03ASHS-MJ03B-10-CTDPFB304,CTD,1552,1552,,ctdpf_optode_sample,908,Located Off Jbox
+RS03ASHS-PN03B-06-CAMHDA301,HD Digital Video Camera,1552,1552,Camera,,,
+RS03AXBS-LJ03A-05-HPIESA301,"Horizontal Electric Field, Pressure and Inverted Echo Sounder",2639,2639,,horizontal_electric_field,,Located Off Jbox
+RS03AXBS-LJ03A-09-HYDBBA302,Broadband Acoustic Receiver (Hydrophone),2594,2594,,antelope_metadata,,Low-Power Jbox
+RS03AXBS-LJ03A-10-ADCPTE303,Velocity Profiler (150kHz),2594,2594,,adcp_velocity_earth,,Low-Power Jbox
+RS03AXBS-LJ03A-11-OPTAAC303,Spectrophotometer,2594,2594,,optaa_sample,20,Located Off Jbox
+RS03AXBS-LJ03A-12-CTDPFB301,CTD,2522,2522,,ctdpf_optode_sample,908,Located Off Jbox
+RS03AXBS-LJ03A-12-DOSTAD301,Dissolved Oxygen,2522,2522,,ctdpf_optode_sample,908,Located Off Jbox
+RS03AXBS-MJ03A-05-HYDLFA301,Low Frequency Acoustic Receiver (Hydrophone),2642,2642,,antelope_metadata,,co-located with Seismometer
+RS03AXBS-MJ03A-05-OBSBBA303,Broadband Ocean Bottom Seismometer,2642,2642,,antelope_metadata,,Located Off Jbox
+RS03AXBS-MJ03A-06-PRESTA301,Tidal Seafloor Pressure,2642,2642,,prest_real_time,891,Located Off Jbox
+RS03AXBS-MJ03A-12-VEL3DB301,3-D Single Point Velocity Meter,2642,2642,,vel3d_b_sample,878,Located Off Jbox
+RS03AXPD-DP03A-00-ENG000000,Mobile Asset Controller,150,2465,Engineering,,,
+RS03AXPD-DP03A-01-CTDPFL304,CTD,150,2465,Recovered Only,,,Deep Profiler
+RS03AXPD-DP03A-02-VEL3DA303,3-D Single Point Velocity Meter,150,2465,Recovered Only,,,Deep Profiler
+RS03AXPD-DP03A-03-FLCDRA302,CDOM Fluorometer,150,2465,Recovered Only,,,Deep Profiler
+RS03AXPD-DP03A-03-FLNTUA302,2-Wavelength Fluorometer,150,2465,Recovered Only,,,Deep Profiler
+RS03AXPD-DP03A-05-OPTAAC302,Spectrophotometer,150,2465,Recovered Only,,,Deep Profiler
+RS03AXPD-DP03A-06-DOSTAD304,Dissolved Oxygen,150,2465,Recovered Only,,,Deep Profiler
+RS03AXPS-PC03A-05-ADCPTD302,Velocity Profiler (150kHz),200,200,,adcp_velocity_earth,,Mid-Water Platform
+RS03AXPS-PC03A-06-VADCPA301,5-Beam Velocity Profiler (600 kHz),200,200,,adcp_velocity_earth,3823,Mid-Water Platform
+RS03AXPS-PC03A-07-CAMDSC302,Digital Still Camera,200,200,Camera,,,Mid-Water Platform
+RS03AXPS-PC03A-08-HYDBBA303,Broadband Acoustic Receiver (Hydrophone),200,200,,antelope_metadata,,Mid-Water Platform
+RS03AXPS-PC03A-4A-CTDPFA303,CTD,200,200,,ctdpf_optode_sample,908,Mid-Water Platform
+RS03AXPS-PC03A-4A-DOSTAD303,Dissolved Oxygen,200,200,,ctdpf_optode_sample,908,Mid-Water Platform
+RS03AXPS-PC03A-4B-PHSENA302,Seawater pH,200,200,,phsen_data_record,939,Mid-Water Platform
+RS03AXPS-PC03A-4C-FLORDD303,2-Wavelength Fluorometer,200,200,,flort_d_data_record,22,Mid-Water Platform
+RS03AXPS-SF03A-2A-CTDPFA302,CTD,5,200,,ctdpf_sbe43_sample,908,Shallow Profiler
+RS03AXPS-SF03A-2A-DOFSTA302,Dissolved Oxygen,5,200,,ctdpf_sbe43_sample,908,Shallow Profiler
+RS03AXPS-SF03A-2D-PHSENA301,Seawater pH,5,200,,phsen_data_record,939,Shallow Profiler
+RS03AXPS-SF03A-3A-FLORTD301,3-Wavelength Fluorometer,5,200,,flort_d_data_record,22,Shallow Profiler
+RS03AXPS-SF03A-3B-OPTAAD301,Spectrophotometer,5,200,,optaa_sample,20,Shallow Profiler
+RS03AXPS-SF03A-3C-PARADA301,Photosynthetically Available Radiation,5,200,,parad_sa_sample,192,Shallow Profiler
+RS03AXPS-SF03A-3D-SPKIRA301,Spectral Irradiance,5,200,,spkir_data_record,2645,Shallow Profiler
+RS03AXPS-SF03A-4A-NUTNRA301,Nitrate,5,200,,nutnr_a_sample,18,Shallow Profiler
+RS03AXPS-SF03A-4B-VELPTD302,Single Point Velocity Meter,5,200,,velpt_velocity_data,3230,Shallow Profiler
+RS03AXPS-SF03A-4F-PCO2WA301,pCO2 Water,5,200,,pco2w_a_sami_data_record,931,Shallow Profiler
+RS03CCAL-MJ03F-05-BOTPTA301,Bottom Pressure and Tilt,1526,1526,,botpt_nano_sample,848,Located Off Jbox
+RS03CCAL-MJ03F-06-HYDLFA305,Low Frequency Acoustic Receiver (Hydrophone),1526,1526,,antelope_metadata,,co-located with Seismometer
+RS03CCAL-MJ03F-06-OBSBBA301,Broadband Ocean Bottom Seismometer,1526,1526,,antelope_metadata,,Located Off Jbox
+RS03ECAL-MJ03E-05-OBSSPA303,Short-Period Ocean Bottom Seismometer,1516,1516,,antelope_metadata,,Located Off Jbox
+RS03ECAL-MJ03E-06-BOTPTA302,Bottom Pressure and Tilt,1516,1516,,botpt_nano_sample,848,Located Off Jbox
+RS03ECAL-MJ03E-08-OBSSPA304,Short-Period Ocean Bottom Seismometer,1516,1516,,antelope_metadata,,Located Off Jbox
+RS03ECAL-MJ03E-09-HYDLFA304,Low Frequency Acoustic Receiver (Hydrophone),1516,1516,,antelope_metadata,,co-located with Seismometer
+RS03ECAL-MJ03E-09-OBSBBA302,Broadband Ocean Bottom Seismometer,1516,1516,,antelope_metadata,,Located Off Jbox
+RS03INT1-MJ03C-05-CAMDSB303,Digital Still Camera,1520,1520,Camera,,,Located Off Jbox
+RS03INT1-MJ03C-06-MASSPA301,Mass Spectrometer,1520,1520,,massp_rga_sample,,Located Off Jbox
+RS03INT1-MJ03C-07-PPSDNA301,Particulate DNA Sampler,1520,1520,Recovered Only,,,co-located with Interactive Sampler
+RS03INT1-MJ03C-07-RASFLA301,Hydrothermal Vent Fluid Interactive Sampler,1520,1520,Recovered Only,,,Located Off Jbox
+RS03INT1-MJ03C-09-THSPHA301,Hydrothermal Vent Fluid In-situ Chemistry,1520,1520,,thsph_sample,2630,Located Off Jbox
+RS03INT1-MJ03C-10-TRHPHA301,Hydrothermal Vent Fluid Temperature and Resistivity,1520,1520,,trhph_sample,2630,Located Off Jbox
+RS03INT2-MJ03D-05-OBSSPA305,Short-Period Ocean Bottom Seismometer,1527,1527,,antelope_metadata,,Located Off Jbox
+RS03INT2-MJ03D-06-BOTPTA303,Bottom Pressure and Tilt,1527,1527,,botpt_nano_sample,848,Located Off Jbox
+RS03INT2-MJ03D-12-VEL3DB304,3-D Single Point Velocity Meter,1527,1527,,vel3d_b_sample,878,Located Off Jbox
