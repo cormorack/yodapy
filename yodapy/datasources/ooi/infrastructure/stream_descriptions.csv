@@ -1,0 +1,588 @@
+name,method,stream_type,display_name,description,status
+adcp_ancillary_system_data,Streamed,Engineering,Ancillary System Data,Engineering Ancillary System Data,active
+adcp_ancillary_system_data_5,Streamed,Engineering,Ancillary System Data - 5 Beam,Engineering Ancillary System Data - 5 Beam,active
+adcp_bottom_track_config,,Engineering,Bottom Track Configuration Data,Engineering Bottom Track Configuration Data,active
+adcp_bottom_track_earth,,Science,Bottom Track Data in Earth Coordinates,Science Bottom Track Data in Earth Coordinates,active
+adcp_bottom_track_inst,,Science,Bottom Track Data Products,Science Bottom Track Data Products,active
+adcp_compass_calibration,Streamed,Calibration,Compass Data,Calibration Compass Data,active
+adcp_compass_calibration_5,Streamed,Calibration,Compass Data - 5 Beam,Calibration Compass Data - 5 Beam,active
+adcp_config,,Engineering,Configuration Data,Engineering Configuration Data,active
+adcp_config_5,,Engineering,Configuration Data - 5 Beam,Engineering Configuration Data - 5 Beam,active
+adcp_engineering,,Engineering,Data,Engineering Data,active
+adcp_engineering_5,,Engineering,Data - 5 Beam,Engineering Data - 5 Beam,active
+adcp_pd0_beam_parsed,Streamed,Science,Data Products,Science Data Products,VOID
+adcp_pd0_earth_parsed,Streamed,Science,Data Products,Science Data Products,VOID
+adcp_pd12_parsed,,,, ,VOID
+adcp_system_configuration,Streamed,Engineering,System Configuration Data,Engineering System Configuration Data,active
+adcp_system_configuration_5,Streamed,Engineering,System Configuration Data - 5 Beam,Engineering System Configuration Data - 5 Beam,active
+adcp_transmit_path,Streamed,Engineering,Transmit Path Data,Engineering Transmit Path Data,active
+adcp_transmit_path_5,,Engineering,Transmit Path Data - 5 Beam,Engineering Transmit Path Data - 5 Beam,active
+adcp_velocity_beam,,Science,Beam Coordinate Data,Science Beam Coordinate Data,active
+adcp_velocity_earth,,Science,Earth Coordinates Data,Science Earth Coordinates Data,active
+adcp_velocity_glider,,Science,Glider Velocity Data,Science Glider Velocity Data,active
+adcp_velocity_inst,,Science,Instrument Data Products,Science Instrument Data Products,active
+adcp_waves_parsed,,,, ,VOID
+adcpa_m_glider_instrument,Telemetered,Science,Data Products,Science Data Products,VOID
+adcpa_m_glider_recovered,Recovered,Science,Data Products,Science Data Products,VOID
+adcpa_n_auv_instrument,,Science,AUV ADCP Data Products,Science AUV ADCP Data Products,active
+adcpa_n_instrument,,,, ,VOID
+adcps_jln_beam_instrument,,,, ,VOID
+adcps_jln_instrument,Recovered,Science,Data Products,Science Data Products,VOID
+adcps_jln_sio_mule_instrument,Telemetered,Science,Glider Mule Data Products,Science Glider Mule Data Products,active
+adcps_jln_stc_instrument,Telemetered,Science,Data Products (STC),Science Data Products (STC),active
+adcps_jln_stc_instrument_recovered,Recovered,Science,Data Products (STC),Science Data Products (STC),active
+adcps_jln_stc_metadata,Telemetered,Engineering,Metadata (STC),Engineering Metadata (STC),active
+adcps_jln_stc_metadata_recovered,Recovered,Engineering,Metadata (STC),Engineering Metadata (STC),active
+adcps_parsed,,,, ,VOID
+adcpt_acfgm_dcl_instrument,,,, ,VOID
+adcpt_acfgm_dcl_instrument_recovered,,,, ,VOID
+adcpt_acfgm_pd0_beam_dcl_instrument,,,, ,VOID
+adcpt_acfgm_pd0_beam_dcl_instrument_recovered,,,, ,VOID
+adcpt_acfgm_pd0_dcl_instrument,Telemetered,Science,Data Products,Science Data Products,VOID
+adcpt_acfgm_pd0_dcl_instrument_recovered,Recovered,Science,Data Products,Science Data Products,VOID
+adcpt_acfgm_pd8_dcl_instrument,Telemetered,Science,PD8 Format Data Products (DCL),Science PD8 Format Data Products (DCL),active
+adcpt_acfgm_pd8_dcl_instrument_recovered,Recovered,Science,PD8 Format Data Products (DCL),Science PD8 Format Data Products (DCL),active
+adcpt_m_instrument_dspec_recovered,Recovered,Science,Directional Wave Spectra Data,Science Directional Wave Spectra Data,active
+adcpt_m_instrument_fcoeff_recovered,Recovered,Science,F Coefficient Data,Science F Coefficient Data,active
+adcpt_m_instrument_log9_recovered,Recovered,Science,LOG9 Data Products,Science LOG9 Data Products,active
+adcpt_m_wvs_recovered,Recovered,Science,Wave Data Products,Science Wave Data Products,active
+antelope_metadata,Streamed,Engineering,Antelope Metadata,Engineering Antelope Metadata,active
+auv_eng_auv_digital_tx_board,,,, ,VOID
+auv_eng_auv_digital_tx_board_recovered,,,, ,VOID
+auv_eng_auv_digital_usbl,,,, ,VOID
+auv_eng_auv_digital_usbl_recovered,,,, ,VOID
+auv_eng_auv_emergency_board,,,, ,VOID
+auv_eng_auv_emergency_board_recovered,Recovered,Engineering,, ,VOID
+auv_eng_auv_fault_message,,,, ,VOID
+auv_eng_auv_fault_message_recovered,Recovered,Engineering,, ,VOID
+auv_eng_auv_imagenex_852,Telemetered,Science,Echosounder Data Products,Science Echosounder Data Products,active
+auv_eng_auv_imagenex_852_recovered,Recovered,Science,Echosounder Data Products,Science Echosounder Data Products,active
+auv_eng_auv_oil_compensator,,,, ,VOID
+auv_eng_auv_oil_compensator_recovered,Recovered,Engineering,, ,VOID
+auv_eng_auv_smart_battery,,,, ,VOID
+auv_eng_auv_smart_battery_recovered,Recovered,Engineering,, ,VOID
+auv_eng_auv_state,,,, ,VOID
+auv_eng_auv_state_recovered,Recovered,Engineering,, ,VOID
+auv_eng_auv_tri_fin_motor,,,, ,VOID
+auv_eng_auv_tri_fin_motor_recovered,Recovered,Engineering,, ,VOID
+botpt_heat_sample,Streamed,Science,HEAT Sensor Data Products,Science HEAT Sensor Data Products,active
+botpt_iris_sample,Streamed,Science,IRIS Sensor Data Products,Science IRIS Sensor Data Products,active
+botpt_lily_leveling,Streamed,Calibration,LILY Leveling Data ,Calibration LILY Leveling Data ,active
+botpt_lily_sample,Streamed,Science,LILY Sensor Data Products,Science LILY Sensor Data Products,active
+botpt_nano_sample,Streamed,Science,NANO Sensor Data Products,Science NANO Sensor Data Products,active
+botpt_nano_sample_15s,,,, ,VOID
+botpt_nano_sample_24hr,,,, ,VOID
+botpt_status,Streamed,Engineering,Instrument Status,Engineering Instrument Status,active
+calibration_status,Streamed,Engineering,Calibration Status,Engineering Calibration Status,active
+camds_disk_status,Streamed,Engineering,Disk Status Data,Engineering Disk Status Data,active
+camds_health_status,Streamed,Engineering,Health Status Data,Engineering Health Status Data,active
+camds_image_metadata,Streamed,Engineering,Image Metadata,Engineering Image Metadata,active
+camds_video,Streamed,Science,Video Data Products,Science Video Data Products,active
+camhd_adread_status,Streamed,Engineering,Data,Engineering Data,active
+camhd_metadata,Streamed,Engineering,Metadata,Engineering Metadata,active
+camhd_streaming_status,Streamed,Engineering,Streaming Status,Engineering Streaming Status,active
+cg_cpm_eng_cpm,Telemetered,Engineering,CPM Controller Status Data,Engineering CPM Controller Status Data,active
+cg_cpm_eng_cpm_recovered,Recovered,Engineering,CPM Controller Status Data,Engineering CPM Controller Status Data,active
+cg_dcl_eng_dcl_cpu_uptime,Telemetered,Engineering,CPU Uptime Data,Engineering CPU Uptime Data,active
+cg_dcl_eng_dcl_cpu_uptime_recovered,Recovered,Engineering,CPU Uptime Data,Engineering CPU Uptime Data,active
+cg_dcl_eng_dcl_dlog_aarm,Telemetered,Engineering,Accelerometer Data,Engineering Accelerometer Data,active
+cg_dcl_eng_dcl_dlog_aarm_recovered,Recovered,Engineering,Accelerometer Data,Engineering Accelerometer Data,active
+cg_dcl_eng_dcl_dlog_mgr,Telemetered,Engineering,Data Log Manager,Engineering Data Log Manager,active
+cg_dcl_eng_dcl_dlog_mgr_recovered,Recovered,Engineering,Data Log Manager,Engineering Data Log Manager,active
+cg_dcl_eng_dcl_dlog_status,Telemetered,Engineering,Data Logger Status,Engineering Data Logger Status,active
+cg_dcl_eng_dcl_dlog_status_recovered,Recovered,Engineering,Data Logger Status,Engineering Data Logger Status,active
+cg_dcl_eng_dcl_error,Telemetered,Engineering,Error Data,Engineering Error Data,active
+cg_dcl_eng_dcl_error_recovered,Recovered,Engineering,Error Data,Engineering Error Data,active
+cg_dcl_eng_dcl_gps,Telemetered,Engineering,GPS Data,Engineering GPS Data,active
+cg_dcl_eng_dcl_gps_recovered,Recovered,Engineering,GPS Data,Engineering GPS Data,active
+cg_dcl_eng_dcl_msg_counts,Telemetered,Engineering,Message Counts Data,Engineering Message Counts Data,active
+cg_dcl_eng_dcl_msg_counts_recovered,Recovered,Engineering,Message Counts Data,Engineering Message Counts Data,active
+cg_dcl_eng_dcl_pps,Telemetered,Engineering,Pulse Data,Engineering Pulse Data,active
+cg_dcl_eng_dcl_pps_recovered,Recovered,Engineering,Pulse Data,Engineering Pulse Data,active
+cg_dcl_eng_dcl_status,Telemetered,Engineering,DCL Status Data,Engineering DCL Status Data,active
+cg_dcl_eng_dcl_status_recovered,Recovered,Engineering,DCL Status Data,Engineering DCL Status Data,active
+cg_dcl_eng_dcl_superv,Telemetered,Engineering,Leak Detect Data,Engineering Leak Detect Data,active
+cg_dcl_eng_dcl_superv_recovered,Recovered,Engineering,Leak Detect Data,Engineering Leak Detect Data,active
+cg_stc_eng_stc,Telemetered,Engineering,STC Controller Status Data,Engineering STC Controller Status Data,active
+cg_stc_eng_stc_recovered,Recovered,Engineering,STC Controller Status Data,Engineering STC Controller Status Data,active
+cspp_eng_cspp_dbg_pdbg_batt_eng,Telemetered,Engineering,Profiler Debug Battery Data,Engineering Profiler Debug Battery Data,active
+cspp_eng_cspp_dbg_pdbg_batt_eng_recovered,Recovered,Engineering,Profiler Debug Battery Data,Engineering Profiler Debug Battery Data,active
+cspp_eng_cspp_dbg_pdbg_gps_eng,Telemetered,Engineering,Profiler Debug GPS Data,Engineering Profiler Debug GPS Data,active
+cspp_eng_cspp_dbg_pdbg_gps_eng_recovered,Recovered,Engineering,Profiler Debug GPS Data,Engineering Profiler Debug GPS Data,active
+cspp_eng_cspp_dbg_pdbg_metadata,Telemetered,Engineering,Profiler Debug Metadata,Engineering Profiler Debug Metadata,active
+cspp_eng_cspp_dbg_pdbg_metadata_recovered,Recovered,Engineering,Profiler Debug Metadata,Engineering Profiler Debug Metadata,active
+cspp_eng_cspp_wc_hmr_eng,Telemetered,Engineering,Winch Controller Compass Data,Engineering Winch Controller Compass Data,active
+cspp_eng_cspp_wc_hmr_eng_recovered,Recovered,Engineering,Winch Controller Compass Data,Engineering Winch Controller Compass Data,active
+cspp_eng_cspp_wc_hmr_metadata,Telemetered,Engineering,Winch Controller Metadata,Engineering Winch Controller Metadata,active
+cspp_eng_cspp_wc_hmr_metadata_recovered,Recovered,Engineering,Winch Controller Metadata,Engineering Winch Controller Metadata,active
+cspp_eng_cspp_wc_sbe_eng,Telemetered,Engineering,Winch Controller Pressure and Velocity Data,Engineering Winch Controller Pressure and Velocity Data,active
+cspp_eng_cspp_wc_sbe_eng_recovered,Recovered,Engineering,Winch Controller Pressure and Velocity Data,Engineering Winch Controller Pressure and Velocity Data,active
+cspp_eng_cspp_wc_sbe_metadata,Telemetered,Engineering,Winch Controller Pressure and Velocity Metadata,Engineering Winch Controller Pressure and Velocity Metadata,active
+cspp_eng_cspp_wc_sbe_metadata_recovered,Recovered,Engineering,Winch Controller Pressure and Velocity Metadata,Engineering Winch Controller Pressure and Velocity Metadata,active
+cspp_eng_cspp_wc_wm_eng,Telemetered,Engineering,Winch Motor Data,Engineering Winch Motor Data,active
+cspp_eng_cspp_wc_wm_eng_recovered,Recovered,Engineering,Winch Motor Data,Engineering Winch Motor Data,active
+cspp_eng_cspp_wc_wm_metadata,Telemetered,Engineering,Winch Motor Metadata,Engineering Winch Motor Metadata,active
+cspp_eng_cspp_wc_wm_metadata_recovered,Recovered,Engineering,Winch Motor Metadata,Engineering Winch Motor Metadata,active
+ctdav_n_auv_instrument,Telemetered,Science,Data Products,Science Data Products,active
+ctdav_n_auv_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+ctdbp_cdef_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+ctdbp_cdef_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+ctdbp_cdef_instrument_recovered,Recovered,Science,Instrument Data Products,Science Instrument Data Products,active
+ctdbp_no_calibration_coefficients,Streamed,Engineering,Calibration Data,Engineering Calibration Data,active
+ctdbp_no_configuration,Streamed,Engineering,Configuration Data,Engineering Configuration Data,active
+ctdbp_no_hardware,Streamed,Engineering,Hardware Data,Engineering Hardware Data,active
+ctdbp_no_optode_settings,Streamed,Engineering,Optode Settings,Engineering Optode Settings,active
+ctdbp_no_sample,Streamed,Science,Data Products,Science Data Products,active
+ctdbp_no_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+ctdbp_p_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+ctdbp_p_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+ctdgv_m_glider_instrument,Telemetered,Science,Data Products,Science Data Products,active
+ctdgv_m_glider_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+ctdmo_ghqr_imodem_instrument,Telemetered,Science,Data Products (Inductive Modem),Science Data Products (Inductive Modem),active
+ctdmo_ghqr_imodem_instrument_recovered,Recovered,Science,Data Products (Inductive Modem),Science Data Products (Inductive Modem),active
+ctdmo_ghqr_imodem_metadata,Telemetered,Engineering,Metadata (Inductive Modem),Engineering Metadata (Inductive Modem),active
+ctdmo_ghqr_imodem_metadata_recovered,Recovered,Engineering,Metadata (Inductive Modem),Engineering Metadata (Inductive Modem),active
+ctdmo_ghqr_instrument_recovered,Recovered,Science,Instrument Data Products,Science Instrument Data Products,active
+ctdmo_ghqr_offset_recovered,Recovered,Engineering,Offset Data,Engineering Offset Data,active
+ctdmo_ghqr_sio_mule_instrument,Telemetered,Science,Glider Mule Data Products,Science Glider Mule Data Products,active
+ctdmo_ghqr_sio_offset,Telemetered,Engineering,Glider Mule Offset Data,Engineering Glider Mule Offset Data,active
+ctdpf_ckl_mmp_cds_instrument,,Science,Data Products,Science Data Products,active
+ctdpf_ckl_wfp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+ctdpf_ckl_wfp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+ctdpf_ckl_wfp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+ctdpf_ckl_wfp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+ctdpf_ckl_wfp_sio_mule_metadata,Telemetered,Engineering,Glider Mule Metadata,Engineering Glider Mule Metadata,active
+ctdpf_j_cspp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+ctdpf_j_cspp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+ctdpf_j_cspp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+ctdpf_j_cspp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+ctdpf_optode_calibration_coefficients,Streamed,Engineering,Optode Calibration Data,Engineering Optode Calibration Data,active
+ctdpf_optode_configuration,Streamed,Engineering,Optode Configuration Data,Engineering Optode Configuration Data,active
+ctdpf_optode_hardware,Streamed,Engineering,Optode Hardware Data,Engineering Optode Hardware Data,active
+ctdpf_optode_sample,Streamed,Science,Optode Data Products,Science Optode Data Products,active
+ctdpf_optode_settings,Streamed,Engineering,Optode Settings,Engineering Optode Settings,active
+ctdpf_optode_status,Streamed,Engineering,Optode Status Data,Engineering Optode Status Data,active
+ctdpf_parsed,,,, ,VOID
+ctdpf_sbe43_calibration_coefficients,Streamed,Engineering,Calibration Data,Engineering Calibration Data,active
+ctdpf_sbe43_configuration,Streamed,Engineering,Configuration Data,Engineering Configuration Data,active
+ctdpf_sbe43_hardware,Streamed,Engineering,Hardware Data,Engineering Hardware Data,active
+ctdpf_sbe43_sample,Streamed,Science,Data Products,Science Data Products,active
+ctdpf_sbe43_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+d1000_sample,Streamed,Science,Data Products,Science Data Products,active
+deep_profiler_dock_eng_data,,,, ,VOID
+deep_profiler_vehicle_eng_data,,,, ,VOID
+dofst_k_wfp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+dofst_k_wfp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dofst_k_wfp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+dofst_k_wfp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+dosta_abcdjm_cspp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+dosta_abcdjm_cspp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dosta_abcdjm_cspp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+dosta_abcdjm_cspp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+dosta_abcdjm_ctdbp_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+dosta_abcdjm_ctdbp_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+dosta_abcdjm_ctdbp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dosta_abcdjm_ctdbp_p_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+dosta_abcdjm_ctdbp_p_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+dosta_abcdjm_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+dosta_abcdjm_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+dosta_abcdjm_glider_instrument,Telemetered,Science,Data Products,Science Data Products,active
+dosta_abcdjm_glider_recovered,Recovered,Science,Data Products,Science Data Products,active
+dosta_abcdjm_mmp_cds_instrument,,Science,Data Products,Science Data Products,active
+dosta_abcdjm_sio_instrument,Telemetered,Science,Data Products,Science Data Products,active
+dosta_abcdjm_sio_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dosta_abcdjm_sio_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+dosta_abcdjm_sio_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+dosta_ln_auv_instrument,Telemetered,Science,Data Products,Science Data Products,active
+dosta_ln_auv_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dosta_ln_wfp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+dosta_ln_wfp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dosta_ln_wfp_sio_instrument,,,, ,VOID
+dpc_acm_instrument,Streamed,Science,Data Products,Science Data Products,VOID
+dpc_acm_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dpc_acs_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dpc_ctd_instrument,Streamed,Science,Data Products,Science Data Products,VOID
+dpc_ctd_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dpc_flcdrtd_instrument,Streamed,Science,Data Products,Science Data Products,VOID
+dpc_flcdrtd_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dpc_flnturtd_instrument,Streamed,Science,Data Products,Science Data Products,VOID
+dpc_flnturtd_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+dpc_mmp_instrument,Streamed,Engineering,Data,Engineering Data,VOID
+dpc_mmp_instrument_recovered,Recovered,Engineering,Data,Engineering Data,active
+dpc_optode_instrument,Streamed,Science,Data Products,Science Data Products,VOID
+dpc_optode_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+echo_sounding,Streamed,Science,Data Products,Science Data Products,active
+fdchp_a_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+fdchp_a_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+fdchp_a_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+flcdr_x_mmp_cds_instrument,,Science,Data Products,Science Data Products,active
+flntu_x_mmp_cds_instrument,,Science,Data Products,Science Data Products,active
+flobn_c_lower_coil_recovered,Recovered,Science,Lower Coil Data Products,Science Lower Coil Data Products,active
+flobn_c_upper_coil_recovered,Recovered,Science,Upper Coil Data Products,Science Upper Coil Data Products,active
+flobn_m_ambient_temperature_recovered,,Science,Ambient Temperature Data Products,Science Ambient Temperature Data Products,active
+flobn_m_direction_x_flow_rate_recovered,,Science,X Flow Rate Data Products,Science X Flow Rate Data Products,active
+flobn_m_direction_y_flow_rate_recovered,,Science,Y Flow Rate Data Products,Science Y Flow Rate Data Products,active
+flobn_m_direction_z_flow_rate_recovered,,Science,Z Flow Rate Data Products,Science Z Flow Rate Data Products,active
+flobn_m_position_x1_recovered,,Science,Position X1 Data,Science Position X1 Data,active
+flobn_m_position_x2_recovered,,Science,Position X2 Data,Science Position X2 Data,active
+flobn_m_position_y1_recovered,,Science,Position Y1 Data,Science Position Y1 Data,active
+flobn_m_position_y2_recovered,,Science,Position Y2 Data,Science Position Y2 Data,active
+flobn_m_position_z1_recovered,,Science,Position Z1 Data,Science Position Z1 Data,active
+flobn_m_position_z2_recovered,,Science,Position Z2 Data,Science Position Z2 Data,active
+flobn_m_position_z3_recovered,,Science,Position Z3 Data,Science Position Z3 Data,active
+flobn_m_position_z4_recovered,,Science,Position Z4 Data,Science Position Z4 Data,active
+flobn_m_position_z5_recovered,,Science,Position Z5 Data,Science Position Z5 Data,active
+flord_d_data_record,,Science,Data Products,Science Data Products,active
+flord_d_status,,Engineering,Status Data,Engineering Status Data,active
+flord_g_ctdbp_p_dcl_instrument,,Science,Data Products (DCL),Science Data Products (DCL),active
+flord_g_ctdbp_p_dcl_instrument_recovered,,Science,Data Products (DCL),Science Data Products (DCL),active
+flord_l_wfp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+flord_l_wfp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+flord_l_wfp_sio_instrument,,,, ,VOID
+flord_m_glider_instrument,Telemetered,Science,Data Products,Science Data Products,active
+flord_m_glider_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+flort_d_data_record,Streamed,Science,Data Products,Science Data Products,active
+flort_d_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+flort_dj_cspp_instrument,Telemetered,Science,CSPP Data Products,Science CSPP Data Products,active
+flort_dj_cspp_instrument_recovered,Recovered,Science,CSPP Data Products,Science CSPP Data Products,active
+flort_dj_cspp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+flort_dj_cspp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+flort_dj_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+flort_dj_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+flort_dj_sio_instrument,Telemetered,Science,Data Products,Science Data Products,active
+flort_dj_sio_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+flort_kn_auv_instrument,,Science,Data Products,Science Data Products,active
+flort_kn_auv_instrument_recovered,,Science,Data Products,Science Data Products,active
+flort_kn_auv_metadata,,Engineering,Metadata,Engineering Metadata,active
+flort_kn_auv_metadata_recovered,,Engineering,Metadata,Engineering Metadata,active
+flort_kn_stc_imodem_instrument,Telemetered,Science,Data Products (STC),Science Data Products (STC),active
+flort_kn_stc_imodem_instrument_recovered,Recovered,Science,Data Products (STC),Science Data Products (STC),active
+flort_m_glider_instrument,Telemetered,Science,Data Products,Science Data Products,active
+flort_m_glider_recovered,Recovered,Science,Data Products,Science Data Products,active
+flort_m_sample,Telemetered,Science,Data Products,Science Data Products,active
+flort_m_sample,Recovered,Science,Data Products,Science Data Products,active
+flort_o_glider_data,Telemetered,Science,Data Products,Science Data Products,active
+flort_o_glider_data,Recovered,Science,Data Products,Science Data Products,active
+flort_sample,Telemetered,Science,Data Products,Science Data Products,active
+flort_sample,Recovered,Science,Data Products,Science Data Products,active
+fuelcell_eng_dcl_recovered,Recovered,Engineering,Data (DCL),Engineering Data (DCL),active
+fuelcell_eng_dcl_telemetered,Telemetered,Engineering,Data (DCL),Engineering Data (DCL),active
+glider_eng_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+glider_eng_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+glider_eng_recovered,Recovered,Engineering,Data,Engineering Data,active
+glider_eng_sci_recovered,Recovered,Engineering,Science Status Data,Engineering Science Status Data,active
+glider_eng_sci_telemetered,Telemetered,Engineering,Science Status Data,Engineering Science Status Data,active
+glider_eng_telemetered,Telemetered,Engineering,Data,Engineering Data,active
+glider_gps_position,,Engineering,GPS Position Data,Engineering GPS Position Data,active
+horizontal_electric_field,Streamed,Science,Horizontal Electric Field Data Products,Science Horizontal Electric Field Data Products,active
+hpies_data_header,,Science,Data Header,Science Data Header,active
+hpies_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+hyd_o_dcl_instrument,Telemetered,Engineering,Data (DCL),Engineering Data (DCL),active
+hyd_o_dcl_instrument_recovered,Recovered,Engineering,Data (DCL),Engineering Data (DCL),active
+ies_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+massp_mcu_status,Streamed,Engineering,MCU Status Data,Engineering MCU Status Data,active
+massp_rga_sample,Streamed,Science,Data Products,Science Data Products,active
+massp_rga_status,Streamed,Engineering,RGA Status Data,Engineering RGA Status Data,active
+massp_turbo_status,Streamed,Engineering,Turbopump Status Data,Engineering Turbopump Status Data,active
+metbk_a_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+metbk_a_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+metbk_hourly,Telemetered,Science,Hourly Averaged Data Products,Science Hourly Averaged Data Products,active
+metbk_sample,,,, ,VOID
+metbk_status,Telemetered,Engineering,Status Data,Engineering Status Data,active
+mopak_o_dcl_accel,Telemetered,Engineering,Accelerometer Data (DCL),Engineering Accelerometer Data (DCL),active
+mopak_o_dcl_accel_recovered,Recovered,Engineering,Accelerometer Data (DCL),Engineering Accelerometer Data (DCL),active
+mopak_o_dcl_rate,Telemetered,Engineering,Rate Data (DCL),Engineering Rate Data (DCL),active
+mopak_o_dcl_rate_recovered,Recovered,Engineering,Rate Data (DCL),Engineering Rate Data (DCL),active
+motor_current,Streamed,Engineering,Motor Current Data,Engineering Motor Current Data,active
+nutnr_a_dark_sample,Streamed,Science,Dark Sample Data,Science Dark Sample Data,active
+nutnr_a_sample,Streamed,Science,Data Products,Science Data Products,active
+nutnr_a_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+nutnr_a_test,Streamed,Engineering,Test Data,Engineering Test Data,active
+nutnr_b_dark_instrument_recovered,Recovered,Engineering,Dark Sample Data,Engineering Dark Sample Data,active
+nutnr_b_dcl_conc_instrument,Telemetered,Science,Concentration ASCII Data Products (DCL),Science Concentration ASCII Data Products (DCL),active
+nutnr_b_dcl_conc_instrument_recovered,Recovered,Science,Concentration ASCII Data Products (DCL),Science Concentration ASCII Data Products (DCL),active
+nutnr_b_dcl_conc_metadata,Telemetered,Engineering,Concentration ASCII Metadata (DCL),Engineering Concentration ASCII Metadata (DCL),active
+nutnr_b_dcl_conc_metadata_recovered,Recovered,Engineering,Concentration ASCII Metadata (DCL),Engineering Concentration ASCII Metadata (DCL),active
+nutnr_b_dcl_dark_conc_instrument,Telemetered,Science,Concentration ASCII Dark Sample Data (DCL),Science Concentration ASCII Dark Sample Data (DCL),active
+nutnr_b_dcl_dark_conc_instrument_recovered,Recovered,Science,Concentration ASCII Dark Sample Data (DCL),Science Concentration ASCII Dark Sample Data (DCL),active
+nutnr_b_dcl_dark_full_instrument,Telemetered,Science,Full ASCII Dark Sample Data (DCL),Science Full ASCII Dark Sample Data (DCL),active
+nutnr_b_dcl_dark_full_instrument_recovered,Recovered,Science,Full ASCII Dark Sample Data (DCL),Science Full ASCII Dark Sample Data (DCL),active
+nutnr_b_dcl_full_instrument,Telemetered,Science,Full ASCII Data Products (DCL),Science Full ASCII Data Products (DCL),active
+nutnr_b_dcl_full_instrument_recovered,Recovered,Science,Full ASCII Data Products (DCL),Science Full ASCII Data Products (DCL),active
+nutnr_b_dcl_full_metadata,Telemetered,Engineering,Full ASCII Metadata (DCL),Engineering Full ASCII Metadata (DCL),active
+nutnr_b_dcl_full_metadata_recovered,Recovered,Engineering,Full ASCII Metadata (DCL),Engineering Full ASCII Metadata (DCL),active
+nutnr_b_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+nutnr_b_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+nutnr_j_cspp_dark_instrument,Telemetered,Science,Dark Sample Data,Science Dark Sample Data,active
+nutnr_j_cspp_dark_instrument_recovered,Recovered,Science,Dark Sample Data,Science Dark Sample Data,active
+nutnr_j_cspp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+nutnr_j_cspp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+nutnr_j_cspp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+nutnr_j_cspp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+nutnr_m_dark_instrument_recovered,Recovered,Science,Dark Sample Data,Science Dark Sample Data,active
+nutnr_m_glider_instrument,Recovered,Science,Data Products,Science Data Products,active
+nutnr_m_glider_instrument,Telemetered,Science,Data Products,Science Data Products,active
+nutnr_m_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+nutnr_n_auv_instrument,Telemetered,Science,Data Products,Science Data Products,active
+nutnr_n_dark_instrument_recovered,Recovered,Science,Dark Sample Data,Science Dark Sample Data,active
+nutnr_n_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+optaa_ac_mmp_cds_instrument,,Science,Data Products,Science Data Products,active
+optaa_dj_cspp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+optaa_dj_cspp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+optaa_dj_cspp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+optaa_dj_cspp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+optaa_dj_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+optaa_dj_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+optaa_dj_dcl_metadata,Telemetered,Engineering,Metadata (DCL),Engineering Metadata (DCL),active
+optaa_dj_dcl_metadata_recovered,Recovered,Engineering,Metadata (DCL),Engineering Metadata (DCL),active
+optaa_sample,Streamed,Science,Data Products,Science Data Products,active
+optaa_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+osmoi_a_subcon_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+parad_j_cspp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+parad_j_cspp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+parad_j_cspp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+parad_j_cspp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+parad_k__stc_imodem_instrument,Telemetered,Science,Data Products (STC),Science Data Products (STC),active
+parad_k__stc_imodem_instrument_recovered,Recovered,Science,Data Products (STC),Science Data Products (STC),active
+parad_m_glider_instrument,Telemetered,Science,Data Products,Science Data Products,active
+parad_m_glider_recovered,Recovered,Science,Data Products,Science Data Products,active
+parad_n_auv_instrument,Telemetered,Science,Data Products,Science Data Products,active
+parad_n_auv_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+parad_sa_config,Streamed,Engineering,Configuration Data,Engineering Configuration Data,active
+parad_sa_sample,Streamed,Science,Data Products,Science Data Products,active
+pco2a_a_dcl_instrument_air,Telemetered,Science,In-Air Data Products (DCL),Science In-Air Data Products (DCL),active
+pco2a_a_dcl_instrument_air_recovered,Recovered,Science,In-Air Data Products (DCL),Science In-Air Data Products (DCL),active
+pco2a_a_dcl_instrument_water,Telemetered,Science,In-Water Data Products (DCL),Science In-Water Data Products (DCL),active
+pco2a_a_dcl_instrument_water_recovered,Recovered,Science,In-Water Data Products (DCL),Science In-Water Data Products (DCL),active
+pco2a_a_dcl_metadata,,,, ,VOID
+pco2a_a_dcl_metadata_recovered,,,, ,VOID
+pco2w_a_battery_voltage,Streamed,Engineering,Battery Voltage,Engineering Battery Voltage,active
+pco2w_a_configuration,Streamed,Engineering,Configuration Data,Engineering Configuration Data,active
+pco2w_a_control_record,,Engineering,Control Record,Engineering Control Record,active
+pco2w_a_regular_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+pco2w_a_sami_data_record,Streamed,Science,Data Products,Science Data Products,active
+pco2w_a_sami_data_record_cal,Streamed,Engineering,Calibration Data,Engineering Calibration Data,active
+pco2w_a_thermistor_voltage,Streamed,Engineering,Thermistor Voltage,Engineering Thermistor Voltage,active
+pco2w_abc_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+pco2w_abc_dcl_instrument_blank,Telemetered,Science,Instrument Blank Data (DCL),Science Instrument Blank Data (DCL),active
+pco2w_abc_dcl_instrument_blank_recovered,Recovered,Science,Instrument Blank Data (DCL),Science Instrument Blank Data (DCL),active
+pco2w_abc_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+pco2w_abc_dcl_metadata,Telemetered,Engineering,Metadata (DCL),Engineering Metadata (DCL),active
+pco2w_abc_dcl_metadata_recovered,Recovered,Engineering,Metadata (DCL),Engineering Metadata (DCL),active
+pco2w_abc_dcl_power,Telemetered,Engineering,Power Data (DCL),Engineering Power Data (DCL),active
+pco2w_abc_dcl_power_recovered,Recovered,Engineering,Power Data (DCL),Engineering Power Data (DCL),active
+pco2w_abc_imodem_control,Telemetered,Engineering,Control Data (Inductive Modem),Engineering Control Data (Inductive Modem),active
+pco2w_abc_imodem_control_recovered,,Engineering,Control Data (Inductive Modem),Engineering Control Data (Inductive Modem),active
+pco2w_abc_imodem_instrument,Telemetered,Science,Data Products (Inductive Modem),Science Data Products (Inductive Modem),active
+pco2w_abc_imodem_instrument_blank,Telemetered,Science,Instrument Blank Data (Inductive Modem),Science Instrument Blank Data (Inductive Modem),active
+pco2w_abc_imodem_instrument_blank_recovered,,Science,Instrument Blank Data (Inductive Modem),Science Instrument Blank Data (Inductive Modem),active
+pco2w_abc_imodem_instrument_recovered,,Science,Data Products (Inductive Modem),Science Data Products (Inductive Modem),active
+pco2w_abc_imodem_metadata,Telemetered,Engineering,Metadata (Inductive Modem),Engineering Metadata (Inductive Modem),active
+pco2w_abc_imodem_metadata_recovered,,Engineering,Metadata (Inductive Modem),Engineering Metadata (Inductive Modem),active
+pco2w_abc_imodem_power,Telemetered,Engineering,Power Data (Inductive Modem),Engineering Power Data (Inductive Modem),active
+pco2w_abc_imodem_power_recovered,,Engineering,Power Data (Inductive Modem),Engineering Power Data (Inductive Modem),active
+pco2w_abc_instrument,Recovered,Science,Data Products,Science Data Products,active
+pco2w_abc_instrument_blank,Recovered,Science,Instrument Blank Data,Science Instrument Blank Data,active
+pco2w_abc_metadata,Recovered,Engineering,Metadata,Engineering Metadata,active
+pco2w_abc_power,Recovered,Engineering,Power Data,Engineering Power Data,active
+pco2w_b_battery_voltage,Streamed,Engineering,Battery Voltage,Engineering Battery Voltage,active
+pco2w_b_configuration,Streamed,Engineering,Configuration Data,Engineering Configuration Data,active
+pco2w_b_control_record,,Engineering,Control Record,Engineering Control Record,active
+pco2w_b_dev1_data_record,Streamed,Engineering,Dev1 Data,Engineering Dev1 Data,active
+pco2w_b_regular_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+pco2w_b_sami_data_record,Streamed,Science,Data Products,Science Data Products,active
+pco2w_b_sami_data_record_cal,Streamed,Engineering,Calibration Data,Engineering Calibration Data,active
+pco2w_b_thermistor_voltage,Streamed,Engineering,Thermistor Voltage,Engineering Thermistor Voltage,active
+phsen_abcdef_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+phsen_abcdef_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+phsen_abcdef_dcl_metadata,Telemetered,Engineering,Metadata (DCL),Engineering Metadata (DCL),active
+phsen_abcdef_dcl_metadata_recovered,Recovered,Engineering,Metadata (DCL),Engineering Metadata (DCL),active
+phsen_abcdef_imodem_control,Telemetered,Engineering,Control Data (Inductive Modem),Engineering Control Data (Inductive Modem),active
+phsen_abcdef_imodem_control_recovered,Recovered,Engineering,Control Data (Inductive Modem),Engineering Control Data (Inductive Modem),active
+phsen_abcdef_imodem_instrument,Telemetered,Science,Data Products (Inductive Modem),Science Data Products (Inductive Modem),active
+phsen_abcdef_imodem_instrument_recovered,Recovered,Science,Data Products (Inductive Modem),Science Data Products (Inductive Modem),active
+phsen_abcdef_imodem_metadata,Telemetered,Engineering,Metadata (Inductive Modem),Engineering Metadata (Inductive Modem),active
+phsen_abcdef_imodem_metadata_recovered,Recovered,Engineering,Metadata (Inductive Modem),Engineering Metadata (Inductive Modem),active
+phsen_abcdef_instrument,Recovered,Science,Data Products,Science Data Products,active
+phsen_abcdef_metadata,Recovered,Engineering,Metadata,Engineering Metadata,active
+phsen_abcdef_sio_mule_instrument,Telemetered,Science,Glider Mule Data Products,Science Glider Mule Data Products,active
+phsen_abcdef_sio_mule_metadata,Telemetered,Engineering,Glider Mule Metadata,Engineering Glider Mule Metadata,active
+phsen_battery_voltage,Streamed,Engineering,Battery Voltage,Engineering Battery Voltage,active
+phsen_configuration,Streamed,Engineering,Configuration Data,Engineering Configuration Data,active
+phsen_control_record,,,, ,VOID
+phsen_data_record,Streamed,Science,Data Products,Science Data Products,active
+phsen_parsed,,,, ,VOID
+phsen_regular_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+phsen_thermistor_voltage,Streamed,Engineering,Thermistor Voltage,Engineering Thermistor Voltage,active
+ppsdn_a_subcon_instrument_recovered,,Science,Data Products,Science Data Products,active
+ppsdn_sample_result,,Engineering,Pump Status,Engineering Pump Status,active
+presf_abc_dcl_tide_measurement,Telemetered,Science,Tide Measurement Data Products (DCL),Science Tide Measurement Data Products (DCL),active
+presf_abc_dcl_tide_measurement_recovered,Recovered,Science,Tide Measurement Data Products (DCL),Science Tide Measurement Data Products (DCL),active
+presf_abc_dcl_wave_burst,Telemetered,Science,Wave Burst Data Products (DCL),Science Wave Burst Data Products (DCL),active
+presf_abc_dcl_wave_burst_recovered,Recovered,Science,Wave Burst Data Products (DCL),Science Wave Burst Data Products (DCL),active
+presf_abc_tide_measurement_recovered,Recovered,Science,Tide Measurement Data Products,Science Tide Measurement Data Products,active
+presf_abc_wave_burst_recovered,Recovered,Science,Wave Burst Data Products,Science Wave Burst Data Products,active
+presf_calibration_coefficients,Telemetered,Engineering,Calibration Data,Engineering Calibration Data,active
+presf_operating_status,Telemetered,Engineering,Status Data,Engineering Status Data,active
+presf_tide_measurement,Telemetered,Science,Tide Measurement Data Products,Science Tide Measurement Data Products,active
+presf_wave_burst,Telemetered,Science,Wave Burst Data Products,Science Wave Burst Data Products,active
+presf_wave_statistics,Telemetered,Science,Wave Statistics Data Products,Science Wave Statistics Data Products,active
+prest_configuration_data,Streamed,Engineering,Configuration Data,Engineering Configuration Data,active
+prest_device_status,Streamed,Engineering,Device Status,Engineering Device Status,active
+prest_event_counter,Streamed,Engineering,Event Counter Data,Engineering Event Counter Data,active
+prest_hardware_data,Streamed,Engineering,Hardware Data,Engineering Hardware Data,active
+prest_real_time,Streamed,Science,Data Products,Science Data Products,active
+prest_reference_oscillator,Streamed,Engineering,Reference Oscillator Data,Engineering Reference Oscillator Data,active
+primary_node_eng_data,,,, ,VOID
+primary_node_out_of_band_port_data,,,, ,VOID
+primary_node_port_eng_data,,,, ,VOID
+rasfl_a_subcon_instrument_recovered,,Science,Data Products,Science Data Products,active
+rasfl_sample_result,,Engineering,Pump Status,Engineering Pump Status,active
+rte_o_dcl_instrument,Telemetered,Engineering,Radar Target Enhancer Data (DCL),Engineering Radar Target Enhancer Data (DCL),active
+rte_o_dcl_instrument_recovered,Recovered,Engineering,Radar Target Enhancer Data (DCL),Engineering Radar Target Enhancer Data (DCL),active
+sami_regular_status,,,, ,VOID
+secondary_node_eng_data,,,, ,VOID
+secondary_node_lpjbox_eng_data,,,, ,VOID
+secondary_node_port_eng_data,,,, ,VOID
+shallow_profiler_winch_eng_data,,,, ,VOID
+shore_station_force_10_network_port_data,,,, ,VOID
+shore_station_otn_sea_side_port_data,,,, ,VOID
+shore_station_otn_shore_side_port_data,,,, ,VOID
+shore_station_power_feed_equipment_eng_data,,,, ,VOID
+shore_station_time_server_eng_data,,,, ,VOID
+shore_station_ups_line_eng_data,,,, ,VOID
+shore_station_ups_status,,,, ,VOID
+sio_eng_control_status,Telemetered,Engineering,Control Status Data,Engineering Control Status Data,active
+sio_eng_control_status_recovered,Recovered,Engineering,Control Status Data,Engineering Control Status Data,active
+spkir_a_configuration_record,Streamed,Engineering,Configuration Record Data,Engineering Configuration Record Data,active
+spkir_abj_cspp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+spkir_abj_cspp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+spkir_abj_cspp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+spkir_abj_cspp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+spkir_abj_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+spkir_abj_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+spkir_data_record,Streamed,Science,Data Products,Science Data Products,active
+stm_timestamp,Streamed,Engineering,STM Timestamp Data,Engineering STM Timestamp Data,active
+thsph_sample,Streamed,Science,Data Products,Science Data Products,active
+tmpsf_engineering,Streamed,Engineering,Data,Engineering Data,active
+tmpsf_sample,Streamed,Science,Data Products,Science Data Products,active
+trhph_sample,Streamed,Science,Data Products,Science Data Products,active
+trhph_status,Streamed,Engineering,Status Data,Engineering Status Data,active
+vadcp_4beam_system_configuration,Streamed,Engineering,Data,Engineering Data,VOID
+vadcp_5thbeam_compass_calibration,Streamed,Calibration,Data,Calibration Data,VOID
+vadcp_5thbeam_pd0_beam_parsed,Streamed,Science,Data Products,Science Data Products,VOID
+vadcp_5thbeam_system_configuration,Streamed,Engineering,Data,Engineering Data,VOID
+vadcp_ancillary_system_data,Streamed,Engineering,Data,Engineering Data,VOID
+vadcp_pd0_beam_parsed,Streamed,Science,Data Products,Science Data Products,VOID
+vadcp_transmit_path,Streamed,Engineering,Data,Engineering Data,VOID
+vadcp_velocity_beam,Streamed,Science,Velocity Data Products,Science Velocity Data Products,active
+vadcp_velocity_beam_5,Streamed,Science,Beam 5 Data Products,Science Beam 5 Data Products,active
+vel3d_a_mmp_cds_instrument,,,, ,VOID
+vel3d_b_engineering,Streamed,Engineering,Data,Engineering Data,active
+vel3d_b_sample,Streamed,Science,Data Products,Science Data Products,active
+vel3d_cd_battery_voltage,Streamed,Engineering,Battery Voltage,Engineering Battery Voltage,active
+vel3d_cd_data_header,Streamed,Engineering,Data Header,Engineering Data Header,active
+vel3d_cd_dcl_data_header,Telemetered,Engineering,Data Header (DCL),Engineering Data Header (DCL),active
+vel3d_cd_dcl_data_header_recovered,Recovered,Engineering,Data Header (DCL),Engineering Data Header (DCL),active
+vel3d_cd_dcl_hardware_configuration,Telemetered,Engineering,Hardware Configuration (DCL),Engineering Hardware Configuration (DCL),active
+vel3d_cd_dcl_hardware_configuration_recovered,Recovered,Engineering,Hardware Configuration (DCL),Engineering Hardware Configuration (DCL),active
+vel3d_cd_dcl_head_configuration,Telemetered,Engineering,Header Configuration (DCL),Engineering Header Configuration (DCL),active
+vel3d_cd_dcl_head_configuration_recovered,Recovered,Engineering,Header Configuration (DCL),Engineering Header Configuration (DCL),active
+vel3d_cd_dcl_system_data,Telemetered,Engineering,System Data (DCL),Engineering System Data (DCL),active
+vel3d_cd_dcl_system_data_recovered,Recovered,Engineering,System Data (DCL),Engineering System Data (DCL),active
+vel3d_cd_dcl_user_configuration,Telemetered,Engineering,User Configuration (DCL),Engineering User Configuration (DCL),active
+vel3d_cd_dcl_user_configuration_recovered,Recovered,Engineering,User Configuration (DCL),Engineering User Configuration (DCL),active
+vel3d_cd_dcl_velocity_data,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+vel3d_cd_dcl_velocity_data_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+vel3d_cd_hardware_configuration,Streamed,Engineering,Hardware Configuration,Engineering Hardware Configuration,active
+vel3d_cd_head_configuration,Streamed,Engineering,Header Configuration,Engineering Header Configuration,active
+vel3d_cd_identification_string,Streamed,Engineering,Identification String,Engineering Identification String,active
+vel3d_cd_system_data,Streamed,Engineering,System Data,Engineering System Data,active
+vel3d_cd_user_configuration,Streamed,Engineering,User Configuration,Engineering User Configuration,active
+vel3d_cd_velocity_data,Streamed,Science,Data Products,Science Data Products,active
+vel3d_clock_data,Streamed,Engineering,Clock Data,Engineering Clock Data,active
+vel3d_k_wfp_instrument,Recovered,Science,Data Products,Science Data Products,active
+vel3d_k_wfp_metadata,Recovered,Engineering,Metadata,Engineering Metadata,active
+vel3d_k_wfp_stc_instrument,Telemetered,Science,Data Products (STC),Science Data Products (STC),active
+vel3d_k_wfp_stc_metadata,Telemetered,Engineering,Metadata (STC),Engineering Metadata (STC),active
+vel3d_k_wfp_string,Recovered,Engineering,String Data,Engineering String Data,active
+vel3d_l_wfp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+vel3d_l_wfp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+vel3d_l_wfp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+vel3d_l_wfp_sio_mule_metadata,Telemetered,Engineering,Glider Mule Metadata,Engineering Glider Mule Metadata,active
+velpt_ab_dcl_diagnostics,Telemetered,Engineering,Diagnostics Data (DCL),Engineering Diagnostics Data (DCL),active
+velpt_ab_dcl_diagnostics_metadata,Telemetered,Engineering,Diagnostics Metadata (DCL),Engineering Diagnostics Metadata (DCL),active
+velpt_ab_dcl_diagnostics_metadata_recovered,Recovered,Engineering,Diagnostics Metadata (DCL),Engineering Diagnostics Metadata (DCL),active
+velpt_ab_dcl_diagnostics_recovered,Recovered,Engineering,Diagnostics Data (DCL),Engineering Diagnostics Data (DCL),active
+velpt_ab_dcl_instrument,Telemetered,Science,Data Products (DCL),Science Data Products (DCL),active
+velpt_ab_dcl_instrument_recovered,Recovered,Science,Data Products (DCL),Science Data Products (DCL),active
+velpt_ab_diagnostics_metadata_recovered,Recovered,Engineering,Instrument Diagnostics Metadata,Engineering Instrument Diagnostics Metadata,active
+velpt_ab_diagnostics_recovered,Recovered,Engineering,Instrument Diagnostics Data,Engineering Instrument Diagnostics Data,active
+velpt_ab_instrument_metadata_recovered,Recovered,Engineering,Instrument Metadata,Engineering Instrument Metadata,active
+velpt_ab_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+velpt_battery_voltage,Streamed,Engineering,Battery Voltage,Engineering Battery Voltage,active
+velpt_clock_data,Streamed,Engineering,Clock Data,Engineering Clock Data,active
+velpt_data_header,,,, ,VOID
+velpt_hardware_configuration,Streamed,Engineering,Hardware Configuration,Engineering Hardware Configuration,active
+velpt_head_configuration,Streamed,Engineering,Head Configuration,Engineering Head Configuration,active
+velpt_identification_string,Streamed,Engineering,Identification String,Engineering Identification String,active
+velpt_j_cspp_instrument,Telemetered,Science,Data Products,Science Data Products,active
+velpt_j_cspp_instrument_recovered,Recovered,Science,Data Products,Science Data Products,active
+velpt_j_cspp_metadata,Telemetered,Engineering,Metadata,Engineering Metadata,active
+velpt_j_cspp_metadata_recovered,Recovered,Engineering,Metadata,Engineering Metadata,active
+velpt_system_data,,,, ,VOID
+velpt_user_configuration,Streamed,Engineering,Configuration Data,Engineering Configuration Data,active
+velpt_velocity_data,Streamed,Science,Data Products,Science Data Products,active
+wavss_a_dcl_fourier,Telemetered,Science,Fourier Data Products (DCL),Science Fourier Data Products (DCL),active
+wavss_a_dcl_fourier_recovered,Recovered,Science,Fourier Data Products (DCL),Science Fourier Data Products (DCL),active
+wavss_a_dcl_mean_directional,Telemetered,Science,Mean Directional Data Products (DCL),Science Mean Directional Data Products (DCL),active
+wavss_a_dcl_mean_directional_recovered,Recovered,Science,Mean Directional Data Products (DCL),Science Mean Directional Data Products (DCL),active
+wavss_a_dcl_motion,Telemetered,Science,Motion Data Products (DCL),Science Motion Data Products (DCL),active
+wavss_a_dcl_motion_recovered,Recovered,Science,Motion Data Products (DCL),Science Motion Data Products (DCL),active
+wavss_a_dcl_non_directional,Telemetered,Science,Non Directional Data Products (DCL),Science Non Directional Data Products (DCL),active
+wavss_a_dcl_non_directional_recovered,Recovered,Science,Non Directional Data Products (DCL),Science Non Directional Data Products (DCL),active
+wavss_a_dcl_statistics,Telemetered,Science,Statistics Data Products (DCL),Science Statistics Data Products (DCL),active
+wavss_a_dcl_statistics_recovered,Recovered,Science,Statistics Data Products (DCL),Science Statistics Data Products (DCL),active
+wfp_eng__stc_imodem_status_recovered,,,, ,VOID
+wfp_eng_stc_imodem_engineering,Telemetered,Engineering,STC Inductive Modem Data,Engineering STC Inductive Modem Data,active
+wfp_eng_stc_imodem_engineering_recovered,Recovered,Engineering,STC Inductive Modem Data,Engineering STC Inductive Modem Data,active
+wfp_eng_stc_imodem_start_time,Telemetered,Engineering,STC Inductive Modem Start Time,Engineering STC Inductive Modem Start Time,active
+wfp_eng_stc_imodem_start_time_recovered,Recovered,Engineering,STC Inductive Modem Start Time,Engineering STC Inductive Modem Start Time,active
+wfp_eng_stc_imodem_status,Telemetered,Engineering,STC Inductive Modem Status,Engineering STC Inductive Modem Status,active
+wfp_eng_stc_imodem_status_recovered,Recovered,Engineering,STC Inductive Modem Status,Engineering STC Inductive Modem Status,active
+wfp_eng_wfp_sio_mule_engineering,Telemetered,Engineering,Glider Mule Data,Engineering Glider Mule Data,active
+wfp_eng_wfp_sio_mule_start_time,Telemetered,Engineering,Glider Mule Start Time,Engineering Glider Mule Start Time,active
+wfp_eng_wfp_sio_mule_status,Telemetered,Engineering,Glider Mule Status,Engineering Glider Mule Status,active
+winch_cspp_eng,Telemetered,Engineering,Winch Data,Engineering Winch Data,active
+zplsc_c_instrument,Telemetered,Science,Data Products,Science Data Products,active
+zplsc_metadata,Streamed,Engineering,Metadata,Engineering Metadata,active
+zplsc_status,Streamed,Engineering,Instrument Status,Engineering Instrument Status,active
+tmpsf_L1,,,, ,VOID
+ctd_external_dataset,,,, ,VOID
+ctd_simulator,,,, ,VOID
+dosta_d_sample,,,, ,VOID
+dosta_d_engineering,,,, ,VOID
+ggldr_ctdgv_delayed,,,, ,VOID
+ggldr_dosta_delayed,,,, ,VOID
+ggldr_eng_delayed,,,, ,VOID
+ggldr_flord_delayed,,,, ,VOID
+cgldr_flort_delayed,,,, ,VOID
+cgldr_engineering_delayed,,,, ,VOID
+cgldr_parad_delayed,,,, ,VOID
+vel3d_k_wfp_instrument,Recovered,Science,Data Products,Science Data Products,VOID
+flord_l_wfp_sio_instrument,,,, ,VOID
+ctdbp_cdef_dcl_cp_instrument,,,, ,VOID
+ctdbp_cdef_dcl_cp_instrument_recovered,,,, ,VOID
+ctdbp_cdef_ce_instrument_recovered,,,, ,VOID
+ctdbp_cdef_cp_instrument_recovered,,,, ,VOID
+ctdbp_cdef_ce_dosta_recovered,,,, ,VOID
+ctdbp_cdef_dcl_ce_dosta,,,, ,VOID
+ctdbp_cdef_dcl_ce_dosta_recovered,,,, ,VOID
+ctdbp_cdef_dcl_ce_instrument,,,, ,VOID
+ctdbp_cdef_dcl_ce_instrument_recovered,,,, ,VOID
+ctdbp_cdef_calibration_coefficients,,,, ,VOID
+ctdbp_cdef_sample,,,, ,VOID
+ctdbp_cdef_status,,,, ,VOID
+metbk_parsed,,,, ,VOID
+adcp_error_status,,,, ,VOID
+adcp_error_status_5,,,, ,VOID

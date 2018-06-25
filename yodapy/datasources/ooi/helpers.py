@@ -39,8 +39,11 @@ def create_streams_cache(fold_path):
     return rawdf
 
 
-def check_data_status(session, urldf, **kwargs):
-    urls = urldf.iloc[0]
+def check_data_status(session, data, **kwargs):
+    urls = {
+        'thredds_url': data['allURLs'][0],
+        'status_url': data['allURLs'][1]
+    }
     check_complete = os.path.join(urls['status_url'], 'status.txt')
 
     req = None

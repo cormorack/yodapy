@@ -80,10 +80,7 @@ class OOI(DataSource):
                 raise Exception('{}'.format(data))
 
         if self._data_type == 'netCDF':
-            return pd.DataFrame.from_records([{
-                'thredds_url': data['allURLs'][0],
-                'status_url': data['allURLs'][1]
-            }])
+            return data
 
         raw_pd = pd.DataFrame.from_records(data).copy()
         raw_pd.loc[:, 'time'] = raw_pd['time'].apply(

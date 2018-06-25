@@ -1,0 +1,127 @@
+class,series,name,make,model
+ADCPA,M,Velocity Profiler (600kHz),Teledyne RDI,Explorer DVL 600 kHz
+ADCPA,N,Velocity Profiler (600kHz),Teledyne RDI,Workhorse Navigator 600 kHz dual
+ADCPS,I,Velocity Profiler (75 kHz),Teledyne RDI,WorkHorse LongRanger Monitor 75khz
+ADCPS,J,Velocity Profiler (75 kHz),Teledyne RDI,WorkHorse LongRanger Sentinel 75khz
+ADCPS,K,Velocity Profiler (75 kHz),Teledyne RDI,WorkHorse LongRanger Monitor 75khz
+ADCPS,L,Velocity Profiler (75 kHz),Teledyne RDI,WorkHorse LongRanger Sentinel 75khz - inductive
+ADCPS,N,Velocity Profiler (75 kHz),Teledyne RDI,WorkHorse LongRanger Sentinel 75khz - inductive
+ADCPT,A,Velocity Profiler (600kHz),Teledyne RDI,WorkHorse Sentinel 600khz
+ADCPT,B,Velocity Profiler (300kHz),Teledyne RDI,WorkHorse Monitor 300khz
+ADCPT,C,Velocity Profiler (300kHz),Teledyne RDI,WorkHorse Sentinel 300khz
+ADCPT,D,Velocity Profiler (150kHz),Teledyne RDI,Workhorse Quartermaster Monitor 150kHz
+ADCPT,E,Velocity Profiler (150kHz),Teledyne RDI,Workhorse Quartermaster Monitor 150kHz
+ADCPT,F,Velocity Profiler (150kHz),Teledyne RDI,WorkHorse Sentinel 150khz
+ADCPT,G,Velocity Profiler (150kHz),Teledyne RDI,WorkHorse Sentinel 150khz - inductive
+ADCPT,M,Velocity Profiler (600kHz),Teledyne RDI,WorkHorse Sentinel 600khz
+BOTPT,A,Bottom Pressure and Tilt,PMEL/Chadwick,PMEL cabled BPR/Tilt
+CAMDS,A,Digital Still Camera,Kongsberg,Modified OE14-408
+CAMDS,B,Digital Still Camera,Kongsberg,Custom Digital Still Camera Assembly
+CAMDS,C,Digital Still Camera,Kongsberg,Custom Digital Still Camera Assembly
+CAMHD,A,HD Digital Video Camera,SubC,1Cam
+CPMEN,G,Platform Controller,WHOI,Communications and Power Manager
+CTDAV,N,CTD,Sea-Bird,SBE Glider Payload CTD (GP-CTD)
+CTDBP,C,CTD,Sea-Bird,SBE 16plusV2
+CTDBP,D,CTD,Sea-Bird,SBE 16plusV2
+CTDBP,E,CTD,Sea-Bird,SBE 16plusV2
+CTDBP,F,CTD,Sea-Bird,SBE 16plusV2
+CTDBP,N,CTD,Sea-Bird,SBE 16plusV2
+CTDBP,O,CTD,Sea-Bird,SBE 16plusV2
+CTDBP,P,CTD,Sea-Bird,SBE 16plus-IM V2
+CTDGV,M,CTD,Sea-Bird,SBE Glider Payload CTD (GP-CTD)
+CTDMO,G,CTD,Sea-Bird,SBE 37IM
+CTDMO,H,CTD,Sea-Bird,SBE 37IM
+CTDMO,Q,CTD,Sea-Bird,SBE 37IM
+CTDMO,R,CTD,Sea-Bird,SBE 37IM
+CTDPF,A,CTD,Sea-Bird,SBE 16plusV2
+CTDPF,B,CTD,Sea-Bird,SBE 16plusV2
+CTDPF,J,CTD,Sea-Bird,FastCAT 49 CTD
+CTDPF,K,CTD,Sea-Bird,SBE 52MP
+CTDPF,L,CTD,Sea-Bird,SBE 52MP
+DCLEN,G,Data Concentrator Logger (DCL),WHOI,Data Concentrator Logger
+DOFST,A,Dissolved Oxygen,Sea-Bird,SBE 43
+DOFST,K,Dissolved Oxygen,Sea-Bird,SBE 43F
+DOSTA,D,Dissolved Oxygen,Aanderaa,Optode 4831
+DOSTA,J,Dissolved Oxygen,Aanderaa,Optode 4831
+DOSTA,L,Dissolved Oxygen,Aanderaa,Optode 4330
+DOSTA,M,Dissolved Oxygen,Aanderaa,Optode 4831
+DOSTA,N,Dissolved Oxygen,Aanderaa,Optode 4330
+ENG00,0,Mobile Asset Controller,Teledyne Webb,G2 Slocum Gliders
+FDCHP,A,Direct Covariance Flux,WHOI,DCFS
+FLCDR,A,CDOM Fluorometer,WET Labs,FLCDRTD (CDOM)
+FLNTU,A,2-Wavelength Fluorometer,WET Labs,FLNTURTD (chlorophyll and backscatter)
+FLOBN,C,Benthic Fluid Flow,"Tryon, UCSD",CAT meter
+FLOBN,M,Benthic Fluid Flow,"Solomon, UW",Mosquito benthic flow sampler
+FLORD,D,2-Wavelength Fluorometer,WET Labs,ECO Triplet-w
+FLORD,G,2-Wavelength Fluorometer,WET Labs,ECO FLBB-SB
+FLORD,L,2-Wavelength Fluorometer,WET Labs,FLBBRTD
+FLORD,M,2-Wavelength Fluorometer,WET Labs,ECO Puck FLBB-SLC
+FLORT,D,3-Wavelength Fluorometer,WET Labs,ECO Triplet-w
+FLORT,J,3-Wavelength Fluorometer,WET Labs,ECO Triplet-w
+FLORT,K,3-Wavelength Fluorometer,WET Labs,ECO Triplet
+FLORT,M,3-Wavelength Fluorometer,WET Labs,ECO Puck FLBBCD-SLK
+FLORT,N,3-Wavelength Fluorometer,WET Labs,ECO Triplet
+FLORT,O,3-Wavelength Fluorometer,WET Labs,ECO BB3
+HPIES,A,"Horizontal Electric Field, Pressure and Inverted Echo Sounder","Sanford, UW",cabled HPIES
+HYDBB,A,Broadband Acoustic Receiver (Hydrophone),Ocean Sonics,icListen HF
+HYDGN,0,Hydrogen Sensor,RKI Instruments,M2A transmitters
+HYDLF,A,Low Frequency Acoustic Receiver (Hydrophone),HTI,90-U
+MASSP,A,Mass Spectrometer,"Girguis, Harvard",cabled Mass Spec
+METBK,A,Bulk Meteorology Instrument Package,Star Engineering,ASIMET
+MOPAK,0,3-Axis Motion Pack,MicroStrain,3DM-GX3-25
+NUTNR,A,Nitrate,Satlantic,Deep SUNA
+NUTNR,B,Nitrate,Satlantic,ISUS
+NUTNR,J,Nitrate,Satlantic,SUNA V2
+NUTNR,M,Nitrate,Satlantic,SUNA V2
+NUTNR,N,Nitrate,Satlantic,Deep SUNA
+OBSBB,A,Broadband Ocean Bottom Seismometer,Guralp,CMG-1T/5T
+OBSSP,A,Short-Period Ocean Bottom Seismometer,Guralp,CMG-6TF
+OPTAA,C,Spectrophotometer,WET Labs,AC-S Deep
+OPTAA,D,Spectrophotometer,WET Labs,AC-S
+OPTAA,J,Spectrophotometer,WET Labs,AC-S
+OSMOI,A,Osmosis-Based Water Sampler,"TLR, Inc.",OsmoSampler
+PARAD,A,Photosynthetically Available Radiation,Satlantic,digital PAR
+PARAD,J,Photosynthetically Available Radiation,WET Labs,ECO PAR
+PARAD,K,Photosynthetically Available Radiation,Biospherical Instruments,QSP-2200
+PARAD,M,Photosynthetically Available Radiation,Biospherical Instruments,QSP-2155
+PARAD,N,Photosynthetically Available Radiation,Biospherical Instruments,QSP-2150
+PCO2A,A,pCO2 Air-Sea,Pro-Oceanus,pCO2-pro
+PCO2W,A,pCO2 Water,Sunburst,SAMI-pCO2
+PCO2W,B,pCO2 Water,Sunburst,SAMI-pCO2
+PCO2W,C,pCO2 Water,Sunburst,SAMI-pCO2 - inductive
+PHSEN,A,Seawater pH,Sunburst,SAMI-pH
+PHSEN,D,Seawater pH,Sunburst,SAMI-pH
+PHSEN,E,Seawater pH,Sunburst,SAMI-pH- inductive
+PHSEN,F,Seawater pH,Sunburst,SAMI-pH
+PPSDN,A,Particulate DNA Sampler,PMEL/Butterfield,modified McLane Particulate Sampler
+PRESF,A,Seafloor Pressure,Sea-Bird,SBE 26plus
+PRESF,B,Seafloor Pressure,Sea-Bird,SBE 26plus
+PRESF,C,Seafloor Pressure,Sea-Bird,SBE 26plus
+PREST,A,Tidal Seafloor Pressure,Sea-Bird,SBE 54
+PREST,B,Tidal Seafloor Pressure,Sea-Bird,SBE 54
+RASFL,A,Hydrothermal Vent Fluid Interactive Sampler,PMEL/Butterfield,Modified McLane Remote Access Sampler
+SIOEN,G,Platform Controller,SIO,Subsurface mooring controller
+SPKIR,A,Spectral Irradiance,Satlantic,OCR507 ICSW
+SPKIR,B,Spectral Irradiance,Satlantic,OCR507 ICSW
+SPKIR,J,Spectral Irradiance,Satlantic,OCR507 ICSW
+SPPEN,G,Profiler Controller,WET Labs,AMP
+STCEN,G,Platform Controller,WHOI,Sensor and Telemetry Controller
+THSPH,A,Hydrothermal Vent Fluid In-situ Chemistry,"Kang/Seyfried, U Minnesota","Vent Chemistry Instrument (H2, H2S, pH)"
+TMPSF,A,Diffuse Vent Fluid 3-D Temperature Array,RBR Global,XR-420
+TRHPH,A,Hydrothermal Vent Fluid Temperature and Resistivity,"Lilley, UW",Vent Temperature & Resistivity
+VADCP,A,5-Beam Velocity Profiler (600 kHz),Teledyne RDI,Workhorse custom 600 kHz 5 Beam
+VEL3D,A,3-D Single Point Velocity Meter,Falmouth Scientific,ACM-3D-MP
+VEL3D,B,3-D Single Point Velocity Meter,Nobska,MAVS-4
+VEL3D,C,3-D Single Point Velocity Meter,Nortek,VECTOR
+VEL3D,D,3-D Single Point Velocity Meter,Nortek,VECTOR
+VEL3D,K,3-D Single Point Velocity Meter,Nortek,Aquadopp II
+VEL3D,L,3-D Single Point Velocity Meter,Falmouth Scientific,ACM-Plus
+VELPT,A,Single Point Velocity Meter,Nortek,Aquadopp 300m
+VELPT,B,Single Point Velocity Meter,Nortek,Aquadopp 3000m
+VELPT,D,Single Point Velocity Meter,Nortek,Aquadopp
+VELPT,J,Single Point Velocity Meter,Nortek,Aquadopp HR
+WAVSS,A,Surface Wave Spectra,Axys Technologies,TRIAXYS
+WFPEN,G,Profiler Controller,McLane,MMP
+ZPLSC,B,Bio-acoustic Sonar (Coastal),Kongsberg,Modified EK-60
+ZPLSC,C,Bio-acoustic Sonar (Coastal),ASL Environmental Sciences,AZFP
+ZPLSG,A,Bio-acoustic Sonar (Global),ASL Environmental Sciences,AZFP
