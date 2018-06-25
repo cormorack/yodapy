@@ -45,6 +45,7 @@ setup(
         'Topic :: Scientific/Engineering'
     ],
     keywords=['Ocean', 'Data', 'Access', 'OOI'],
+    include_package_data=True,
     packages=find_packages(),
     install_requires=install_requires,
 )
