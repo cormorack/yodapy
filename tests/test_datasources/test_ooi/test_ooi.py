@@ -47,6 +47,24 @@ class TestOOIDataSource:
         assert len(search_results) == 2
 
     @pytest.mark.skip(reason='Need credentials.')
+    def test_view_instruments(self):
+        inst = self.OOI.view_instruments()
+
+        assert isinstance(inst, pd.DataFrame)
+
+    @pytest.mark.skip(reason='Need credentials.')
+    def test_view_regions(self):
+        inst = self.OOI.view_regions()
+
+        assert isinstance(inst, pd.DataFrame)
+
+    @pytest.mark.skip(reason='Need credentials.')
+    def test_view_instruments(self):
+        inst = self.OOI.view_sites()
+
+        assert isinstance(inst, pd.DataFrame)
+
+    @pytest.mark.skip(reason='Need credentials.')
     def test_data_availibility(self):
         search_results = self.OOI.filter(region=self.region,
                                          site=self.site,
