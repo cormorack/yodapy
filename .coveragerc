@@ -3,12 +3,20 @@ source = yodapy
 omit =
     # omit _version.py
     yodapy/_*
+    # omit helpers.py
+    yodapy/datasources/ooi/helpers.py
+    # omit m2m_client.py
+    yodapy/datasources/ooi/m2m_client.py
 branch = True
 
 [report]
 exclude_lines =
     pragma: no cover
     def __repr__
+    def __repr__
+    Exception
+    os.path.exists
     raise AssertionError
     raise NotImplementedError
     if __name__ == .__main__.:
+    warnings.warn

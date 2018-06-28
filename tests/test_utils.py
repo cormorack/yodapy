@@ -8,6 +8,10 @@ from __future__ import (division,
 import json
 import datetime
 import os
+import shutil
+import warnings
+
+import pytest
 
 from requests import Session
 
@@ -44,6 +48,9 @@ def test_set_credentials_file():
 
 
 def test_create_folder():
+    if os.path.exists(YODAPY_DIR):
+        shutil.rmtree(YODAPY_DIR)
+
     source_name = 'OOI'
     res_path = meta.create_folder(source_name=source_name)
 
