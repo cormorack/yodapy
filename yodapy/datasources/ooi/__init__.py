@@ -23,6 +23,14 @@ SOURCE_NAME = 'OOI'
 
 
 class OOI(DataSource):
+    """OOI Object for Ocean Observatories Initiative Data Retrieval.
+
+    Attributes:
+        username (str): Username for OOI API Data Access.
+        token (str): Token for OOI API Data Access.
+        source_name (str): Data source name.
+
+    """
 
     def __init__(self):
         super(OOI, self).__init__()
@@ -54,25 +62,46 @@ class OOI(DataSource):
         return len(self._filtered_instruments)
 
     def view_instruments(self):
+        """
+        Shows the current instruments requested.
+
+        Returns:
+            DataFrame: Pandas dataframe of the instruments.
+
+        """
         return self._filtered_instruments
 
     def view_regions(self):
+        """
+        Shows the regions within OOI.
+
+        Returns:
+            DataFrame: Pandas dataframe of the regions.
+
+        """
         return self._regions
 
     def view_sites(self):
+        """
+        Shows the sites within OOI.
+
+        Returns:
+            DataFrame: Pandas dataframe of the sites.
+
+        """
         return self._sites
 
     def filter(self, region, site=None, instrument=None):
         """
-        Filter for desired instruments by region, site, and instrument.
+        Filter for desired instruments by region, site, and/or instrument.
 
         Args:
-            region:
-            site:
-            instrument:
+            region (str): **Required** Region name. If multiple use comma separated.
+            site (str): Site name. If multiple use comma separated.
+            instrument (str): Instrument name. If multiple use comma separated.
 
         Returns:
-            Dataframe
+            self: Modified OOI Object
 
         """
         filtered_region = None
@@ -106,10 +135,10 @@ class OOI(DataSource):
 
     def clear(self):
         """
-        Clears the filter
+        Clears the instrument filter.
 
         Returns:
-
+            self: Modified OOI Object
         """
         self._filtered_instruments = self._instruments
         return self
@@ -119,10 +148,10 @@ class OOI(DataSource):
         Retrieves instrument streams availability.
         Args:
             inst (DataFrame): Instruments DataFrame.
-            stream_type: Stream Type (Engineering, Science, all).
+            stream_type (str): Stream Type (Engineering, Science, all).
 
         Returns:
-
+            dict: All the streams for instruments.
         """
         all_streams = {}
         for i, v in inst.iterrows():
@@ -161,12 +190,10 @@ class OOI(DataSource):
 
     def data_availability(self):
         """
-        Plots data availably of provided instruments.
-
-        Args:
-            inst:
+        Plots data availability of desired instruments.
 
         Returns:
+            None: Prints out matplotlib plot of the data availibility.
 
         """
         import matplotlib.pyplot as plt
@@ -209,18 +236,29 @@ class OOI(DataSource):
     def request_data(self, begin_date=None, end_date=None,
                      data_type='netcdf', limit=-1, **kwargs):
         """
-        Request data for instruments.
+        Request data for filtered instruments.
 
         Args:
-            begin_date:
-            end_date:
-            data_type:
-            limit:
-            **kwargs:
+            begin_date (str): Begin date of desired data in ISO-8601 Format.
+            end_date (str): End date of desired data in ISO-8601 Format.
+            data_type (str): Desired data type. Either 'netcdf' or 'json'.
+            limit (int): Desired data points. Required for 'json' ``data_type``. Max is 20000.
+            **kwargs: Optional Keyword arguments. \n
+                **telemetry** - telemetry type (Default is all telemetry types) \n
+                **time_delta_type** - Type for calculating the subset start time, i.e.: years, months, weeks, days.  Must be a type kwarg accepted by dateutil.relativedelta' \n
+                **time_delta_value** - Positive integer value to subtract from the end time to get the start time for subsetting. \n
+                **time_check** - set to true (default) to ensure the request times fall within the stream data availability \n
+                **exec_dpa** - boolean value specifying whether to execute all data product algorithms to return L1/L2 parameters (Default is True) \n
+                **provenance** - boolean value specifying whether provenance information should be included in the data set (Default is True) \n
 
         Returns:
+            self: Modified OOI Object. Use ``raw()`` to see either data url for netcdf or json result for json.
 
         """
+        if len(self._filtered_instruments) > 5:
+            text = f'Too many instruments to request data for! Max is 5, you have {len(self._filtered_instruments)}'  # noqa
+            self._logger.error(text)
+            raise Exception(text)
         instrument_avail = self._retrieve_availibility(self._filtered_instruments)
         request_urls = list(map(lambda inst: self._client.instrument_to_query(inst[0],
                                                                               user=self.username,
@@ -257,7 +295,7 @@ class OOI(DataSource):
             **kwargs: Keyword arguments for xarray open_mfdataset.
 
         Returns:
-            List of xarray datasets
+            list: List of xarray datasets
         """
         from yodapy.datasources.ooi.helpers import check_data_status
         dataset_list = None
