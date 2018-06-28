@@ -26,13 +26,3 @@ def create_folder(source_name):
     else:
         warnings.warn('You don\'t have a read-write permission '
                       'to your home (\'~\') directory!')
-
-
-# def meta_cache(source_name):
-#     def meta_cache_decorator(func):
-#         def wrapper():
-#             fold_path = create_folder(source_name)
-#             func_res = func(fold_path)
-#             return func_res
-#         return wrapper
-#     return meta_cache_decorator
