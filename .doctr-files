@@ -1,5 +1,5 @@
 ./_modules/index.html
-./_modules/yodapy/datasources/ooi/ooi_m2m.html
+./_modules/yodapy/datasources/ooi.html
 ./_sources/index.rst.txt
 ./_sources/modules.rst.txt
 ./_static/ajax-loader.gif
