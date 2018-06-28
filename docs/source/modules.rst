@@ -7,7 +7,7 @@ This part of the documentation covers all the interfaces of yodapy.
 
 :mod:`Data Sources`
 
-.. automodule:: yodapy.datasources.ooi.ooi_m2m
+.. automodule:: yodapy.datasources.ooi
    :members:
    :undoc-members:
    :show-inheritance:
