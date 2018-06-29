@@ -123,17 +123,18 @@
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.request_data">
-<code class="descname">request_data</code><span class="sig-paren">(</span><em>begin_date=None</em>, <em>end_date=None</em>, <em>data_type='netcdf'</em>, <em>limit=-1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi.html#OOI.request_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.request_data" title="Permalink to this definition">¶</a></dt>
+<code class="descname">request_data</code><span class="sig-paren">(</span><em>begin_date=None</em>, <em>end_date=None</em>, <em>data_type='netcdf'</em>, <em>limit=-1</em>, <em>stream=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi.html#OOI.request_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.request_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Request data for filtered instruments.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>begin_date</strong> (<em>str</em>) – Begin date of desired data in ISO-8601 Format.</li>
-<li><strong>end_date</strong> (<em>str</em>) – End date of desired data in ISO-8601 Format.</li>
+<li><strong>begin_date</strong> (<em>str</em><em>, </em><em>optional</em>) – Begin date of desired data in ISO-8601 Format.</li>
+<li><strong>end_date</strong> (<em>str</em><em>, </em><em>optional</em>) – End date of desired data in ISO-8601 Format.</li>
 <li><strong>data_type</strong> (<em>str</em>) – Desired data type. Either ‘netcdf’ or ‘json’.</li>
-<li><strong>limit</strong> (<em>int</em>) – Desired data points. Required for ‘json’ <code class="docutils literal notranslate"><span class="pre">data_type</span></code>. Max is 20000.</li>
+<li><strong>limit</strong> (<em>int</em><em>, </em><em>optional</em>) – Desired data points. Required for ‘json’ <code class="docutils literal notranslate"><span class="pre">data_type</span></code>. Max is 20000.</li>
+<li><strong>stream</strong> (<em>str</em><em>, </em><em>optional</em>) – Reference designator of stream.</li>
 <li><strong>**kwargs</strong> – <p>Optional Keyword arguments.</p>
 <p><strong>telemetry</strong> - telemetry type (Default is all telemetry types)</p>
 <p><strong>time_delta_type</strong> - Type for calculating the subset start time, i.e.: years, months, weeks, days.  Must be a type kwarg accepted by dateutil.relativedelta’</p>
