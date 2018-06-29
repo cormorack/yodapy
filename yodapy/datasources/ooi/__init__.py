@@ -289,8 +289,8 @@ class OOI(DataSource):
 
         self._data_urls = data_urls
         self._data_type = data_type.lower()
+
         return self
-        assert self.OOI._filtered_instruments == inst
 
     def raw(self):
         return self._data_urls
