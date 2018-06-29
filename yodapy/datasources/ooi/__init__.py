@@ -15,6 +15,7 @@ import pandas as pd
 import xarray as xr
 
 from yodapy.datasources.datasource import DataSource
+from yodapy.datasources.ooi.helpers import check_data_status
 from yodapy.datasources.ooi.m2m_client import M2MClient
 from yodapy.utils.parser import get_nc_urls
 from yodapy.utils.conn import requests_retry_session
@@ -109,18 +110,18 @@ class OOI(DataSource):
         filtered_instruments = self._instruments
         if region:
             region_search = list(map(lambda x: x.strip(' '), region.split(',')))  # noqa
-            filtered_region = self._regions[self._regions.name.str.contains('|'.join(region_search), flags=re.IGNORECASE)]  # noqa
+            filtered_region = self._regions[self._regions.name.str.contains('|'.join(region_search), flags=re.IGNORECASE) | self._regions.reference_designator.str.contains('|'.join(region_search), flags=re.IGNORECASE)]  # noqa
 
         if site:
             site_search = list(map(lambda x: x.strip(' '), site.split(',')))  # noqa
-            filtered_sites = self._sites[self._sites.name.str.contains('|'.join(site_search), flags=re.IGNORECASE)]  # noqa
+            filtered_sites = self._sites[self._sites.name.str.contains('|'.join(site_search), flags=re.IGNORECASE) | self._sites.reference_designator.str.contains('|'.join(site_search), flags=re.IGNORECASE)]  # noqa
             if isinstance(filtered_region, pd.DataFrame):
                 if len(filtered_region) > 0:
                     filtered_sites = filtered_sites[filtered_sites.reference_designator.str.contains('|'.join(filtered_region.reference_designator.values))]  # noqa
 
         if instrument:
             instrument_search = list(map(lambda x: x.strip(' '), instrument.split(',')))  # noqa
-            filtered_instruments = self._instruments[self._instruments.name.str.contains('|'.join(instrument_search), flags=re.IGNORECASE)]  # noqa
+            filtered_instruments = self._instruments[self._instruments.name.str.contains('|'.join(instrument_search), flags=re.IGNORECASE) | self._instruments.reference_designator.str.contains('|'.join(instrument_search), flags=re.IGNORECASE)]  # noqa
 
         if isinstance(filtered_region, pd.DataFrame):
             if len(filtered_region) > 0:
@@ -234,15 +235,16 @@ class OOI(DataSource):
             return None
 
     def request_data(self, begin_date=None, end_date=None,
-                     data_type='netcdf', limit=-1, **kwargs):
+                     data_type='netcdf', limit=-1, stream=None, **kwargs):
         """
         Request data for filtered instruments.
 
         Args:
-            begin_date (str): Begin date of desired data in ISO-8601 Format.
-            end_date (str): End date of desired data in ISO-8601 Format.
+            begin_date (str, optional): Begin date of desired data in ISO-8601 Format.
+            end_date (str, optional): End date of desired data in ISO-8601 Format.
             data_type (str): Desired data type. Either 'netcdf' or 'json'.
-            limit (int): Desired data points. Required for 'json' ``data_type``. Max is 20000.
+            limit (int, optional): Desired data points. Required for 'json' ``data_type``. Max is 20000.
+            stream (str, optional): Reference designator of stream.
             **kwargs: Optional Keyword arguments. \n
                 **telemetry** - telemetry type (Default is all telemetry types) \n
                 **time_delta_type** - Type for calculating the subset start time, i.e.: years, months, weeks, days.  Must be a type kwarg accepted by dateutil.relativedelta' \n
@@ -260,6 +262,11 @@ class OOI(DataSource):
             self._logger.error(text)
             raise Exception(text)
         instrument_avail = self._retrieve_availibility(self._filtered_instruments)
+        do_filter = instrument_avail.items()
+        if stream:
+            stream_list = list(map(lambda x: x.strip(' '), stream.split(',')))
+            do_filter = filter(lambda inst: inst[1][0]['stream'] in stream_list, instrument_avail.items())
+
         request_urls = list(map(lambda inst: self._client.instrument_to_query(inst[0],
                                                                               user=self.username,
                                                                               stream=inst[1][0]['stream'],
@@ -268,7 +275,7 @@ class OOI(DataSource):
                                                                               application_type=data_type,
                                                                               limit=limit,
                                                                               **kwargs)[0],
-                                instrument_avail.items()))
+                                do_filter))
 
         client = Client()
         futures = client.map(lambda url: self._client.send_request(url),
@@ -282,8 +289,8 @@ class OOI(DataSource):
 
         self._data_urls = data_urls
         self._data_type = data_type.lower()
+
         return self
-        assert self.OOI._filtered_instruments == inst
 
     def raw(self):
         return self._data_urls
@@ -298,7 +305,6 @@ class OOI(DataSource):
         Returns:
             list: List of xarray datasets
         """
-        from yodapy.datasources.ooi.helpers import check_data_status
         dataset_list = None
         # TODO: What to do when it's JSON request, calling on to_xarray.
         # TODO: Standardize the structure of the netCDF to ensure CF compliance.  # noqa
