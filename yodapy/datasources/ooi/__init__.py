@@ -178,7 +178,7 @@ class OOI(DataSource):
             'thredds_url': data['allURLs'][0],
             'status_url': data['allURLs'][1]
         }
-        check_complete = os.path.join(urls['status_url'], 'status.txt')
+        check_complete = '/'.join([urls['status_url'], 'status.txt'])
 
         req = None
         self._logger.debug(f"Your data ({urls['status_url']}) is still compiling... Please wait.")  # noqa
@@ -307,7 +307,8 @@ class OOI(DataSource):
         """
         dataset_list = None
         # TODO: What to do when it's JSON request, calling on to_xarray.
-        # TODO: Standardize the structure of the netCDF to ensure CF compliance.  # noqa
+        # TODO: Standardize the structure of the netCDF to ensure CF compliance.
+        # TODO: Add way to specify instruments to convert to xarray
         if self._data_type == 'netcdf':
             dataset_list = []
             client = Client()
