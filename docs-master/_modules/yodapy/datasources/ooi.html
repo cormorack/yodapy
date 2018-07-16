@@ -212,7 +212,7 @@
             <span class="s1">&#39;thredds_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
             <span class="s1">&#39;status_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
         <span class="p">}</span>
-        <span class="n">check_complete</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">urls</span><span class="p">[</span><span class="s1">&#39;status_url&#39;</span><span class="p">],</span> <span class="s1">&#39;status.txt&#39;</span><span class="p">)</span>
+        <span class="n">check_complete</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">urls</span><span class="p">[</span><span class="s1">&#39;status_url&#39;</span><span class="p">],</span> <span class="s1">&#39;status.txt&#39;</span><span class="p">])</span>
 
         <span class="n">req</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Your data (</span><span class="si">{urls[&#39;status_url&#39;]}</span><span class="s2">) is still compiling... Please wait.&quot;</span><span class="p">)</span>  <span class="c1"># noqa</span>
@@ -341,7 +341,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">dataset_list</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="c1"># TODO: What to do when it&#39;s JSON request, calling on to_xarray.</span>
-        <span class="c1"># TODO: Standardize the structure of the netCDF to ensure CF compliance.  # noqa</span>
+        <span class="c1"># TODO: Standardize the structure of the netCDF to ensure CF compliance.</span>
+        <span class="c1"># TODO: Add way to specify instruments to convert to xarray</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">==</span> <span class="s1">&#39;netcdf&#39;</span><span class="p">:</span>
             <span class="n">dataset_list</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
