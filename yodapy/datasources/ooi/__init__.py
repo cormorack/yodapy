@@ -15,7 +15,6 @@ import pandas as pd
 import xarray as xr
 
 from yodapy.datasources.datasource import DataSource
-from yodapy.datasources.ooi.helpers import check_data_status
 from yodapy.datasources.ooi.m2m_client import M2MClient
 from yodapy.utils.parser import get_nc_urls
 from yodapy.utils.conn import requests_retry_session
@@ -180,13 +179,15 @@ class OOI(DataSource):
         }
         check_complete = '/'.join([urls['status_url'], 'status.txt'])
 
-        req = None
-        self._logger.debug(f"Your data ({urls['status_url']}) is still compiling... Please wait.")  # noqa
-        while not req:
-            req = requests_retry_session(session=self._session, **kwargs).get(
-                check_complete)
-        self._logger.debug('Request completed.')  # noqa
+        req = requests.get(check_complete)
 
+        if req.status_code != 200:
+            req = requests.get(check_complete)
+            self._logger.warning(
+                f"Your data ({urls['status_url']}) is still compiling... Please wait.")  # noqa
+            return None
+
+        self._logger.debug('Request completed.')  # noqa
         return urls['thredds_url']
 
     def data_availability(self):
@@ -295,6 +296,16 @@ class OOI(DataSource):
     def raw(self):
         return self._data_urls
 
+    def check_status(self):
+        turls = []
+        for durl in self._data_urls:
+            turl = self._check_data_status(durl)
+            if turl:
+                turls.append(turl)
+
+        if len(turls) == len(self._data_urls):
+            self._logger.warning('Request Completed')
+
     def to_xarray(self, **kwargs):
         """
         Retrieve the OOI streams data and export to Xarray Datasets.
@@ -305,12 +316,11 @@ class OOI(DataSource):
         Returns:
             list: List of xarray datasets
         """
-        dataset_list = None
+        dataset_list = []
         # TODO: What to do when it's JSON request, calling on to_xarray.
         # TODO: Standardize the structure of the netCDF to ensure CF compliance.
         # TODO: Add way to specify instruments to convert to xarray
         if self._data_type == 'netcdf':
-            dataset_list = []
             client = Client()
             futures = client.map(lambda durl: self._check_data_status(durl),
                                  self._data_urls)
@@ -318,7 +328,10 @@ class OOI(DataSource):
 
             for future, result in as_completed(futures, with_results=True):
                 self._logger.debug(f'Retrieving data: {future}')
-                datasets = get_nc_urls(result)
-                dataset_list.append(xr.open_mfdataset(datasets, **kwargs))
+                if result:
+                    datasets = get_nc_urls(result)
+                    dataset_list.append(xr.open_mfdataset(datasets, **kwargs))
+        else:
+            self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
         return dataset_list
