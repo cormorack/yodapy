@@ -49,7 +49,6 @@
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 
 <span class="kn">from</span> <span class="nn">yodapy.datasources.datasource</span> <span class="k">import</span> <span class="n">DataSource</span>
-<span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.helpers</span> <span class="k">import</span> <span class="n">check_data_status</span>
 <span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.m2m_client</span> <span class="k">import</span> <span class="n">M2MClient</span>
 <span class="kn">from</span> <span class="nn">yodapy.utils.parser</span> <span class="k">import</span> <span class="n">get_nc_urls</span>
 <span class="kn">from</span> <span class="nn">yodapy.utils.conn</span> <span class="k">import</span> <span class="n">requests_retry_session</span>
@@ -214,13 +213,15 @@
         <span class="p">}</span>
         <span class="n">check_complete</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">urls</span><span class="p">[</span><span class="s1">&#39;status_url&#39;</span><span class="p">],</span> <span class="s1">&#39;status.txt&#39;</span><span class="p">])</span>
 
-        <span class="n">req</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Your data (</span><span class="si">{urls[&#39;status_url&#39;]}</span><span class="s2">) is still compiling... Please wait.&quot;</span><span class="p">)</span>  <span class="c1"># noqa</span>
-        <span class="k">while</span> <span class="ow">not</span> <span class="n">req</span><span class="p">:</span>
-            <span class="n">req</span> <span class="o">=</span> <span class="n">requests_retry_session</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="n">check_complete</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Request completed.&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">check_complete</span><span class="p">)</span>
 
+        <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">check_complete</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Your data (</span><span class="si">{urls[&#39;status_url&#39;]}</span><span class="s2">) is still compiling... Please wait.&quot;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Request completed.&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
         <span class="k">return</span> <span class="n">urls</span><span class="p">[</span><span class="s1">&#39;thredds_url&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="OOI.data_availability"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.data_availability">[docs]</a>    <span class="k">def</span> <span class="nf">data_availability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -329,6 +330,16 @@
 <div class="viewcode-block" id="OOI.raw"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span></div>
 
+<div class="viewcode-block" id="OOI.check_status"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.check_status">[docs]</a>    <span class="k">def</span> <span class="nf">check_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">turls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">durl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span><span class="p">:</span>
+            <span class="n">turl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_data_status</span><span class="p">(</span><span class="n">durl</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">turl</span><span class="p">:</span>
+                <span class="n">turls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">turl</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">turls</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Request Completed&#39;</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="OOI.to_xarray"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.to_xarray">[docs]</a>    <span class="k">def</span> <span class="nf">to_xarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Retrieve the OOI streams data and export to Xarray Datasets.</span>
@@ -339,12 +350,11 @@
 <span class="sd">        Returns:</span>
 <span class="sd">            list: List of xarray datasets</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">dataset_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">dataset_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># TODO: What to do when it&#39;s JSON request, calling on to_xarray.</span>
         <span class="c1"># TODO: Standardize the structure of the netCDF to ensure CF compliance.</span>
         <span class="c1"># TODO: Add way to specify instruments to convert to xarray</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">==</span> <span class="s1">&#39;netcdf&#39;</span><span class="p">:</span>
-            <span class="n">dataset_list</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">durl</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_data_status</span><span class="p">(</span><span class="n">durl</span><span class="p">),</span>
                                  <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span><span class="p">)</span>
@@ -352,8 +362,11 @@
 
             <span class="k">for</span> <span class="n">future</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">,</span> <span class="n">with_results</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Retrieving data: </span><span class="si">{future}</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">datasets</span> <span class="o">=</span> <span class="n">get_nc_urls</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-                <span class="n">dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
+                    <span class="n">datasets</span> <span class="o">=</span> <span class="n">get_nc_urls</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+                    <span class="n">dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{self._data_type}</span><span class="s1"> cannot be converted to xarray dataset&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
 
         <span class="k">return</span> <span class="n">dataset_list</span></div></div>
 </pre></div>
