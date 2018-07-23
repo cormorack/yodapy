@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
 
-import os
-import glob
-import re
-import sys
 import logging
-import datetime
-
-import requests
+import os
+import re
 
 from dask.distributed import (Client, as_completed, progress)
+
 import pandas as pd
+
+import requests
 
 import xarray as xr
 
 from yodapy.datasources.datasource import DataSource
-from yodapy.datasources.ooi.m2m_client import M2MClient
 from yodapy.datasources.ooi.helpers import preprocess_ds
+from yodapy.datasources.ooi.m2m_client import M2MClient
 from yodapy.utils.parser import get_nc_urls
-from yodapy.utils.conn import requests_retry_session
 
 SOURCE_NAME = 'OOI'
 
@@ -282,7 +279,7 @@ class OOI(DataSource):
         self.last_request_urls = request_urls
 
         client = Client()
-        print(client)
+        self._logger.debug(f'request_data dask client: {client}')
         futures = client.map(lambda url: self._client.send_request(url),
                              request_urls)
         progress(futures)
@@ -326,7 +323,7 @@ class OOI(DataSource):
         # TODO: Add way to specify instruments to convert to xarray
         if self._data_type == 'netcdf':
             client = Client()
-            print(client)
+            self._logger.debug(f'to_xarray dask client: {client}')
             futures = client.map(lambda durl: self._check_data_status(durl),
                                  self._data_urls)
             progress(futures)

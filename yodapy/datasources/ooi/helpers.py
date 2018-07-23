@@ -5,13 +5,15 @@ from __future__ import (division,
                         print_function,
                         unicode_literals)
 
+import logging
 import os
 
-from dask.diagnostics import ProgressBar
 import numpy as np
 
 from yodapy.utils.conn import requests_retry_session
 from yodapy.utils.parser import seconds_to_date
+
+logger = logging.getLogger(__name__)
 
 
 def check_data_status(session, data, **kwargs):
@@ -34,8 +36,8 @@ def check_data_status(session, data, **kwargs):
 
 def preprocess_ds(ds):
     cleaned_ds = ds.swap_dims({'obs': 'time'})
-    print('DIMS SWAPPED')
+    logger.debug('DIMS SWAPPED')
     cleaned_ds['time'] = np.array(list(map(lambda x: seconds_to_date(x),
-                                        cleaned_ds.time.values)))
-    print('COMPLETE')
+                                           cleaned_ds.time.values)))
+    logger.debug('COMPLETE')
     return cleaned_ds
