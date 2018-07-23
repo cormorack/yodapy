@@ -7,7 +7,11 @@ from __future__ import (division,
 
 import os
 
+from dask.diagnostics import ProgressBar
+import numpy as np
+
 from yodapy.utils.conn import requests_retry_session
+from yodapy.utils.parser import seconds_to_date
 
 
 def check_data_status(session, data, **kwargs):
@@ -26,3 +30,12 @@ def check_data_status(session, data, **kwargs):
     print('\nRequest completed.')  # noqa
 
     return urls['thredds_url']
+
+
+def preprocess_ds(ds):
+    cleaned_ds = ds.swap_dims({'obs': 'time'})
+    print('DIMS SWAPPED')
+    cleaned_ds['time'] = np.array(list(map(lambda x: seconds_to_date(x),
+                                        cleaned_ds.time.values)))
+    print('COMPLETE')
+    return cleaned_ds

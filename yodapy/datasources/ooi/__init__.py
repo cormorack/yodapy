@@ -16,6 +16,7 @@ import xarray as xr
 
 from yodapy.datasources.datasource import DataSource
 from yodapy.datasources.ooi.m2m_client import M2MClient
+from yodapy.datasources.ooi.helpers import preprocess_ds
 from yodapy.utils.parser import get_nc_urls
 from yodapy.utils.conn import requests_retry_session
 
@@ -48,6 +49,7 @@ class OOI(DataSource):
         self._session = requests.session()
         self.username = self._client.api_username
         self.token = self._client.api_token
+        self.last_request_urls = None
 
         self._filtered_instruments = self._instruments
         self._data_urls = None
@@ -277,8 +279,10 @@ class OOI(DataSource):
                                                                               limit=limit,
                                                                               **kwargs)[0],
                                 do_filter))
+        self.last_request_urls = request_urls
 
         client = Client()
+        print(client)
         futures = client.map(lambda url: self._client.send_request(url),
                              request_urls)
         progress(futures)
@@ -322,6 +326,7 @@ class OOI(DataSource):
         # TODO: Add way to specify instruments to convert to xarray
         if self._data_type == 'netcdf':
             client = Client()
+            print(client)
             futures = client.map(lambda durl: self._check_data_status(durl),
                                  self._data_urls)
             progress(futures)
@@ -330,7 +335,12 @@ class OOI(DataSource):
                 self._logger.debug(f'Retrieving data: {future}')
                 if result:
                     datasets = get_nc_urls(result)
-                    dataset_list.append(xr.open_mfdataset(datasets, **kwargs))
+                    dataset_list.append(xr.open_mfdataset(
+                        datasets,
+                        preprocess=preprocess_ds,
+                        decode_times=False,
+                        **kwargs)
+                    )
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 

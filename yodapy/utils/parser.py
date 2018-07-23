@@ -22,13 +22,15 @@ def get_nc_urls(thredds_url):
 
     response = requests.get(caturl)
     ROOT = etree.XML(response.content)
-    dataset_el = list(filter(lambda x: re.match(r'(.*?.nc$)', x.attrib['urlPath']) is not None,
+    dataset_el = list(filter(lambda x: re.match(r'(.*?.nc$)',
+                             x.attrib['urlPath']) is not None,
                              ROOT.xpath('//*[contains(@urlPath, ".nc")]')))
 
     service_el = ROOT.xpath('//*[contains(@name, "odap")]')[0]
 
-    dataset_urls = [urljoin(domain, urljoin(service_el.attrib['base'], el.attrib['urlPath'])) for el in
-                    dataset_el]  # noqa
+    dataset_urls = [urljoin(domain,
+                            urljoin(service_el.attrib['base'],
+                                    el.attrib['urlPath'])) for el in dataset_el]  # noqa
 
     return dataset_urls
 
