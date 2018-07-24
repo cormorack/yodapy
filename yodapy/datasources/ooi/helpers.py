@@ -37,7 +37,7 @@ def check_data_status(session, data, **kwargs):
 def preprocess_ds(ds):
     cleaned_ds = ds.swap_dims({'obs': 'time'})
     logger.debug('DIMS SWAPPED')
-    cleaned_ds['time'] = np.array(list(map(lambda x: seconds_to_date(x),
+    cleaned_ds['time'] = np.array(list(map(seconds_to_date,
                                            cleaned_ds.time.values)))
     logger.debug('COMPLETE')
     return cleaned_ds

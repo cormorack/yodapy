@@ -90,13 +90,14 @@ class OOI(DataSource):
         """
         return self._sites
 
-    def filter(self, region, site=None, instrument=None):
+    def filter(self, region, site=None, node=None, instrument=None):
         """
         Filter for desired instruments by region, site, and/or instrument.
 
         Args:
             region (str): **Required** Region name. If multiple use comma separated.
             site (str): Site name. If multiple use comma separated.
+            node (str): Node name. If multiple use comma separated.
             instrument (str): Instrument name. If multiple use comma separated.
 
         Returns:
@@ -128,6 +129,10 @@ class OOI(DataSource):
         if isinstance(filtered_sites, pd.DataFrame):
             if len(filtered_region) > 0:
                 filtered_instruments = filtered_instruments[filtered_instruments.reference_designator.str.contains('|'.join(filtered_sites.reference_designator.values))]  # noqa
+
+        if node:
+            node_search = list(map(lambda x: x.strip(' '), node.split(',')))
+            filtered_instruments = filtered_instruments[filtered_instruments.reference_designator.str.contains('|'.join(node_search), flags=re.IGNORECASE) | filtered_instruments.location.str.contains('|'.join(node_search), flags=re.IGNORECASE)]  # noqa
 
         self._filtered_instruments = filtered_instruments  # noqa
         return self
@@ -194,7 +199,7 @@ class OOI(DataSource):
         Plots data availability of desired instruments.
 
         Returns:
-            None: Prints out matplotlib plot of the data availibility.
+            dict: Instruments availability dictionary and prints out matplotlib plot of the data availibility.
 
         """
         import matplotlib.pyplot as plt
@@ -228,6 +233,8 @@ class OOI(DataSource):
                 ax.set_yticks(ypos)
                 ax.set_yticklabels(x)
                 ax.xaxis_date()
+
+                return instruments_avail
             else:
                 self._logger.warning('Dataframe is empty...')
         else:
@@ -291,7 +298,7 @@ class OOI(DataSource):
 
         self._data_urls = data_urls
         self._data_type = data_type.lower()
-
+        client.close()
         return self
 
     def raw(self):
@@ -306,6 +313,8 @@ class OOI(DataSource):
 
         if len(turls) == len(self._data_urls):
             self._logger.warning('Request Completed')
+            return 0
+        return -1
 
     def to_xarray(self, **kwargs):
         """
@@ -338,6 +347,7 @@ class OOI(DataSource):
                         decode_times=False,
                         **kwargs)
                     )
+            client.close()
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
