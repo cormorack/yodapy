@@ -39,7 +39,7 @@ class TestOOIDataSource:
           'numberOfSubJobs': 1}]
 
     def test_searc(self):
-        search_results = self.OOI.searc(region=self.region,
+        search_results = self.OOI.search(region=self.region,
                                          site=self.site,
                                          instrument=self.instrument)
 
