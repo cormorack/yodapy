@@ -199,7 +199,7 @@ class OOI(DataSource):
         Plots data availability of desired instruments.
 
         Returns:
-            None: Prints out matplotlib plot of the data availibility.
+            dict: Instruments availability dictionary and prints out matplotlib plot of the data availibility.
 
         """
         import matplotlib.pyplot as plt
