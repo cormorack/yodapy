@@ -38,7 +38,7 @@ class TestOOIDataSource:
           'timeCalculation': 60,
           'numberOfSubJobs': 1}]
 
-    def test_searc(self):
+    def test_search(self):
         search_results = self.OOI.search(region=self.region,
                                          site=self.site,
                                          instrument=self.instrument)
