@@ -97,32 +97,6 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="yodapy.datasources.ooi.OOI.filter">
-<code class="descname">filter</code><span class="sig-paren">(</span><em>region</em>, <em>site=None</em>, <em>node=None</em>, <em>instrument=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi.html#OOI.filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Filter for desired instruments by region, site, and/or instrument.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>region</strong> (<em>str</em>) – <strong>Required</strong> Region name. If multiple use comma separated.</li>
-<li><strong>site</strong> (<em>str</em>) – Site name. If multiple use comma separated.</li>
-<li><strong>node</strong> (<em>str</em>) – Node name. If multiple use comma separated.</li>
-<li><strong>instrument</strong> (<em>str</em>) – Instrument name. If multiple use comma separated.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Modified OOI Object</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">self</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.raw">
 <code class="descname">raw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi.html#OOI.raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.raw" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -153,6 +127,32 @@
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Modified OOI Object. Use <code class="docutils literal notranslate"><span class="pre">raw()</span></code> to see either data url for netcdf or json result for json.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">self</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="yodapy.datasources.ooi.OOI.search">
+<code class="descname">search</code><span class="sig-paren">(</span><em>region</em>, <em>site=None</em>, <em>node=None</em>, <em>instrument=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi.html#OOI.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.search" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search for desired instruments by region, site, and/or instrument.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>region</strong> (<em>str</em>) – <strong>Required</strong> Region name. If multiple use comma separated.</li>
+<li><strong>site</strong> (<em>str</em>) – Site name. If multiple use comma separated.</li>
+<li><strong>node</strong> (<em>str</em>) – Node name. If multiple use comma separated.</li>
+<li><strong>instrument</strong> (<em>str</em>) – Instrument name. If multiple use comma separated.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Modified OOI Object</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">self</p>
