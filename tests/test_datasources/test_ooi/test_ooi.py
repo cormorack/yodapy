@@ -38,8 +38,8 @@ class TestOOIDataSource:
           'timeCalculation': 60,
           'numberOfSubJobs': 1}]
 
-    def test_filter(self):
-        search_results = self.OOI.filter(region=self.region,
+    def test_searc(self):
+        search_results = self.OOI.searc(region=self.region,
                                          site=self.site,
                                          instrument=self.instrument)
 
@@ -66,7 +66,7 @@ class TestOOIDataSource:
 
     @pytest.mark.skip(reason='Need credentials.')
     def test_data_availibility(self):
-        search_results = self.OOI.filter(region=self.region,
+        search_results = self.OOI.search(region=self.region,
                                          site=self.site,
                                          instrument=self.instrument)
 
