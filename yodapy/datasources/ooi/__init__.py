@@ -298,7 +298,6 @@ class OOI(DataSource):
 
         self._data_urls = data_urls
         self._data_type = data_type.lower()
-        client.close()
         return self
 
     def raw(self):
@@ -347,7 +346,6 @@ class OOI(DataSource):
                         decode_times=False,
                         **kwargs)
                     )
-            client.close()
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
