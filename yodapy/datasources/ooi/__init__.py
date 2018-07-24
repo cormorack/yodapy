@@ -90,9 +90,9 @@ class OOI(DataSource):
         """
         return self._sites
 
-    def filter(self, region, site=None, node=None, instrument=None):
+    def search(self, region, site=None, node=None, instrument=None):
         """
-        Filter for desired instruments by region, site, and/or instrument.
+        Search for desired instruments by region, site, and/or instrument.
 
         Args:
             region (str): **Required** Region name. If multiple use comma separated.
