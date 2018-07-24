@@ -34,24 +34,22 @@
   <h1>Source code for yodapy.datasources.ooi</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-
-<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="k">import</span> <span class="p">(</span><span class="n">Client</span><span class="p">,</span> <span class="n">as_completed</span><span class="p">,</span> <span class="n">progress</span><span class="p">)</span>
+
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
 
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 
 <span class="kn">from</span> <span class="nn">yodapy.datasources.datasource</span> <span class="k">import</span> <span class="n">DataSource</span>
+<span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.helpers</span> <span class="k">import</span> <span class="n">preprocess_ds</span>
 <span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.m2m_client</span> <span class="k">import</span> <span class="n">M2MClient</span>
 <span class="kn">from</span> <span class="nn">yodapy.utils.parser</span> <span class="k">import</span> <span class="n">get_nc_urls</span>
-<span class="kn">from</span> <span class="nn">yodapy.utils.conn</span> <span class="k">import</span> <span class="n">requests_retry_session</span>
 
 <span class="n">SOURCE_NAME</span> <span class="o">=</span> <span class="s1">&#39;OOI&#39;</span>
 
@@ -82,6 +80,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">session</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">api_username</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">api_token</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_request_urls</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instruments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span> <span class="o">=</span> <span class="kc">None</span>
@@ -311,8 +310,10 @@
                                                                               <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
                                                                               <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
                                 <span class="n">do_filter</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_request_urls</span> <span class="o">=</span> <span class="n">request_urls</span>
 
         <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;request_data dask client: </span><span class="si">{client}</span><span class="s1">&#39;</span><span class="p">)</span>
         <span class="n">futures</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">url</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">send_request</span><span class="p">(</span><span class="n">url</span><span class="p">),</span>
                              <span class="n">request_urls</span><span class="p">)</span>
         <span class="n">progress</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
@@ -356,6 +357,7 @@
         <span class="c1"># TODO: Add way to specify instruments to convert to xarray</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">==</span> <span class="s1">&#39;netcdf&#39;</span><span class="p">:</span>
             <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;to_xarray dask client: </span><span class="si">{client}</span><span class="s1">&#39;</span><span class="p">)</span>
             <span class="n">futures</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">durl</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_data_status</span><span class="p">(</span><span class="n">durl</span><span class="p">),</span>
                                  <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span><span class="p">)</span>
             <span class="n">progress</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
@@ -364,7 +366,12 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Retrieving data: </span><span class="si">{future}</span><span class="s1">&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
                     <span class="n">datasets</span> <span class="o">=</span> <span class="n">get_nc_urls</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-                    <span class="n">dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">datasets</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+                    <span class="n">dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span>
+                        <span class="n">datasets</span><span class="p">,</span>
+                        <span class="n">preprocess</span><span class="o">=</span><span class="n">preprocess_ds</span><span class="p">,</span>
+                        <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{self._data_type}</span><span class="s1"> cannot be converted to xarray dataset&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
 
