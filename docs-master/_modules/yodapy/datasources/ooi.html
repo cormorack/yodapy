@@ -124,13 +124,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sites</span></div>
 
-<div class="viewcode-block" id="OOI.filter"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">site</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="OOI.filter"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="p">,</span> <span class="n">site</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Filter for desired instruments by region, site, and/or instrument.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            region (str): **Required** Region name. If multiple use comma separated.</span>
 <span class="sd">            site (str): Site name. If multiple use comma separated.</span>
+<span class="sd">            node (str): Node name. If multiple use comma separated.</span>
 <span class="sd">            instrument (str): Instrument name. If multiple use comma separated.</span>
 
 <span class="sd">        Returns:</span>
@@ -162,6 +163,10 @@
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filtered_sites</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_region</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">filtered_instruments</span> <span class="o">=</span> <span class="n">filtered_instruments</span><span class="p">[</span><span class="n">filtered_instruments</span><span class="o">.</span><span class="n">reference_designator</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filtered_sites</span><span class="o">.</span><span class="n">reference_designator</span><span class="o">.</span><span class="n">values</span><span class="p">))]</span>  <span class="c1"># noqa</span>
+
+        <span class="k">if</span> <span class="n">node</span><span class="p">:</span>
+            <span class="n">node_search</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">node</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+            <span class="n">filtered_instruments</span> <span class="o">=</span> <span class="n">filtered_instruments</span><span class="p">[</span><span class="n">filtered_instruments</span><span class="o">.</span><span class="n">reference_designator</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">filtered_instruments</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)]</span>  <span class="c1"># noqa</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span> <span class="o">=</span> <span class="n">filtered_instruments</span>  <span class="c1"># noqa</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -228,7 +233,7 @@
 <span class="sd">        Plots data availability of desired instruments.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            None: Prints out matplotlib plot of the data availibility.</span>
+<span class="sd">            dict: Instruments availability dictionary and prints out matplotlib plot of the data availibility.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -262,6 +267,8 @@
                 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="n">ypos</span><span class="p">)</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
                 <span class="n">ax</span><span class="o">.</span><span class="n">xaxis_date</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="n">instruments_avail</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Dataframe is empty...&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -325,7 +332,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span> <span class="o">=</span> <span class="n">data_urls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="n">data_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-
+        <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="OOI.raw"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -339,7 +346,9 @@
                 <span class="n">turls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">turl</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">turls</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Request Completed&#39;</span><span class="p">)</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Request Completed&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
 
 <div class="viewcode-block" id="OOI.to_xarray"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.to_xarray">[docs]</a>    <span class="k">def</span> <span class="nf">to_xarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -372,6 +381,7 @@
                         <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
                     <span class="p">)</span>
+            <span class="n">client</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{self._data_type}</span><span class="s1"> cannot be converted to xarray dataset&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
 
