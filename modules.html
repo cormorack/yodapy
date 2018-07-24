@@ -88,9 +88,9 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Prints out matplotlib plot of the data availibility.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Instruments availability dictionary and prints out matplotlib plot of the data availibility.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None</td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
 </tr>
 </tbody>
 </table>
@@ -98,7 +98,7 @@
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.filter">
-<code class="descname">filter</code><span class="sig-paren">(</span><em>region</em>, <em>site=None</em>, <em>instrument=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi.html#OOI.filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.filter" title="Permalink to this definition">¶</a></dt>
+<code class="descname">filter</code><span class="sig-paren">(</span><em>region</em>, <em>site=None</em>, <em>node=None</em>, <em>instrument=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi.html#OOI.filter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.filter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Filter for desired instruments by region, site, and/or instrument.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -107,6 +107,7 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>region</strong> (<em>str</em>) – <strong>Required</strong> Region name. If multiple use comma separated.</li>
 <li><strong>site</strong> (<em>str</em>) – Site name. If multiple use comma separated.</li>
+<li><strong>node</strong> (<em>str</em>) – Node name. If multiple use comma separated.</li>
 <li><strong>instrument</strong> (<em>str</em>) – Instrument name. If multiple use comma separated.</li>
 </ul>
 </td>
