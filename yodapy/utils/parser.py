@@ -48,6 +48,14 @@ def seconds_to_date(num):
     return nc.num2date(num, 'seconds since 1900-01-01')
 
 
+def get_midnight(dt):
+    nextday = dt + datetime.timedelta(1)
+    time_labels = ('hour', 'minute', 'second', 'microsecond')
+    time_list = nextday.hour, nextday.minute, nextday.second, nextday.microsecond  # noqa
+    zeroed = tuple(map(lambda x: 0 if x > 0 else x, time_list))
+    return nextday.replace(**dict(zip(time_labels, zeroed)))
+
+
 def ooi_instrument_reference_designator(reference_designator):
     """
     Parses reference designator into a dictionary containing subsite, node,
