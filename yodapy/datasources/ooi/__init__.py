@@ -365,23 +365,6 @@ class OOI(DataSource):
                 jobs = [gevent.spawn(self._fetch_xr, url, **kwargs) for url in turls]
                 gevent.joinall(jobs, timeout=300)
                 dataset_list = [job.value for job in jobs]
-
-            # client = Client()
-            # self._logger.debug(f'to_xarray dask client: {client}')
-            # futures = client.map(lambda durl: self._check_data_status(durl),
-            #                      self._data_urls)
-            # progress(futures)
-
-            # for future, result in as_completed(futures, with_results=True):
-            #     self._logger.debug(f'Retrieving data: {future}')
-            #     if result:
-            #         datasets = get_nc_urls(result)
-            #         dataset_list.append(xr.open_mfdataset(
-            #             datasets,
-            #             preprocess=preprocess_ds,
-            #             decode_times=False,
-            #             **kwargs)
-            #         )
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
