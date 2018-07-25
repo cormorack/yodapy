@@ -3,4 +3,5 @@ pandas
 xarray
 matplotlib
 lxml
-streamz
+grequests
+gevent
