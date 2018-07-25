@@ -8,10 +8,7 @@ from __future__ import (division,
 import logging
 import os
 
-import numpy as np
-
 from yodapy.utils.conn import requests_retry_session
-from yodapy.utils.parser import seconds_to_date
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +34,4 @@ def check_data_status(session, data, **kwargs):
 def preprocess_ds(ds):
     cleaned_ds = ds.swap_dims({'obs': 'time'})
     logger.debug('DIMS SWAPPED')
-    cleaned_ds['time'] = np.array(list(map(seconds_to_date,
-                                           cleaned_ds.time.values)))
-    logger.debug('COMPLETE')
     return cleaned_ds

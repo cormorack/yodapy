@@ -6,6 +6,8 @@ import re
 
 from dask.distributed import (Client, as_completed, progress)
 
+import grequests
+
 import pandas as pd
 
 import requests
@@ -37,8 +39,8 @@ class OOI(DataSource):
 
         meta_pth = os.path.join(os.path.dirname(__file__), 'infrastructure')
         self._instruments = pd.read_csv(os.path.join(meta_pth, 'instruments.csv')).fillna('')  # noqa
-        self._regions = pd.read_csv(os.path.join(meta_pth, 'regions.csv')).fillna('')
-        self._sites = pd.read_csv(os.path.join(meta_pth, 'sites.csv')).fillna('')
+        self._regions = pd.read_csv(os.path.join(meta_pth, 'regions.csv')).fillna('')  # noqa
+        self._sites = pd.read_csv(os.path.join(meta_pth, 'sites.csv')).fillna('')  # noqa
         self._streams_descriptions = pd.read_csv(os.path.join(meta_pth, 'stream_descriptions.csv')).fillna('')  # noqa
         self._data_streams = pd.read_csv(os.path.join(meta_pth, 'data_streams.csv')).fillna('')  # noqa
 
@@ -274,27 +276,40 @@ class OOI(DataSource):
             stream_list = list(map(lambda x: x.strip(' '), stream.split(',')))
             do_filter = filter(lambda inst: inst[1][0]['stream'] in stream_list, instrument_avail.items())
 
-        request_urls = list(map(lambda inst: self._client.instrument_to_query(inst[0],
-                                                                              user=self.username,
-                                                                              stream=inst[1][0]['stream'],
-                                                                              begin_ts=begin_date,
-                                                                              end_ts=end_date,
-                                                                              application_type=data_type,
-                                                                              limit=limit,
-                                                                              **kwargs)[0],
-                                do_filter))
+        try:
+            request_urls = list(map(lambda inst: self._client.instrument_to_query(inst[0],
+                                                                                  user=self.username,
+                                                                                  stream=inst[1][0]['stream'],
+                                                                                  begin_ts=begin_date,
+                                                                                  end_ts=end_date,
+                                                                                  application_type=data_type,
+                                                                                  limit=limit,
+                                                                                  **kwargs)[0],
+                                    do_filter))
+        except Exception as e:
+            self._logger.warning(e)
+            request_urls = []
         self.last_request_urls = request_urls
 
-        client = Client()
-        self._logger.debug(f'request_data dask client: {client}')
-        futures = client.map(lambda url: self._client.send_request(url),
-                             request_urls)
-        progress(futures)
+        reqs = (grequests.get(
+                    url,
+                    auth=(self._client.api_username,
+                          self._client.api_token),
+                    timeout=self._client.timeout,
+                    verify=False) for url in request_urls
+                )
+
+        def exception_handler(request, exception):
+            self._logger.error(f'{request.status_code}: {exception}')
+
+        results = grequests.map(reqs,
+                                exception_handler=exception_handler)
 
         data_urls = []
-        for future, result in as_completed(futures, with_results=True):
-            self._logger.debug(f'Requesting data: {future}')
-            data_urls.append(result)
+        try:
+            data_urls = [r.json() for r in results]
+        except ValueError as e:
+            self._logger.warning(e)
 
         self._data_urls = data_urls
         self._data_type = data_type.lower()
