@@ -6,6 +6,7 @@ import re
 
 from dask.distributed import (Client, as_completed, progress)
 
+import gevent
 import grequests
 
 import pandas as pd
@@ -179,21 +180,25 @@ class OOI(DataSource):
         return all_streams
 
     def _check_data_status(self, data, **kwargs):
-        urls = {
-            'thredds_url': data['allURLs'][0],
-            'status_url': data['allURLs'][1]
-        }
+        try:
+            urls = {
+                'thredds_url': data['allURLs'][0],
+                'status_url': data['allURLs'][1]
+            }
+        except Exception as e:
+            self._logger.info(e)
+            return None
         check_complete = '/'.join([urls['status_url'], 'status.txt'])
 
         req = requests.get(check_complete)
 
         if req.status_code != 200:
             req = requests.get(check_complete)
-            self._logger.warning(
+            self._logger.info(
                 f"Your data ({urls['status_url']}) is still compiling... Please wait.")  # noqa
             return None
 
-        self._logger.debug('Request completed.')  # noqa
+        self._logger.info('Request completed.')  # noqa
         return urls['thredds_url']
 
     def data_availability(self):
@@ -300,7 +305,7 @@ class OOI(DataSource):
                 )
 
         def exception_handler(request, exception):
-            self._logger.error(f'{request.status_code}: {exception}')
+            self._logger.error(exception)
 
         results = grequests.map(reqs,
                                 exception_handler=exception_handler)
@@ -308,7 +313,7 @@ class OOI(DataSource):
         data_urls = []
         try:
             data_urls = [r.json() for r in results]
-        except ValueError as e:
+        except Exception as e:
             self._logger.warning(e)
 
         self._data_urls = data_urls
@@ -327,8 +332,16 @@ class OOI(DataSource):
 
         if len(turls) == len(self._data_urls):
             self._logger.warning('Request Completed')
-            return 0
-        return -1
+            return (0, turls)
+        return (-1, turls)
+
+    def _fetch_xr(self, turl, **kwargs):
+        datasets = get_nc_urls(turl)
+        return xr.open_mfdataset(
+            datasets,
+            preprocess=preprocess_ds,
+            decode_times=False,
+            **kwargs)
 
     def to_xarray(self, **kwargs):
         """
@@ -345,22 +358,30 @@ class OOI(DataSource):
         # TODO: Standardize the structure of the netCDF to ensure CF compliance.
         # TODO: Add way to specify instruments to convert to xarray
         if self._data_type == 'netcdf':
-            client = Client()
-            self._logger.debug(f'to_xarray dask client: {client}')
-            futures = client.map(lambda durl: self._check_data_status(durl),
-                                 self._data_urls)
-            progress(futures)
+            status = -1
+            while status < 0:
+                status, turls = self.check_status()
+            if len(turls) > 0:
+                jobs = [gevent.spawn(self._fetch_xr, url, **kwargs) for url in turls]
+                gevent.joinall(jobs, timeout=300)
+                dataset_list = [job.value for job in jobs]
 
-            for future, result in as_completed(futures, with_results=True):
-                self._logger.debug(f'Retrieving data: {future}')
-                if result:
-                    datasets = get_nc_urls(result)
-                    dataset_list.append(xr.open_mfdataset(
-                        datasets,
-                        preprocess=preprocess_ds,
-                        decode_times=False,
-                        **kwargs)
-                    )
+            # client = Client()
+            # self._logger.debug(f'to_xarray dask client: {client}')
+            # futures = client.map(lambda durl: self._check_data_status(durl),
+            #                      self._data_urls)
+            # progress(futures)
+
+            # for future, result in as_completed(futures, with_results=True):
+            #     self._logger.debug(f'Retrieving data: {future}')
+            #     if result:
+            #         datasets = get_nc_urls(result)
+            #         dataset_list.append(xr.open_mfdataset(
+            #             datasets,
+            #             preprocess=preprocess_ds,
+            #             decode_times=False,
+            #             **kwargs)
+            #         )
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
