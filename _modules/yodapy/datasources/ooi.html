@@ -40,6 +40,7 @@
 
 <span class="kn">from</span> <span class="nn">dask.distributed</span> <span class="k">import</span> <span class="p">(</span><span class="n">Client</span><span class="p">,</span> <span class="n">as_completed</span><span class="p">,</span> <span class="n">progress</span><span class="p">)</span>
 
+<span class="kn">import</span> <span class="nn">gevent</span>
 <span class="kn">import</span> <span class="nn">grequests</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -213,21 +214,25 @@
         <span class="k">return</span> <span class="n">all_streams</span>
 
     <span class="k">def</span> <span class="nf">_check_data_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">urls</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s1">&#39;thredds_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
-            <span class="s1">&#39;status_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-        <span class="p">}</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">urls</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;thredds_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s1">&#39;status_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
         <span class="n">check_complete</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">urls</span><span class="p">[</span><span class="s1">&#39;status_url&#39;</span><span class="p">],</span> <span class="s1">&#39;status.txt&#39;</span><span class="p">])</span>
 
         <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">check_complete</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
             <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">check_complete</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="n">f</span><span class="s2">&quot;Your data (</span><span class="si">{urls[&#39;status_url&#39;]}</span><span class="s2">) is still compiling... Please wait.&quot;</span><span class="p">)</span>  <span class="c1"># noqa</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Request completed.&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Request completed.&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
         <span class="k">return</span> <span class="n">urls</span><span class="p">[</span><span class="s1">&#39;thredds_url&#39;</span><span class="p">]</span>
 
 <div class="viewcode-block" id="OOI.data_availability"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.data_availability">[docs]</a>    <span class="k">def</span> <span class="nf">data_availability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -334,7 +339,7 @@
                 <span class="p">)</span>
 
         <span class="k">def</span> <span class="nf">exception_handler</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{request.status_code}</span><span class="s1">: </span><span class="si">{exception}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
 
         <span class="n">results</span> <span class="o">=</span> <span class="n">grequests</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">reqs</span><span class="p">,</span>
                                 <span class="n">exception_handler</span><span class="o">=</span><span class="n">exception_handler</span><span class="p">)</span>
@@ -342,7 +347,7 @@
         <span class="n">data_urls</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">data_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span> <span class="o">=</span> <span class="n">data_urls</span>
@@ -361,8 +366,16 @@
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">turls</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Request Completed&#39;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">turls</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">turls</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_fetch_xr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">turl</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">datasets</span> <span class="o">=</span> <span class="n">get_nc_urls</span><span class="p">(</span><span class="n">turl</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span>
+            <span class="n">datasets</span><span class="p">,</span>
+            <span class="n">preprocess</span><span class="o">=</span><span class="n">preprocess_ds</span><span class="p">,</span>
+            <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 <div class="viewcode-block" id="OOI.to_xarray"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.to_xarray">[docs]</a>    <span class="k">def</span> <span class="nf">to_xarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -379,22 +392,13 @@
         <span class="c1"># TODO: Standardize the structure of the netCDF to ensure CF compliance.</span>
         <span class="c1"># TODO: Add way to specify instruments to convert to xarray</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">==</span> <span class="s1">&#39;netcdf&#39;</span><span class="p">:</span>
-            <span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;to_xarray dask client: </span><span class="si">{client}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">futures</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">durl</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_data_status</span><span class="p">(</span><span class="n">durl</span><span class="p">),</span>
-                                 <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span><span class="p">)</span>
-            <span class="n">progress</span><span class="p">(</span><span class="n">futures</span><span class="p">)</span>
-
-            <span class="k">for</span> <span class="n">future</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">as_completed</span><span class="p">(</span><span class="n">futures</span><span class="p">,</span> <span class="n">with_results</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Retrieving data: </span><span class="si">{future}</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">result</span><span class="p">:</span>
-                    <span class="n">datasets</span> <span class="o">=</span> <span class="n">get_nc_urls</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-                    <span class="n">dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span>
-                        <span class="n">datasets</span><span class="p">,</span>
-                        <span class="n">preprocess</span><span class="o">=</span><span class="n">preprocess_ds</span><span class="p">,</span>
-                        <span class="n">decode_times</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                        <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-                    <span class="p">)</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">while</span> <span class="n">status</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">status</span><span class="p">,</span> <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_status</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">turls</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">jobs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gevent</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fetch_xr</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">turls</span><span class="p">]</span>
+                <span class="n">gevent</span><span class="o">.</span><span class="n">joinall</span><span class="p">(</span><span class="n">jobs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+                <span class="n">dataset_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">job</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{self._data_type}</span><span class="s1"> cannot be converted to xarray dataset&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
 
