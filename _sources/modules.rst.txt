@@ -11,3 +11,10 @@ This part of the documentation covers all the interfaces of yodapy.
    :members:
    :undoc-members:
    :show-inheritance:
+
+:mod:`Utilities`
+
+.. automodule:: yodapy.utils.creds
+   :members:
+   :undoc-members:
+   :show-inheritance:

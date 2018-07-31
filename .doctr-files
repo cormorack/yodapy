@@ -1,5 +1,6 @@
 ./_modules/index.html
 ./_modules/yodapy/datasources/ooi.html
+./_modules/yodapy/utils/creds.html
 ./_sources/index.rst.txt
 ./_sources/modules.rst.txt
 ./_static/ajax-loader.gif
