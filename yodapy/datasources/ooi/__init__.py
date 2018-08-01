@@ -4,8 +4,6 @@ import logging
 import os
 import re
 
-from dask.distributed import (Client, as_completed, progress)
-
 import gevent
 import grequests
 
@@ -13,12 +11,9 @@ import pandas as pd
 
 import requests
 
-import xarray as xr
-
 from yodapy.datasources.datasource import DataSource
-from yodapy.datasources.ooi.helpers import preprocess_ds
+from yodapy.datasources.ooi.helpers import fetch_xr
 from yodapy.datasources.ooi.m2m_client import M2MClient
-from yodapy.utils.parser import get_nc_urls
 
 SOURCE_NAME = 'OOI'
 
@@ -179,26 +174,20 @@ class OOI(DataSource):
 
         return all_streams
 
-    def _check_data_status(self, data, **kwargs):
-        try:
-            urls = {
-                'thredds_url': data['allURLs'][0],
-                'status_url': data['allURLs'][1]
-            }
-        except Exception as e:
-            self._logger.info(e)
-            return None
+    def _check_data_status(self, data):
+        urls = {
+            'thredds_url': data['allURLs'][0],
+            'status_url': data['allURLs'][1]
+        }
         check_complete = '/'.join([urls['status_url'], 'status.txt'])
 
         req = requests.get(check_complete)
-
-        if req.status_code != 200:
-            req = requests.get(check_complete)
-            self._logger.info(
-                f"Your data ({urls['status_url']}) is still compiling... Please wait.")  # noqa
+        status_code = req.status_code
+        if status_code != 200:
+            self._logger.warning(f"Your data ({urls['status_url']}) is still compiling... Please wait.")  # noqa
             return None
 
-        self._logger.info('Request completed.')  # noqa
+        self._logger.info(f"Request ({urls['status_url']}) completed.")  # noqa
         return urls['thredds_url']
 
     def data_availability(self):
@@ -307,6 +296,7 @@ class OOI(DataSource):
         def exception_handler(request, exception):
             self._logger.error(exception)
 
+        self._logger.info('Requesting data ...')
         results = grequests.map(reqs,
                                 exception_handler=exception_handler)
 
@@ -316,6 +306,7 @@ class OOI(DataSource):
         except Exception as e:
             self._logger.warning(e)
 
+        self._logger.info('Data request complete, please wait for data to be compiled ...')
         self._data_urls = data_urls
         self._data_type = data_type.lower()
         return self
@@ -325,23 +316,15 @@ class OOI(DataSource):
 
     def check_status(self):
         turls = []
-        for durl in self._data_urls:
+        filtered_data_urls = list(filter(lambda x: 'allURLs' in x, self._data_urls))
+        for durl in filtered_data_urls:
             turl = self._check_data_status(durl)
             if turl:
                 turls.append(turl)
 
-        if len(turls) == len(self._data_urls):
-            self._logger.warning('Request Completed')
-            return (0, turls)
-        return (-1, turls)
-
-    def _fetch_xr(self, turl, **kwargs):
-        datasets = get_nc_urls(turl)
-        return xr.open_mfdataset(
-            datasets,
-            preprocess=preprocess_ds,
-            decode_times=False,
-            **kwargs)
+        if len(turls) == len(filtered_data_urls):
+            return turls
+        return None
 
     def to_xarray(self, **kwargs):
         """
@@ -353,16 +336,24 @@ class OOI(DataSource):
         Returns:
             list: List of xarray datasets
         """
+        import time
+        import datetime
         dataset_list = []
         # TODO: What to do when it's JSON request, calling on to_xarray.
         # TODO: Standardize the structure of the netCDF to ensure CF compliance.
         # TODO: Add way to specify instruments to convert to xarray
         if self._data_type == 'netcdf':
-            status = -1
-            while status < 0:
-                status, turls = self.check_status()
+            turls = self.check_status()
+            start = datetime.datetime.now()
+            while turls is None:
+                time.sleep(10)
+                end = datetime.datetime.now()
+                delta = end - start
+                self._logger.info(f'Time elapsed: {delta.seconds}s')
+                turls = self.check_status()
             if len(turls) > 0:
-                jobs = [gevent.spawn(self._fetch_xr, url, **kwargs) for url in turls]
+                self._logger.info('Acquiring data from opendap urls ...')
+                jobs = [gevent.spawn(fetch_xr, url, **kwargs) for url in turls]
                 gevent.joinall(jobs, timeout=300)
                 dataset_list = [job.value for job in jobs]
         else:
