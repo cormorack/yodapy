@@ -41,7 +41,6 @@ def preprocess_ds(ds):
     return cleaned_ds
 
 
-@dask.delayed
 def fetch_xr(turl, **kwargs):
     datasets = get_nc_urls(turl)
     return xr.open_mfdataset(

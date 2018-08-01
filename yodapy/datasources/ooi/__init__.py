@@ -4,9 +4,8 @@ import logging
 import os
 import re
 
+import gevent
 import grequests
-
-import dask
 
 import pandas as pd
 
@@ -354,8 +353,9 @@ class OOI(DataSource):
                 turls = self.check_status()
             if len(turls) > 0:
                 self._logger.info('Acquiring data from opendap urls ...')
-                dataset_list = [fetch_xr(turl=url, **kwargs) for url in turls]
-                dataset_list = dask.compute(*dataset_list)
+                jobs = [gevent.spawn(fetch_xr, url, **kwargs) for url in turls]
+                gevent.joinall(jobs, timeout=300)
+                dataset_list = [job.value for job in jobs]
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
