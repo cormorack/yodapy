@@ -20,12 +20,9 @@ from dateutil.relativedelta import relativedelta as tdelta
 import datetime
 import pytz
 
-# Disables SSL warnings
-import urllib3
+requests.packages.urllib3.disable_warnings() 
 
 from yodapy.utils.files import CREDENTIALS_FILE
-
-urllib3.disable_warnings()
 
 HTTP_STATUS_OK = 200
 HTTP_STATUS_NOT_FOUND = 404
@@ -46,7 +43,7 @@ _valid_relativedeltatypes = ('years',
 class M2MClient:
 
     def __init__(self, timeout=120, api_username=None,
-                 api_token=None):
+                 api_token=None, **kwargs):
         """Lightweight OOI UFrame client for making GET requests to the UFrame API via
         the machine to machine (m2m) API or directly to UFrame.
 
@@ -66,6 +63,11 @@ class M2MClient:
         self._api_username = api_username
         self._api_token = api_token
         self._session = requests.Session()
+        self._pool_connections = kwargs.get('pool_connections', 100)
+        self._pool_maxsize = kwargs.get('pool_maxsize', 100)
+        a = requests.adapters.HTTPAdapter(pool_connections=self._pool_connections,  # noqa
+                                          pool_maxsize=self._pool_maxsize)
+        self._session.mount('https://', a)
         self._is_m2m = True
         self._instruments = []
         self._subsites = []

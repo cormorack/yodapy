@@ -4,21 +4,17 @@ import logging
 import os
 import re
 
-from dask.distributed import (Client, as_completed, progress)
-
-import gevent
 import grequests
+
+import dask
 
 import pandas as pd
 
 import requests
 
-import xarray as xr
-
 from yodapy.datasources.datasource import DataSource
-from yodapy.datasources.ooi.helpers import preprocess_ds
+from yodapy.datasources.ooi.helpers import fetch_xr
 from yodapy.datasources.ooi.m2m_client import M2MClient
-from yodapy.utils.parser import get_nc_urls
 
 SOURCE_NAME = 'OOI'
 
@@ -335,14 +331,6 @@ class OOI(DataSource):
             return (0, turls)
         return (-1, turls)
 
-    def _fetch_xr(self, turl, **kwargs):
-        datasets = get_nc_urls(turl)
-        return xr.open_mfdataset(
-            datasets,
-            preprocess=preprocess_ds,
-            decode_times=False,
-            **kwargs)
-
     def to_xarray(self, **kwargs):
         """
         Retrieve the OOI streams data and export to Xarray Datasets.
@@ -362,9 +350,8 @@ class OOI(DataSource):
             while status < 0:
                 status, turls = self.check_status()
             if len(turls) > 0:
-                jobs = [gevent.spawn(self._fetch_xr, url, **kwargs) for url in turls]
-                gevent.joinall(jobs, timeout=300)
-                dataset_list = [job.value for job in jobs]
+                dataset_list = [fetch_xr(turl=url, **kwargs) for url in turls]
+                dataset_list = dask.compute(*dataset_list)
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 

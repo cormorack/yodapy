@@ -8,7 +8,11 @@ from __future__ import (division,
 import logging
 import os
 
+import dask
+import xarray as xr
+
 from yodapy.utils.conn import requests_retry_session
+from yodapy.utils.parser import get_nc_urls
 
 logger = logging.getLogger(__name__)
 
@@ -35,3 +39,13 @@ def preprocess_ds(ds):
     cleaned_ds = ds.swap_dims({'obs': 'time'})
     logger.debug('DIMS SWAPPED')
     return cleaned_ds
+
+
+@dask.delayed
+def fetch_xr(turl, **kwargs):
+    datasets = get_nc_urls(turl)
+    return xr.open_mfdataset(
+        datasets,
+        preprocess=preprocess_ds,
+        decode_times=False,
+        **kwargs)
