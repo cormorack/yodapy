@@ -344,14 +344,7 @@ class OOI(DataSource):
         user_input = input('WARNING: This can possibly take a while for large dataset. Are you sure? (yes | no) :')
         if user_input.lower() == 'yes':
             if self._data_type == 'netcdf':
-                turls = self.check_status()
-                start = datetime.datetime.now()
-                while turls is None:
-                    time.sleep(10)
-                    end = datetime.datetime.now()
-                    delta = end - start
-                    self._logger.info(f'Time elapsed: {delta.seconds}s')
-                    turls = self.check_status()
+                turls = self._perform_check()
                 if len(turls) > 0:
                     self._logger.info('Downloading netcdf data ...')
                     print(turls)
@@ -362,6 +355,17 @@ class OOI(DataSource):
                 self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
         return dataset_list
+
+    def _perform_check(self):
+        turls = self.check_status()
+        start = datetime.datetime.now()
+        while turls is None:
+            time.sleep(10)
+            end = datetime.datetime.now()
+            delta = end - start
+            self._logger.info(f'Time elapsed: {delta.seconds}s')
+            turls = self.check_status()
+        return turls
 
     def to_xarray(self, **kwargs):
         """
@@ -378,14 +382,7 @@ class OOI(DataSource):
         # TODO: Standardize the structure of the netCDF to ensure CF compliance.
         # TODO: Add way to specify instruments to convert to xarray
         if self._data_type == 'netcdf':
-            turls = self.check_status()
-            start = datetime.datetime.now()
-            while turls is None:
-                time.sleep(10)
-                end = datetime.datetime.now()
-                delta = end - start
-                self._logger.info(f'Time elapsed: {delta.seconds}s')
-                turls = self.check_status()
+            turls = self._perform_check()
             if len(turls) > 0:
                 self._logger.info('Acquiring data from opendap urls ...')
                 jobs = [gevent.spawn(fetch_xr, url, **kwargs) for url in turls]
