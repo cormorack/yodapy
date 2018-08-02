@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 
+import gevent
+import grequests
+
 import logging
 import os
 import re
 
-import gevent
-import grequests
+import time
+import datetime
 
 import pandas as pd
 
 import requests
 
 from yodapy.datasources.datasource import DataSource
-from yodapy.datasources.ooi.helpers import fetch_xr
+from yodapy.datasources.ooi.helpers import fetch_xr, download_all_nc
+from yodapy.utils.parser import get_nc_urls
 from yodapy.datasources.ooi.m2m_client import M2MClient
 
 SOURCE_NAME = 'OOI'
@@ -326,6 +330,43 @@ class OOI(DataSource):
             return turls
         return None
 
+    def download_ncfiles(self, folder=os.path.curdir):
+        """
+        Download netcdf files from the catalog created from data request.
+
+        Args:
+            folder (str, optional): Location to save netcdf file. Default will save in current directory.
+
+        Returns:
+            list: List of exported netcdf.
+        """
+        dataset_list = []
+        user_input = input('WARNING: This can possibly take a while for large dataset. Are you sure? (yes | no) :')
+        if user_input.lower() == 'yes':
+            if self._data_type == 'netcdf':
+                turls = self._perform_check()
+                if len(turls) > 0:
+                    self._logger.info('Downloading netcdf data ...')
+                    print(turls)
+                    jobs = [gevent.spawn(download_all_nc, url, folder) for url in turls]
+                    gevent.joinall(jobs, timeout=300)
+                    dataset_list = [job.value for job in jobs]
+            else:
+                self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
+
+        return dataset_list
+
+    def _perform_check(self):
+        turls = self.check_status()
+        start = datetime.datetime.now()
+        while turls is None:
+            time.sleep(10)
+            end = datetime.datetime.now()
+            delta = end - start
+            self._logger.info(f'Time elapsed: {delta.seconds}s')
+            turls = self.check_status()
+        return turls
+
     def to_xarray(self, **kwargs):
         """
         Retrieve the OOI streams data and export to Xarray Datasets.
@@ -336,21 +377,12 @@ class OOI(DataSource):
         Returns:
             list: List of xarray datasets
         """
-        import time
-        import datetime
         dataset_list = []
         # TODO: What to do when it's JSON request, calling on to_xarray.
         # TODO: Standardize the structure of the netCDF to ensure CF compliance.
         # TODO: Add way to specify instruments to convert to xarray
         if self._data_type == 'netcdf':
-            turls = self.check_status()
-            start = datetime.datetime.now()
-            while turls is None:
-                time.sleep(10)
-                end = datetime.datetime.now()
-                delta = end - start
-                self._logger.info(f'Time elapsed: {delta.seconds}s')
-                turls = self.check_status()
+            turls = self._perform_check()
             if len(turls) > 0:
                 self._logger.info('Acquiring data from opendap urls ...')
                 jobs = [gevent.spawn(fetch_xr, url, **kwargs) for url in turls]
