@@ -14,7 +14,10 @@ import netCDF4 as nc
 import requests
 
 
-def get_nc_urls(thredds_url):
+def get_nc_urls(thredds_url, download=False):
+    urltype = 'odap'
+    if download:
+        urltype = 'http'
     caturl = thredds_url.replace('.html', '.xml')
 
     parsed_uri = urlsplit(caturl)
@@ -26,7 +29,7 @@ def get_nc_urls(thredds_url):
                              x.attrib['urlPath']) is not None,
                              ROOT.xpath('//*[contains(@urlPath, ".nc")]')))
 
-    service_el = ROOT.xpath('//*[contains(@name, "odap")]')[0]
+    service_el = ROOT.xpath(f'//*[contains(@name, "{urltype}")]')[0]
 
     dataset_urls = [urljoin(domain,
                             urljoin(service_el.attrib['base'],
