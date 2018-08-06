@@ -381,11 +381,12 @@ class OOI(DataSource):
         # TODO: What to do when it's JSON request, calling on to_xarray.
         # TODO: Standardize the structure of the netCDF to ensure CF compliance.
         # TODO: Add way to specify instruments to convert to xarray
+        ref_degs = self.view_instruments()["reference_designator"].values
         if self._data_type == 'netcdf':
             turls = self._perform_check()
             if len(turls) > 0:
                 self._logger.info('Acquiring data from opendap urls ...')
-                jobs = [gevent.spawn(fetch_xr, url, **kwargs) for url in turls]
+                jobs = [gevent.spawn(fetch_xr, (url, ref_degs), **kwargs) for url in turls]
                 gevent.joinall(jobs, timeout=300)
                 dataset_list = [job.value for job in jobs]
         else:

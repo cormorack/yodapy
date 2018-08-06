@@ -69,10 +69,13 @@ def download_all_nc(turl, folder):
     return ncfiles
 
 
-def fetch_xr(turl, **kwargs):
+def fetch_xr(params, **kwargs):
+    turl, ref_degs = params
     datasets = get_nc_urls(turl)
+    # only include instruments where ref_deg appears twice (i.e. was in original filter)
+    filt_ds = list(filter(lambda x: any(x.count(ref) > 1 for ref in ref_degs), datasets))
     return xr.open_mfdataset(
-        datasets,
+        filt_ds,
         preprocess=preprocess_ds,
         decode_times=False,
         **kwargs)
