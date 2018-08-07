@@ -381,7 +381,7 @@ class OOI(DataSource):
         # TODO: What to do when it's JSON request, calling on to_xarray.
         # TODO: Standardize the structure of the netCDF to ensure CF compliance.
         # TODO: Add way to specify instruments to convert to xarray
-        ref_degs = self.view_instruments()["reference_designator"].values
+        ref_degs = self._filtered_instruments()["reference_designator"].values
         if self._data_type == 'netcdf':
             turls = self._perform_check()
             if len(turls) > 0:
