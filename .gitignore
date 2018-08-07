@@ -105,6 +105,7 @@ ENV/
 
 # VS Code
 .vscode
+.vs/
 
 # credentials
 .creds.json
@@ -121,3 +122,5 @@ dask-worker-space/
 # cpsarason_examples
 examples/example*
 
+#inis
+*.ini
