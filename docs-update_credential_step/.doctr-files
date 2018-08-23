@@ -1,3 +1,6 @@
+docs-update_credential_step/_modules/index.html
+docs-update_credential_step/_modules/yodapy/datasources/ooi.html
+docs-update_credential_step/_modules/yodapy/utils/creds.html
 docs-update_credential_step/_sources/index.rst.txt
 docs-update_credential_step/_sources/modules.rst.txt
 docs-update_credential_step/_static/ajax-loader.gif
@@ -27,5 +30,6 @@ docs-update_credential_step/genindex.html
 docs-update_credential_step/index.html
 docs-update_credential_step/modules.html
 docs-update_credential_step/objects.inv
+docs-update_credential_step/py-modindex.html
 docs-update_credential_step/search.html
 docs-update_credential_step/searchindex.js
