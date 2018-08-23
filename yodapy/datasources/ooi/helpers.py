@@ -78,4 +78,5 @@ def fetch_xr(params, **kwargs):
         filt_ds,
         preprocess=preprocess_ds,
         decode_times=False,
+        engine='netcdf4',
         **kwargs)

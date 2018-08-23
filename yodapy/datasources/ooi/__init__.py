@@ -32,7 +32,7 @@ class OOI(DataSource):
 
     """
 
-    def __init__(self):
+    def __init__(self, username=None, token=None):
         super(OOI, self).__init__()
 
         self._source_name = SOURCE_NAME
@@ -44,7 +44,7 @@ class OOI(DataSource):
         self._streams_descriptions = pd.read_csv(os.path.join(meta_pth, 'stream_descriptions.csv')).fillna('')  # noqa
         self._data_streams = pd.read_csv(os.path.join(meta_pth, 'data_streams.csv')).fillna('')  # noqa
 
-        self._client = M2MClient()
+        self._client = M2MClient(api_username=username, api_token=token)
         self._session = requests.session()
         self.username = self._client.api_username
         self.token = self._client.api_token

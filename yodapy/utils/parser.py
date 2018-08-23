@@ -6,35 +6,21 @@ from __future__ import (division,
                         unicode_literals)
 
 import datetime
-import re
-from urllib.parse import urljoin, urlsplit
 
-from lxml import etree
 import netCDF4 as nc
-import requests
+
+from siphon.catalog import TDSCatalog
 
 
 def get_nc_urls(thredds_url, download=False):
-    urltype = 'odap'
+    urltype = 'OPENDAP'
     if download:
-        urltype = 'http'
+        urltype = 'HTTPServer'
     caturl = thredds_url.replace('.html', '.xml')
-
-    parsed_uri = urlsplit(caturl)
-    domain = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_uri)
-
-    response = requests.get(caturl)
-    ROOT = etree.XML(response.content)
-    dataset_el = list(filter(lambda x: re.match(r'(.*?.nc$)',
-                             x.attrib['urlPath']) is not None,
-                             ROOT.xpath('//*[contains(@urlPath, ".nc")]')))
-
-    service_el = ROOT.xpath(f'//*[contains(@name, "{urltype}")]')[0]
-
-    dataset_urls = [urljoin(domain,
-                            urljoin(service_el.attrib['base'],
-                                    el.attrib['urlPath'])) for el in dataset_el]  # noqa
-
+    cat = TDSCatalog(caturl)
+    ncfiles = list(filter(lambda d: not any(w in d.name for w in ['json', 'txt', 'ncml']),  # noqa
+                          [cat.datasets[i] for i, d in enumerate(cat.datasets)]))  # noqa
+    dataset_urls = [d.access_urls[urltype] for d in ncfiles]
     return dataset_urls
 
 
