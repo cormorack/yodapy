@@ -104,7 +104,8 @@ class M2MClient:
     @base_url.setter
     def base_url(self, url):
         self._logger.debug('Setting UFrame credentials.')
-        self._use_existing_credentials()
+        if not self._api_username or not self._api_token:
+            self._use_existing_credentials()
 
         self._logger.debug('Setting UFrame base url: {:s}'.format(url))
 
