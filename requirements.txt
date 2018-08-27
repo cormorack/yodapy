@@ -6,3 +6,5 @@ lxml
 grequests
 gevent
 siphon
+dask
+netCDF4
