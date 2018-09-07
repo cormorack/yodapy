@@ -1,3 +1,6 @@
+docs-add_params/_modules/index.html
+docs-add_params/_modules/yodapy/datasources/ooi.html
+docs-add_params/_modules/yodapy/utils/creds.html
 docs-add_params/_sources/index.rst.txt
 docs-add_params/_sources/modules.rst.txt
 docs-add_params/_static/ajax-loader.gif
@@ -27,5 +30,6 @@ docs-add_params/genindex.html
 docs-add_params/index.html
 docs-add_params/modules.html
 docs-add_params/objects.inv
+docs-add_params/py-modindex.html
 docs-add_params/search.html
 docs-add_params/searchindex.js
