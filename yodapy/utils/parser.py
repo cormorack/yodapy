@@ -78,5 +78,5 @@ def split_val_list(df, lst_col):
 
 
 def get_value(rowcol):
-    if type(rowcol) == dict:
+    if isinstance(rowcol, dict):
         return rowcol['value']
