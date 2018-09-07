@@ -8,3 +8,4 @@ gevent
 siphon
 dask
 netCDF4
+progressbar2

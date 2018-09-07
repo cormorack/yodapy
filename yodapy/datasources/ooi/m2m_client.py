@@ -21,8 +21,12 @@ import datetime
 import pytz
 
 requests.packages.urllib3.disable_warnings() 
+import pandas as pd
+import progressbar
 
 from yodapy.utils.files import CREDENTIALS_FILE
+from yodapy.utils.parser import (get_value, 
+                                 split_val_list)
 
 HTTP_STATUS_OK = 200
 HTTP_STATUS_NOT_FOUND = 404
@@ -74,6 +78,7 @@ class M2MClient:
         self._instrument_streams = []
         self._streams = []
         self._toc = None
+        self._parameter_index = None
 
         self._logger = logging.getLogger(__name__)
 
@@ -103,9 +108,17 @@ class M2MClient:
 
     @base_url.setter
     def base_url(self, url):
+        widgets = [
+            progressbar.Percentage(),
+            ' ', progressbar.Bar(),
+            progressbar.FormatLabel('Time elapsed: %(elapsed)s')
+        ]
+        bar = progressbar.ProgressBar(widgets=widgets, max_value=5).start()
+
         self._logger.debug('Setting UFrame credentials.')
         if not self._api_username or not self._api_token:
             self._use_existing_credentials()
+        bar += 1
 
         self._logger.debug('Setting UFrame base url: {:s}'.format(url))
 
@@ -122,6 +135,7 @@ class M2MClient:
         self._logger.debug('UFrame base_url: {:s}'.format(self.base_url))
         self._logger.debug(
             'UFrame m2m base_url: {:s}'.format(self.m2m_base_url))
+        bar += 1
 
         # Try to get the sensor invetory subsite list to see if we're able to connect
         self.fetch_subsites()
@@ -130,9 +144,14 @@ class M2MClient:
             self._base_url = None
             # self._valid_uframe = False
             return
+        bar += 1
 
         # Create the instrument list
         self._create_instrument_list()
+        bar += 1
+        self._create_parameter_index()
+        bar += 1
+        bar.finish()
 
     @property
     def is_m2m(self):
@@ -412,6 +431,63 @@ class M2MClient:
 
         return filtered_deployments
 
+    def fetch_parameters(self):
+        """Fetch all parameters from the /parameter API endpoint"""
+
+        self._logger.debug('Fetching all OOI Parameters')
+
+        port = 12575
+        end_point = '/parameter'
+
+        request_url = self.build_request(port,
+                                         end_point)
+
+        # Send the request
+        self.send_request(request_url)
+
+        if self._status_code == HTTP_STATUS_OK:
+            return self._response
+        else:
+            return None
+
+    def fetch_streams(self):
+        """Fetch all streams from the /stream API endpoint"""
+
+        self._logger.debug('Fetching all OOI Streams')
+
+        port = 12575
+        end_point = '/stream'
+
+        request_url = self.build_request(port,
+                                         end_point)
+
+        # Send the request
+        self.send_request(request_url)
+
+        if self._status_code == HTTP_STATUS_OK:
+            return self._response
+        else:
+            return None
+
+    def fetch_vocabs(self):
+        """Fetch all vocabs from the /vocab API endpoint"""
+
+        self._logger.debug('Fetching all OOI Vocab')
+
+        port = 12586
+        end_point = '/vocab'
+
+        request_url = self.build_request(port,
+                                         end_point)
+
+        # Send the request
+        self.send_request(request_url)
+
+        if self._status_code == HTTP_STATUS_OK:
+            return self._response
+        else:
+            return None
+
     def search_instruments(self, ref_des):
         """Search all instruments for the fully-qualified reference designators
         matching the fully or partially-qualified ref_des string"""
@@ -522,6 +598,73 @@ class M2MClient:
             self._logger.warning('{:} ({:s})'.format(e, url))
             self._response = r.text
             return None
+
+    def _create_parameter_index(self):
+        # Get parameters
+        self._logger.debug('--- Get Parameters ---')
+        all_params = self.fetch_parameters()
+        paramdf = pd.DataFrame.from_records(all_params)
+        paramdf.loc[:, 'data_product_type'] = paramdf.apply(lambda row: get_value(row['data_product_type']), axis=1)
+        productsdf = paramdf[['id', 'name', 'display_name', 'data_product_type']]
+        productsdf.columns = ['parameterid', 'parameter_name', 'display_name', 'data_product_type']
+
+        # Get streams
+        self._logger.debug('--- Get Streams ---')
+        all_stream = self.fetch_streams()
+        streamsdf = pd.DataFrame.from_records(all_stream)
+        streamsdf.loc[:, 'stream_type'] = streamsdf.apply(lambda row: get_value(row['stream_type']), axis=1)
+        streamsdf.loc[:, 'stream_content'] = streamsdf.apply(lambda row: get_value(row['stream_content']), axis=1)
+        inststreams = streamsdf[['id', 'name', 'parameters', 'stream_content', 'time_parameter', 'stream_type']]
+
+        # -- Expand parameters in science streams
+        science_streams = inststreams.copy()
+        science_streams.loc[:, 'parameterid'] = science_streams.parameters.apply(lambda params: [p['id'] for p in params])
+        science_streams = split_val_list(science_streams, 'parameterid')
+        science_streams.drop('parameters', axis=1, inplace=True)
+        science_streams.columns = ['streamid', 'name', 'stream_content', 'time_parameter', 'stream_type', 'parameterid']
+
+        joined_params = pd.merge(productsdf, science_streams, on='parameterid')
+
+        # Get instruments
+        self._logger.debug('--- Get Instruments ---')
+        sensor_inv = self._toc
+        instrumentsdf = pd.DataFrame.from_records(sensor_inv['instruments'])
+        instdf = split_val_list(instrumentsdf, 'streams')
+        instdf.loc[:, 'stream_name'] = instdf.apply(lambda row: row['streams']['stream'], axis=1)
+        instdf.loc[:, 'stream_method'] = instdf.apply(lambda row: row['streams']['method'], axis=1)
+        instdf.drop('streams', axis=1, inplace=True)
+        all_instruments = pd.merge(joined_params, instdf, left_on='name', right_on='stream_name').reset_index(drop='index')
+
+        # Get Instrument metada
+        self._logger.info('--- Get Instrument Metadata ---')
+        vocabs = self.fetch_vocabs()
+        vocabdf = pd.DataFrame.from_records(vocabs)
+        all_vocabs = vocabdf[['vocabId', 'instrument', 'manufacturer', 'refdes', 'tocL1', 'tocL2', 'tocL3']]
+        es_index = pd.merge(all_instruments, all_vocabs, left_on='reference_designator', right_on='refdes')
+        es_index.drop(['name', 'refdes'], axis=1, inplace=True)
+        column_array = ['parameter_id',
+                        'parameter_name',
+                        'parameter_display_name',
+                        'parameter_product_type',
+                        'stream_id',
+                        'stream_content',
+                        'time_parameter',
+                        'stream_type',
+                        'instrument_code',
+                        'node_code',
+                        'site_code',
+                        'instrument_refdes',
+                        'stream_name',
+                        'stream_method',
+                        'vocabid',
+                        'instrument_name',
+                        'instrument_manufacturer',
+                        'array_name',
+                        'site_name',
+                        'node_name']
+        es_index.columns = column_array
+        self._logger.debug('--- Exporting es_index ---')
+        self._parameter_index = es_index.reset_index(drop='index')
 
     def _create_instrument_list(self):
 
