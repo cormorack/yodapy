@@ -20,7 +20,10 @@ from dateutil.relativedelta import relativedelta as tdelta
 import datetime
 import pytz
 
-requests.packages.urllib3.disable_warnings() 
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
 import pandas as pd
 import progressbar
 

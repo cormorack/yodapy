@@ -9,6 +9,8 @@ import re
 
 import time
 import datetime
+from dateutil import parser
+import pytz
 
 import pandas as pd
 
@@ -32,10 +34,11 @@ class OOI(DataSource):
 
     """
 
-    def __init__(self, username=None, token=None):
+    def __init__(self, username=None, token=None, cloud_source=False):
         super(OOI, self).__init__()
 
         self._source_name = SOURCE_NAME
+        self._cloud_source = cloud_source
 
         meta_pth = os.path.join(os.path.dirname(__file__), 'infrastructure')
         self._instruments = pd.read_csv(os.path.join(meta_pth, 'instruments.csv')).fillna('')  # noqa
@@ -49,6 +52,7 @@ class OOI(DataSource):
         self.username = self._client.api_username
         self.token = self._client.api_token
         self.last_request_urls = None
+        self._requested_time_range = None
 
         self._filtered_instruments = self._instruments
         self._data_urls = None
@@ -241,6 +245,18 @@ class OOI(DataSource):
             self._logger.warning('Please find your desired instruments by using OOI().search() method.')  # noqa
             return None
 
+    def _get_cloud_thredds_url(self, inst):
+        thredds_host = 'http://localhost/thredds/catalog'
+        thredds_catalog = 'catalog.xml'
+
+        stream = list(filter(lambda x: x['stream'] == inst.preferred_stream,
+                             self._client.fetch_instrument_streams(inst.reference_designator)))[0]
+        desired_rd = '-'.join([inst.reference_designator,
+                              stream['method'],
+                              stream['stream']])
+
+        return '/'.join([thredds_host, desired_rd, thredds_catalog])
+
     def request_data(self, begin_date=None, end_date=None,
                      data_type='netcdf', limit=-1, stream=None, **kwargs):
         """
@@ -268,49 +284,58 @@ class OOI(DataSource):
             text = f'Too many instruments to request data for! Max is 5, you have {len(self._filtered_instruments)}'  # noqa
             self._logger.error(text)
             raise Exception(text)
-        instrument_avail = self._retrieve_availibility(self._filtered_instruments)
-        do_filter = instrument_avail.items()
-        if stream:
-            stream_list = list(map(lambda x: x.strip(' '), stream.split(',')))
-            do_filter = filter(lambda inst: inst[1][0]['stream'] in stream_list, instrument_avail.items())
+        if self._cloud_source:
+            if data_type == 'netcdf':
+                data_urls = [self._get_cloud_thredds_url(inst) for idx, inst in self._filtered_instruments.iterrows()]
+                begin_date = parser.parse(begin_date)
+                end_date = parser.parse(end_date)
+                self._requested_time_range = (begin_date, end_date)
+            else:
+                raise Exception('Only netcdf is allowed for cloud_copy request!')
+        else:
+            instrument_avail = self._retrieve_availibility(self._filtered_instruments)
+            do_filter = instrument_avail.items()
+            if stream:
+                stream_list = list(map(lambda x: x.strip(' '), stream.split(',')))
+                do_filter = filter(lambda inst: inst[1][0]['stream'] in stream_list, instrument_avail.items())
 
-        try:
-            request_urls = list(map(lambda inst: self._client.instrument_to_query(inst[0],
-                                                                                  user=self.username,
-                                                                                  stream=inst[1][0]['stream'],
-                                                                                  begin_ts=begin_date,
-                                                                                  end_ts=end_date,
-                                                                                  application_type=data_type,
-                                                                                  limit=limit,
-                                                                                  **kwargs)[0],
-                                    do_filter))
-        except Exception as e:
-            self._logger.warning(e)
-            request_urls = []
-        self.last_request_urls = request_urls
+            try:
+                request_urls = list(map(lambda inst: self._client.instrument_to_query(inst[0],
+                                                                                    user=self.username,
+                                                                                    stream=inst[1][0]['stream'],
+                                                                                    begin_ts=begin_date,
+                                                                                    end_ts=end_date,
+                                                                                    application_type=data_type,
+                                                                                    limit=limit,
+                                                                                    **kwargs)[0],
+                                        do_filter))
+            except Exception as e:
+                self._logger.warning(e)
+                request_urls = []
+            self.last_request_urls = request_urls
 
-        reqs = (grequests.get(
-                    url,
-                    auth=(self._client.api_username,
-                          self._client.api_token),
-                    timeout=self._client.timeout,
-                    verify=False) for url in request_urls
-                )
+            reqs = (grequests.get(
+                        url,
+                        auth=(self._client.api_username,
+                            self._client.api_token),
+                        timeout=self._client.timeout,
+                        verify=False) for url in request_urls
+                    )
 
-        def exception_handler(request, exception):
-            self._logger.error(exception)
+            def exception_handler(request, exception):
+                self._logger.error(exception)
 
-        self._logger.info('Requesting data ...')
-        results = grequests.map(reqs,
-                                exception_handler=exception_handler)
+            self._logger.info('Requesting data ...')
+            results = grequests.map(reqs,
+                                    exception_handler=exception_handler)
 
-        data_urls = []
-        try:
-            data_urls = [r.json() for r in results]
-        except Exception as e:
-            self._logger.warning(e)
+            data_urls = []
+            try:
+                data_urls = [r.json() for r in results]
+            except Exception as e:
+                self._logger.warning(e)
 
-        self._logger.info('Data request complete, please wait for data to be compiled ...')
+            self._logger.info('Data request complete, please wait for data to be compiled ...')
         self._data_urls = data_urls
         self._data_type = data_type.lower()
         return self
@@ -383,7 +408,12 @@ class OOI(DataSource):
         # TODO: Add way to specify instruments to convert to xarray
         ref_degs = self._filtered_instruments["reference_designator"].values
         if self._data_type == 'netcdf':
-            turls = self._perform_check()
+            if self._cloud_source:
+                turls = self._data_urls
+                kwargs['begin_date'] = self._requested_time_range[0]
+                kwargs['end_date'] = self._requested_time_range[1]
+            else:
+                turls = self._perform_check()
             if len(turls) > 0:
                 self._logger.info('Acquiring data from opendap urls ...')
                 jobs = [gevent.spawn(fetch_xr, (url, ref_degs), **kwargs) for url in turls]

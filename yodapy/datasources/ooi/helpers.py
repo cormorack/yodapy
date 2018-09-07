@@ -71,7 +71,11 @@ def download_all_nc(turl, folder):
 
 def fetch_xr(params, **kwargs):
     turl, ref_degs = params
-    datasets = get_nc_urls(turl)
+    datasets = get_nc_urls(turl, begin_date=kwargs.get('begin_date'), end_date=kwargs.get('end_date'))
+    if 'begin_date' in kwargs.keys():
+        kwargs.pop('begin_date')
+    if 'end_date' in kwargs.keys():
+        kwargs.pop('end_date')
     # only include instruments where ref_deg appears twice (i.e. was in original filter)
     filt_ds = list(filter(lambda x: any(x.count(ref) > 1 for ref in ref_degs), datasets))
     return xr.open_mfdataset(

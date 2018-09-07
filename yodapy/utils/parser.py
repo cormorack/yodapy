@@ -14,14 +14,19 @@ import numpy as np
 from siphon.catalog import TDSCatalog
 
 
-def get_nc_urls(thredds_url, download=False):
+def get_nc_urls(thredds_url, download=False, begin_date=None, end_date=None):
     urltype = 'OPENDAP'
     if download:
         urltype = 'HTTPServer'
     caturl = thredds_url.replace('.html', '.xml')
     cat = TDSCatalog(caturl)
+    datasets = cat.datasets
+    if begin_date and end_date:
+        datasets = cat.datasets.filter_time_range(start=begin_date,
+                                                  end=end_date,
+                                                  regex=r'(?P<year>\d{4})(?P<month>[01]\d)(?P<day>[0123]\d)T(?P<hour>[012]\d)(?P<minute>[0-5]\d)')
     ncfiles = list(filter(lambda d: not any(w in d.name for w in ['json', 'txt', 'ncml']),  # noqa
-                          [cat.datasets[i] for i, d in enumerate(cat.datasets)]))  # noqa
+                      [cat.datasets[i] for i, d in enumerate(datasets)]))  # noqa
     dataset_urls = [d.access_urls[urltype] for d in ncfiles]
     return dataset_urls
 
