@@ -8,6 +8,8 @@ from __future__ import (division,
 import datetime
 
 import netCDF4 as nc
+import pandas as pd
+import numpy as np
 
 from siphon.catalog import TDSCatalog
 
@@ -65,3 +67,16 @@ def ooi_instrument_reference_designator(reference_designator):
 
 def build_url(*args):
     return '/'.join(args)
+
+
+def split_val_list(df, lst_col):
+    return pd.DataFrame({
+      col: np.repeat(df[col].values,
+                     df[lst_col].str.len())
+      for col in df.columns.drop(lst_col)}
+    ).assign(**{lst_col: np.concatenate(df[lst_col].values)})[df.columns]
+
+
+def get_value(rowcol):
+    if type(rowcol) == dict:
+        return rowcol['value']
