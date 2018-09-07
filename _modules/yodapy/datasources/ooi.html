@@ -43,6 +43,8 @@
 
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span>
+<span class="kn">import</span> <span class="nn">pytz</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -66,10 +68,11 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cloud_source</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">OOI</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_source_name</span> <span class="o">=</span> <span class="n">SOURCE_NAME</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span> <span class="o">=</span> <span class="n">cloud_source</span>
 
         <span class="n">meta_pth</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;infrastructure&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_instruments</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">meta_pth</span><span class="p">,</span> <span class="s1">&#39;instruments.csv&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
@@ -83,6 +86,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">api_username</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">api_token</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">last_request_urls</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_requested_time_range</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_instruments</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span> <span class="o">=</span> <span class="kc">None</span>
@@ -275,6 +279,18 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Please find your desired instruments by using OOI().search() method.&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
+    <span class="k">def</span> <span class="nf">_get_cloud_thredds_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
+        <span class="n">thredds_host</span> <span class="o">=</span> <span class="s1">&#39;http://localhost/thredds/catalog&#39;</span>
+        <span class="n">thredds_catalog</span> <span class="o">=</span> <span class="s1">&#39;catalog.xml&#39;</span>
+
+        <span class="n">stream</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;stream&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">inst</span><span class="o">.</span><span class="n">preferred_stream</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">fetch_instrument_streams</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">reference_designator</span><span class="p">)))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">desired_rd</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">inst</span><span class="o">.</span><span class="n">reference_designator</span><span class="p">,</span>
+                              <span class="n">stream</span><span class="p">[</span><span class="s1">&#39;method&#39;</span><span class="p">],</span>
+                              <span class="n">stream</span><span class="p">[</span><span class="s1">&#39;stream&#39;</span><span class="p">]])</span>
+
+        <span class="k">return</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">thredds_host</span><span class="p">,</span> <span class="n">desired_rd</span><span class="p">,</span> <span class="n">thredds_catalog</span><span class="p">])</span>
+
 <div class="viewcode-block" id="OOI.request_data"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.request_data">[docs]</a>    <span class="k">def</span> <span class="nf">request_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">end_date</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                      <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;netcdf&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -302,49 +318,58 @@
             <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Too many instruments to request data for! Max is 5, you have {len(self._filtered_instruments)}&#39;</span>  <span class="c1"># noqa</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-        <span class="n">instrument_avail</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrieve_availibility</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span><span class="p">)</span>
-        <span class="n">do_filter</span> <span class="o">=</span> <span class="n">instrument_avail</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">stream</span><span class="p">:</span>
-            <span class="n">stream_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">stream</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
-            <span class="n">do_filter</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">inst</span><span class="p">:</span> <span class="n">inst</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;stream&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">stream_list</span><span class="p">,</span> <span class="n">instrument_avail</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;netcdf&#39;</span><span class="p">:</span>
+                <span class="n">data_urls</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_cloud_thredds_url</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+                <span class="n">begin_date</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">begin_date</span><span class="p">)</span>
+                <span class="n">end_date</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_requested_time_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">begin_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Only netcdf is allowed for cloud_copy request!&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">instrument_avail</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_retrieve_availibility</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span><span class="p">)</span>
+            <span class="n">do_filter</span> <span class="o">=</span> <span class="n">instrument_avail</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">stream</span><span class="p">:</span>
+                <span class="n">stream_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">stream</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+                <span class="n">do_filter</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">inst</span><span class="p">:</span> <span class="n">inst</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;stream&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">stream_list</span><span class="p">,</span> <span class="n">instrument_avail</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">request_urls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">inst</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">instrument_to_query</span><span class="p">(</span><span class="n">inst</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
-                                                                                  <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
-                                                                                  <span class="n">stream</span><span class="o">=</span><span class="n">inst</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;stream&#39;</span><span class="p">],</span>
-                                                                                  <span class="n">begin_ts</span><span class="o">=</span><span class="n">begin_date</span><span class="p">,</span>
-                                                                                  <span class="n">end_ts</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span>
-                                                                                  <span class="n">application_type</span><span class="o">=</span><span class="n">data_type</span><span class="p">,</span>
-                                                                                  <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
-                                                                                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
-                                    <span class="n">do_filter</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-            <span class="n">request_urls</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">last_request_urls</span> <span class="o">=</span> <span class="n">request_urls</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">request_urls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">inst</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">instrument_to_query</span><span class="p">(</span><span class="n">inst</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                                                                    <span class="n">user</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+                                                                                    <span class="n">stream</span><span class="o">=</span><span class="n">inst</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;stream&#39;</span><span class="p">],</span>
+                                                                                    <span class="n">begin_ts</span><span class="o">=</span><span class="n">begin_date</span><span class="p">,</span>
+                                                                                    <span class="n">end_ts</span><span class="o">=</span><span class="n">end_date</span><span class="p">,</span>
+                                                                                    <span class="n">application_type</span><span class="o">=</span><span class="n">data_type</span><span class="p">,</span>
+                                                                                    <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+                                                                                    <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span>
+                                        <span class="n">do_filter</span><span class="p">))</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="n">request_urls</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">last_request_urls</span> <span class="o">=</span> <span class="n">request_urls</span>
 
-        <span class="n">reqs</span> <span class="o">=</span> <span class="p">(</span><span class="n">grequests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                    <span class="n">url</span><span class="p">,</span>
-                    <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">api_username</span><span class="p">,</span>
-                          <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">api_token</span><span class="p">),</span>
-                    <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
-                    <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">request_urls</span>
-                <span class="p">)</span>
+            <span class="n">reqs</span> <span class="o">=</span> <span class="p">(</span><span class="n">grequests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="n">url</span><span class="p">,</span>
+                        <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">api_username</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">api_token</span><span class="p">),</span>
+                        <span class="n">timeout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">timeout</span><span class="p">,</span>
+                        <span class="n">verify</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">request_urls</span>
+                    <span class="p">)</span>
 
-        <span class="k">def</span> <span class="nf">exception_handler</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
+            <span class="k">def</span> <span class="nf">exception_handler</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">exception</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">exception</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Requesting data ...&#39;</span><span class="p">)</span>
-        <span class="n">results</span> <span class="o">=</span> <span class="n">grequests</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">reqs</span><span class="p">,</span>
-                                <span class="n">exception_handler</span><span class="o">=</span><span class="n">exception_handler</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Requesting data ...&#39;</span><span class="p">)</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">grequests</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">reqs</span><span class="p">,</span>
+                                    <span class="n">exception_handler</span><span class="o">=</span><span class="n">exception_handler</span><span class="p">)</span>
 
-        <span class="n">data_urls</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">data_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">data_urls</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">data_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">json</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Data request complete, please wait for data to be compiled ...&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Data request complete, please wait for data to be compiled ...&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span> <span class="o">=</span> <span class="n">data_urls</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="n">data_type</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -417,7 +442,12 @@
         <span class="c1"># TODO: Add way to specify instruments to convert to xarray</span>
         <span class="n">ref_degs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span><span class="p">[</span><span class="s2">&quot;reference_designator&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">==</span> <span class="s1">&#39;netcdf&#39;</span><span class="p">:</span>
-            <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perform_check</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span><span class="p">:</span>
+                <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;begin_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_requested_time_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_requested_time_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perform_check</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">turls</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Acquiring data from opendap urls ...&#39;</span><span class="p">)</span>
                 <span class="n">jobs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gevent</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="n">fetch_xr</span><span class="p">,</span> <span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">ref_degs</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">turls</span><span class="p">]</span>
