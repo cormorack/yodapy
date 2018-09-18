@@ -24,7 +24,7 @@ def check_data_status(session, data, **kwargs):
         'thredds_url': data['allURLs'][0],
         'status_url': data['allURLs'][1]
     }
-    check_complete = os.path.join(urls['status_url'], 'status.txt')
+    check_complete = '/'.join([urls['status_url'], 'status.txt'])
 
     req = None
     print('\nYour data ({}) is still compiling... Please wait.'.format(
