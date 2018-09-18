@@ -11,7 +11,7 @@ import requests
 from yodapy.datasources.ooi.helpers import check_data_status
 
 
-@pytest.mark.skip(reason='Not implemented yet')
+# @pytest.mark.skip(reason='Not implemented yet')
 def test_check_data_status():
     # TODO: Integrate with online check data status
     session = requests.session()

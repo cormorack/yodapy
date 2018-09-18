@@ -5,12 +5,14 @@ from __future__ import (absolute_import,
 
 import datetime
 
+import os
 import pandas as pd
 import pytest
 
 import xarray as xr
 
 from yodapy.datasources import OOI
+from yodapy.utils.creds import set_credentials_file
 
 
 class TestOOIDataSource:
@@ -37,6 +39,7 @@ class TestOOIDataSource:
           'sizeCalculation': 5595265,
           'timeCalculation': 60,
           'numberOfSubJobs': 1}]
+        set_credentials_file(data_source='ooi', username=os.environ.get('OOI_USERNAME'), token=os.environ.get('OOI_TOKEN'))
 
     def test_search(self):
         search_results = self.OOI.search(region=self.region,
@@ -46,37 +49,32 @@ class TestOOIDataSource:
         assert isinstance(search_results, OOI)
         assert len(search_results) == 2
 
-    @pytest.mark.skip(reason='Need credentials.')
     def test_view_instruments(self):
         inst = self.OOI.view_instruments()
 
         assert isinstance(inst, pd.DataFrame)
 
-    @pytest.mark.skip(reason='Need credentials.')
     def test_view_regions(self):
         inst = self.OOI.view_regions()
 
         assert isinstance(inst, pd.DataFrame)
 
-    @pytest.mark.skip(reason='Need credentials.')
     def test_view_instruments(self):
         inst = self.OOI.view_sites()
 
         assert isinstance(inst, pd.DataFrame)
 
-    @pytest.mark.skip(reason='Need credentials.')
     def test_data_availibility(self):
         search_results = self.OOI.search(region=self.region,
                                          site=self.site,
                                          instrument=self.instrument)
 
-        assert isinstance(search_results.data_availibility(), type(None))
+        assert isinstance(search_results.data_availability(), dict)
 
-    @pytest.mark.skip(reason='Inconsistent connection to data.')
     def test_to_xarray(self):
         # TODO: Need smarter test in case OOI Server is down. Need caching of the sample netCDF!
         self.OOI._data_urls = self._data_urls
 
-        dataset_list = self.ooi.to_xarray()
+        dataset_list = self.OOI.to_xarray()
         assert isinstance(dataset_list, list)
         assert all(isinstance(data, xr.Dataset) for data in dataset_list)
