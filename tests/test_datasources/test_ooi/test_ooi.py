@@ -91,7 +91,7 @@ class TestOOIDataSource:
                                          data_type='netcdf')
 
         assert isinstance(data_request._data_urls, list)
-        assert len(data_request._data_urls) != 0
+        assert data_request._data_urls
         assert data_request._data_type == 'netcdf'
     
     def test_request_data_check(self):
@@ -99,7 +99,7 @@ class TestOOIDataSource:
         url_len = self.search_results._perform_check()
 
         assert isinstance(url_len, list)
-        assert len(url_len) !=0
+        assert url_len
 
 
         
