@@ -163,7 +163,7 @@ class OOI(DataSource):
             dict: All the streams for instruments.
         """
         all_streams = {}
-        for i, v in inst.iterrows():
+        for _, v in inst.iterrows():
             st = self._client.fetch_instrument_streams(v.reference_designator)
             if stream_type != 'all':
                 st = list(filter(lambda s: self._client.fetch_stream_metadata(s['stream'])['stream_type']['value'] == stream_type, st))  # noqa
@@ -228,7 +228,7 @@ class OOI(DataSource):
                                 (ends, starts)]
 
                 ypos = range(len(edate))
-                fig, ax = plt.subplots(figsize=(20, 10))
+                _, ax = plt.subplots(figsize=(20, 10))
                 ax.barh(ypos, edate - bdate,
                         height=0.8, left=bdate, color='green',
                         align='center')
