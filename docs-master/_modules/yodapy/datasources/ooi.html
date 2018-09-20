@@ -44,7 +44,6 @@
 
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span>
 <span class="kn">import</span> <span class="nn">pytz</span>
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -281,7 +280,7 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">_get_cloud_thredds_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
-        <span class="n">thredds_host</span> <span class="o">=</span> <span class="s1">&#39;http://localhost/thredds/catalog&#39;</span>
+        <span class="n">thredds_host</span> <span class="o">=</span> <span class="s1">&#39;http://data.ooica.net:8080/thredds/catalog&#39;</span>
         <span class="n">thredds_catalog</span> <span class="o">=</span> <span class="s1">&#39;catalog.xml&#39;</span>
 
         <span class="n">stream</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;stream&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">inst</span><span class="o">.</span><span class="n">preferred_stream</span><span class="p">,</span>
@@ -322,8 +321,6 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">data_type</span> <span class="o">==</span> <span class="s1">&#39;netcdf&#39;</span><span class="p">:</span>
                 <span class="n">data_urls</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_cloud_thredds_url</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
-                <span class="n">begin_date</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">begin_date</span><span class="p">)</span>
-                <span class="n">end_date</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">end_date</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_requested_time_range</span> <span class="o">=</span> <span class="p">(</span><span class="n">begin_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Only netcdf is allowed for cloud_copy request!&#39;</span><span class="p">)</span>
@@ -447,6 +444,7 @@
                 <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_urls</span>
                 <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;begin_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_requested_time_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;end_date&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_requested_time_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;cloud_source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perform_check</span><span class="p">()</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">turls</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
