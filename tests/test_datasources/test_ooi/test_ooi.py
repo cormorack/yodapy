@@ -13,9 +13,11 @@ import xarray as xr
 
 from yodapy.datasources import OOI
 from yodapy.utils.creds import set_credentials_file
+from yodapy.utils.parser import get_midnight
 
 
 class TestOOIDataSource:
+    
 
     def setup(self):
         self.OOI = OOI()
@@ -39,15 +41,16 @@ class TestOOIDataSource:
           'sizeCalculation': 5595265,
           'timeCalculation': 60,
           'numberOfSubJobs': 1}]
+        self.dt_val = datetime.datetime.utcnow()
         set_credentials_file(data_source='ooi', username=os.environ.get('OOI_USERNAME'), token=os.environ.get('OOI_TOKEN'))
-
-    def test_search(self):
-        search_results = self.OOI.search(region=self.region,
+        self.search_results = self.OOI.search(region=self.region,
                                          site=self.site,
                                          instrument=self.instrument)
+        
+    def test_search(self):
 
-        assert isinstance(search_results, OOI)
-        assert len(search_results) == 2
+        assert isinstance(self.search_results, OOI)
+        assert len(self.search_results) == 2
 
     def test_view_instruments(self):
         inst = self.OOI.view_instruments()
@@ -59,22 +62,44 @@ class TestOOIDataSource:
 
         assert isinstance(inst, pd.DataFrame)
 
-    def test_view_instruments(self):
+    def test_view_sites(self):
         inst = self.OOI.view_sites()
 
         assert isinstance(inst, pd.DataFrame)
 
     def test_data_availibility(self):
-        search_results = self.OOI.search(region=self.region,
-                                         site=self.site,
-                                         instrument=self.instrument)
 
-        assert isinstance(search_results.data_availability(), dict)
+        assert isinstance(self.search_results.data_availability(), dict)
+        assert isinstance(self.search_results._get_cloud_thredds_url(self.search_results._filtered_instruments.iloc[0]), str)
 
     def test_to_xarray(self):
         # TODO: Need smarter test in case OOI Server is down. Need caching of the sample netCDF!
         self.OOI._data_urls = self._data_urls
-
         dataset_list = self.OOI.to_xarray()
+
         assert isinstance(dataset_list, list)
         assert all(isinstance(data, xr.Dataset) for data in dataset_list)
+
+    def test_midnight_check(self):
+        midnight = get_midnight(self.dt_val)
+        
+        assert isinstance(midnight, datetime.datetime)  
+
+    def test_request_data(self):
+        data_request = self.search_results.request_data(begin_date=self.start_date,
+                                         end_date=self.end_date,
+                                         data_type='netcdf')
+
+        assert isinstance(data_request._data_urls, list)
+        assert len(data_request._data_urls) != 0
+        assert data_request._data_type == 'netcdf'
+    
+    def test_data_request_check(self):
+        self.search_results._data_urls = self._data_urls
+        url_len = self.search_results._perform_check()
+
+        assert isinstance(url_len, list)
+        assert len(url_len) !=0
+
+
+        
