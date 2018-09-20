@@ -94,7 +94,7 @@ class TestOOIDataSource:
         assert len(data_request._data_urls) != 0
         assert data_request._data_type == 'netcdf'
     
-    def test_data_request_check(self):
+    def test_request_data_check(self):
         self.search_results._data_urls = self._data_urls
         url_len = self.search_results._perform_check()
 
