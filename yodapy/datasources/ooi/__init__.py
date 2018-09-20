@@ -9,7 +9,6 @@ import re
 
 import time
 import datetime
-from dateutil import parser
 import pytz
 
 import pandas as pd
@@ -246,7 +245,7 @@ class OOI(DataSource):
             return None
 
     def _get_cloud_thredds_url(self, inst):
-        thredds_host = 'http://localhost/thredds/catalog'
+        thredds_host = 'http://data.ooica.net:8080/thredds/catalog'
         thredds_catalog = 'catalog.xml'
 
         stream = list(filter(lambda x: x['stream'] == inst.preferred_stream,
@@ -287,8 +286,6 @@ class OOI(DataSource):
         if self._cloud_source:
             if data_type == 'netcdf':
                 data_urls = [self._get_cloud_thredds_url(inst) for idx, inst in self._filtered_instruments.iterrows()]
-                begin_date = parser.parse(begin_date)
-                end_date = parser.parse(end_date)
                 self._requested_time_range = (begin_date, end_date)
             else:
                 raise Exception('Only netcdf is allowed for cloud_copy request!')
@@ -412,6 +409,7 @@ class OOI(DataSource):
                 turls = self._data_urls
                 kwargs['begin_date'] = self._requested_time_range[0]
                 kwargs['end_date'] = self._requested_time_range[1]
+                kwargs['cloud_source'] = self._cloud_source
             else:
                 turls = self._perform_check()
             if len(turls) > 0:
