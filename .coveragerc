@@ -19,10 +19,3 @@ exclude_lines =
     raise NotImplementedError
     if __name__ == .__main__.:
     warnings.warn
-omit =
-    # omit _version.py
-    yodapy/_*
-    # omit helpers.py
-    yodapy/datasources/ooi/helpers.py
-    # omit m2m_client.py
-    yodapy/datasources/ooi/m2m_client.py
