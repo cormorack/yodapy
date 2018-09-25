@@ -55,6 +55,7 @@
 <span class="kn">from</span> <span class="nn">yodapy.utils.parser</span> <span class="k">import</span> <span class="n">get_nc_urls</span>
 <span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.m2m_client</span> <span class="k">import</span> <span class="n">M2MClient</span>
 
+
 <span class="n">SOURCE_NAME</span> <span class="o">=</span> <span class="s1">&#39;OOI&#39;</span>
 
 
@@ -95,7 +96,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">f</span><span class="s1">&#39;&lt;Data Source: </span><span class="si">{self._source_name}</span><span class="s1">&gt;&#39;</span>
+        <span class="n">inst_text</span> <span class="o">=</span> <span class="s1">&#39;Instrument&#39;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">inst_text</span> <span class="o">=</span> <span class="n">inst_text</span> <span class="o">+</span> <span class="s1">&#39;s&#39;</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s1">&#39;&lt;Data Source: </span><span class="si">{self._source_name}</span><span class="s1"> ({len(self._filtered_instruments)} </span><span class="si">{inst_text}</span><span class="s1">)&gt;&#39;</span>
 
     <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_instruments</span><span class="p">)</span>
@@ -232,6 +236,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Request (</span><span class="si">{urls[&#39;status_url&#39;]}</span><span class="s2">) completed.&quot;</span><span class="p">)</span>  <span class="c1"># noqa</span>
         <span class="k">return</span> <span class="n">urls</span><span class="p">[</span><span class="s1">&#39;thredds_url&#39;</span><span class="p">]</span>
 
+
 <div class="viewcode-block" id="OOI.data_availability"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.data_availability">[docs]</a>    <span class="k">def</span> <span class="nf">data_availability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Plots data availability of desired instruments.</span>
@@ -280,7 +285,7 @@
             <span class="k">return</span> <span class="kc">None</span></div>
 
     <span class="k">def</span> <span class="nf">_get_cloud_thredds_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
-        <span class="n">thredds_host</span> <span class="o">=</span> <span class="s1">&#39;http://data.ooica.net:8080/thredds/catalog&#39;</span>
+        <span class="n">thredds_host</span> <span class="o">=</span> <span class="s1">&#39;http://data-dev.ooica.net:8080/thredds/catalog&#39;</span>
         <span class="n">thredds_catalog</span> <span class="o">=</span> <span class="s1">&#39;catalog.xml&#39;</span>
 
         <span class="n">stream</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;stream&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">inst</span><span class="o">.</span><span class="n">preferred_stream</span><span class="p">,</span>
@@ -456,6 +461,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{self._data_type}</span><span class="s1"> cannot be converted to xarray dataset&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
 
         <span class="k">return</span> <span class="n">dataset_list</span></div></div>
+
 </pre></div>
 
           </div>
@@ -508,7 +514,7 @@
       &copy;2018, Landung Setiawan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.0</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
       
     </div>
