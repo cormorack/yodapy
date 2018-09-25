@@ -59,14 +59,14 @@
                         <span class="n">FILE_CONTENT</span><span class="p">[</span><span class="n">CREDENTIALS_FILE</span><span class="p">][</span><span class="n">data_source</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>  <span class="c1"># noqa</span>
                                                                        <span class="s1">&#39;api_key&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">}</span>  <span class="c1"># noqa</span>
                         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">FILE_CONTENT</span><span class="p">[</span><span class="n">CREDENTIALS_FILE</span><span class="p">]))</span>
-                <span class="k">else</span><span class="p">:</span>
+                <span class="k">else</span><span class="p">:</span>   <span class="c1"># pragma: no cover</span>
                     <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;You don</span><span class="se">\&#39;</span><span class="s1">t have a read-write permission &#39;</span>
                                   <span class="s1">&#39;to your home (</span><span class="se">\&#39;</span><span class="s1">~</span><span class="se">\&#39;</span><span class="s1">) directory!&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
+            <span class="k">else</span><span class="p">:</span>   <span class="c1"># pragma: no cover</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Please enter your username and token!&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">else</span><span class="p">:</span>   <span class="c1"># pragma: no cover</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Datasource: </span><span class="si">{data_source}</span><span class="s1"> is not valid. Available: ooi&#39;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
+    <span class="k">else</span><span class="p">:</span>   <span class="c1"># pragma: no cover</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Please specify a data_source. Available: ooi&#39;</span><span class="p">)</span></div>
 </pre></div>
 
