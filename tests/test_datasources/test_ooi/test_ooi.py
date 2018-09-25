@@ -8,12 +8,15 @@ import datetime
 import os
 import pandas as pd
 import pytest
+import unittest.mock as mock
 
 import xarray as xr
 
 from yodapy.datasources import OOI
 from yodapy.utils.creds import set_credentials_file
 from yodapy.utils.parser import get_midnight
+from unittest.mock import patch
+
 
 
 class TestOOIDataSource:
@@ -72,11 +75,16 @@ class TestOOIDataSource:
         assert isinstance(self.search_results.data_availability(), dict)
         assert isinstance(self.search_results._get_cloud_thredds_url(self.search_results._filtered_instruments.iloc[0]), str)
 
-    def test_to_xarray(self):
-        # TODO: Need smarter test in case OOI Server is down. Need caching of the sample netCDF!
-        self.OOI._data_urls = self._data_urls
-        dataset_list = self.OOI.to_xarray()
+    @patch('builtins.input', side_effect= ['yes'])
+    def test_to_xarray(self, input):
+        data_request = self.search_results.request_data(begin_date=self.start_date,
+                                         end_date=self.end_date,
+                                         data_type='netcdf')
+        dataset_list = data_request.to_xarray()
 
+        download_nc_dataset_list = data_request.download_ncfiles()
+
+        assert isinstance(download_nc_dataset_list, list)
         assert isinstance(dataset_list, list)
         assert all(isinstance(data, xr.Dataset) for data in dataset_list)
 
@@ -101,5 +109,32 @@ class TestOOIDataSource:
         assert isinstance(url_len, list)
         assert url_len
 
-
+    def test_preferred_stream_availability(self):
+        inst = pd.DataFrame({'reference_designator': 'RS03AXPS-PC03A-4A-CTDPFA303',
+                         'name': 'CTD',
+                         'preferred_stream': ''
+                        }, index=[0])
+        inst_stream_incorrect = pd.DataFrame({'reference_designator': 'RS03AXPS-PC03A-4A-CTDPFA303',
+                         'name': 'CTD',
+                         'preferred_stream': 'ctdpf'
+                        }, index=[0])
         
+        inst_availability = self.OOI._retrieve_availibility(inst)
+        inst_stream_missing_availability = self.OOI._retrieve_availibility(inst, stream_type='eScience')
+        inst_stream_incorrect_availability = self.OOI._retrieve_availibility(inst_stream_incorrect)
+
+
+        assert isinstance(inst_availability, dict)
+        assert not inst_availability
+        assert isinstance(inst_stream_missing_availability, dict)
+        assert not inst_stream_missing_availability
+        assert isinstance(inst_stream_incorrect_availability, dict)
+        assert not inst_stream_incorrect_availability
+
+    def test_reference_designator_false_availability(self):
+        inst = pd.DataFrame({'reference_designator': 'RS03AXPS-PC03A-4A',
+                         'name': 'CTD',
+                         'preferred_stream': ''
+                        }, index=[0])
+        with pytest.raises(TypeError):
+            self.OOI._retrieve_availibility(inst)

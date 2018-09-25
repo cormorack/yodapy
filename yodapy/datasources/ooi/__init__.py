@@ -20,6 +20,7 @@ from yodapy.datasources.ooi.helpers import fetch_xr, download_all_nc
 from yodapy.utils.parser import get_nc_urls
 from yodapy.datasources.ooi.m2m_client import M2MClient
 
+
 SOURCE_NAME = 'OOI'
 
 
@@ -199,6 +200,7 @@ class OOI(DataSource):
 
         self._logger.info(f"Request ({urls['status_url']}) completed.")  # noqa
         return urls['thredds_url']
+
 
     def data_availability(self):
         """
@@ -424,3 +426,4 @@ class OOI(DataSource):
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
         return dataset_list
+
