@@ -13,7 +13,6 @@ branch = True
 exclude_lines =
     pragma: no cover
     def __repr__
-    def __repr__
     Exception
     os.path.exists
     raise AssertionError

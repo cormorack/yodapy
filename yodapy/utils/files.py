@@ -26,7 +26,7 @@ def _permissions():
             f.write('testing\n')
         os.remove(TEST_FILE)
         return True
-    except Exception as e:
+    except Exception as e:   # pragma: no cover
         print(e)
         return False
 

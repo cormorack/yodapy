@@ -16,7 +16,7 @@ class DataSource:
     def __repr__(self):
         return 'Data Source: {0}'.format(self._source_name)
 
-    def __len__(self):
+    def __len__(self):   # pragma: no cover
         raise NotImplementedError
 
     @property
@@ -35,11 +35,11 @@ class DataSource:
     def source_name(self):
         return self._source_name
 
-    def request_data(self, begin_date, end_date):
+    def request_data(self, begin_date, end_date):   # pragma: no cover
         raise NotImplementedError
 
-    def raw(self):
+    def raw(self):   # pragma: no cover
         raise NotImplementedError
 
-    def to_xarray(self):
+    def to_xarray(self):   # pragma: no cover
         raise NotImplementedError
