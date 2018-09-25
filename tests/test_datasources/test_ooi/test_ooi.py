@@ -138,3 +138,4 @@ class TestOOIDataSource:
                         }, index=[0])
         with pytest.raises(TypeError):
             self.OOI._retrieve_availibility(inst)
+
