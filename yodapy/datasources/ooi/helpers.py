@@ -47,8 +47,11 @@ def preprocess_ds(ds):
 def write_nc(fname, r, folder):
     with open(os.path.join(folder, fname), 'wb') as f:
         logger.info(f'Writing {fname}...')
+        # TODO: Add download progressbar?
         for chunk in r.iter_content(chunk_size=1024):
-            f.write(chunk)
+            if chunk:
+                f.write(chunk)
+    logger.info(f'{fname} successfully downloaded ---')
 
 
 def download_nc(url, folder=os.path.curdir):
@@ -77,7 +80,6 @@ def fetch_xr(params, **kwargs):
         datasets = filter_ncurls(datasets,
                                  begin_date=kwargs.get('begin_date'),
                                  end_date=kwargs.get('end_date'))
-
         # cleanup kwargs
         kwargs.pop('begin_date')
         kwargs.pop('end_date')
@@ -96,7 +98,6 @@ def fetch_xr(params, **kwargs):
 def get_start_end_dates(ncurl):
     import re
     import pandas as pd
-
     regex = r'(?P<start_date>\d{4}[01]\d[0123]\dT[012]\d\d{2}\d+.\d+)-(?P<end_date>\d{4}[01]\d[0123]\dT[012]\d\d{2}\d+.\d+)'  # noqa
     sres = re.search(regex, ncurl)
     return {
