@@ -60,7 +60,10 @@ class OOI(DataSource):
         self._logger = logging.getLogger(__name__)
 
     def __repr__(self):
-        return f'<Data Source: {self._source_name}>'
+        inst_text = 'Instrument'
+        if len(self._filtered_instruments) > 1:
+            inst_text = inst_text + 's'
+        return f'<Data Source: {self._source_name} ({len(self._filtered_instruments)} {inst_text})>'
 
     def __len__(self):
         return len(self._filtered_instruments)
@@ -245,7 +248,7 @@ class OOI(DataSource):
             return None
 
     def _get_cloud_thredds_url(self, inst):
-        thredds_host = 'http://data.ooica.net:8080/thredds/catalog'
+        thredds_host = 'http://data-dev.ooica.net:8080/thredds/catalog'
         thredds_catalog = 'catalog.xml'
 
         stream = list(filter(lambda x: x['stream'] == inst.preferred_stream,
