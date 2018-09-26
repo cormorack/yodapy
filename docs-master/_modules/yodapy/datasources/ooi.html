@@ -55,6 +55,7 @@
 <span class="kn">from</span> <span class="nn">yodapy.utils.parser</span> <span class="k">import</span> <span class="n">get_nc_urls</span>
 <span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.m2m_client</span> <span class="k">import</span> <span class="n">M2MClient</span>
 
+
 <span class="n">SOURCE_NAME</span> <span class="o">=</span> <span class="s1">&#39;OOI&#39;</span>
 
 
@@ -234,6 +235,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Request (</span><span class="si">{urls[&#39;status_url&#39;]}</span><span class="s2">) completed.&quot;</span><span class="p">)</span>  <span class="c1"># noqa</span>
         <span class="k">return</span> <span class="n">urls</span><span class="p">[</span><span class="s1">&#39;thredds_url&#39;</span><span class="p">]</span>
+
 
 <div class="viewcode-block" id="OOI.data_availability"><a class="viewcode-back" href="../../../modules.html#yodapy.datasources.ooi.OOI.data_availability">[docs]</a>    <span class="k">def</span> <span class="nf">data_availability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -459,6 +461,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{self._data_type}</span><span class="s1"> cannot be converted to xarray dataset&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
 
         <span class="k">return</span> <span class="n">dataset_list</span></div></div>
+
 </pre></div>
 
           </div>
