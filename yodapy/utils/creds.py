@@ -24,12 +24,12 @@ def set_credentials_file(data_source=None, username=None, token=None):
                         FILE_CONTENT[CREDENTIALS_FILE][data_source] = {'username': username,  # noqa
                                                                        'api_key': token}  # noqa
                         f.write(json.dumps(FILE_CONTENT[CREDENTIALS_FILE]))
-                else:
+                else:   # pragma: no cover
                     warnings.warn('You don\'t have a read-write permission '
                                   'to your home (\'~\') directory!')
-            else:
+            else:   # pragma: no cover
                 warnings.warn('Please enter your username and token!')
-        else:
+        else:   # pragma: no cover
             warnings.warn(f'Datasource: {data_source} is not valid. Available: ooi')
-    else:
+    else:   # pragma: no cover
         warnings.warn('Please specify a data_source. Available: ooi')
