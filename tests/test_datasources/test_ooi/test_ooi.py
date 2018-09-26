@@ -13,10 +13,11 @@ import unittest.mock as mock
 import xarray as xr
 
 from yodapy.datasources import OOI
+from yodapy.datasources.ooi import helpers
+from yodapy.datasources.ooi.m2m_client import M2MClient
 from yodapy.utils.creds import set_credentials_file
-from yodapy.utils.parser import get_midnight
+from yodapy.utils.parser import get_midnight, get_nc_urls
 from unittest.mock import patch
-
 
 
 class TestOOIDataSource:
@@ -104,10 +105,14 @@ class TestOOIDataSource:
     
     def test_request_data_check(self):
         self.search_results._data_urls = self._data_urls
-        url_len = self.search_results._perform_check()
+        turls = self.search_results._perform_check()
+        nc_urls = get_nc_urls(turls[0], download=True)
+        ncurl_list = helpers.filter_ncurls(nc_urls, begin_date = self.start_date, end_date = self.end_date)
 
-        assert isinstance(url_len, list)
-        assert url_len
+        assert isinstance(ncurl_list, list)
+        assert isinstance(turls, list)
+        assert ncurl_list
+        assert turls
 
     def test_preferred_stream_availability(self):
         inst = pd.DataFrame({'reference_designator': 'RS03AXPS-PC03A-4A-CTDPFA303',
@@ -138,4 +143,19 @@ class TestOOIDataSource:
                         }, index=[0])
         with pytest.raises(TypeError):
             self.OOI._retrieve_availibility(inst)
+
+    def test_m2m_client_response_check(self):
+        m2m_client = M2MClient()
+
+        response_parameters = m2m_client.fetch_instrument_parameters(ref_des = 'RS03AXPS-PC03A-4A-CTDPFA303')
+        response_metadata = m2m_client.fetch_instrument_metadata(ref_des = 'RS03AXPS-PC03A-4A-CTDPFA303')
+        response_deployment = m2m_client.fetch_instrument_deployments(ref_des = 'RS03AXPS-PC03A-4A-CTDPFA303')
+
+        assert isinstance(response_metadata, dict)
+        assert isinstance(response_parameters, list)
+        assert isinstance(response_deployment, list)
+        assert response_metadata
+        assert response_parameters
+        assert response_deployment
+
 
