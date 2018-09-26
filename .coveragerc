@@ -2,11 +2,11 @@
 source = yodapy
 omit =
     # omit _version.py
-    yodapy/_*
+    # yodapy/_*
     # omit helpers.py
-    yodapy/datasources/ooi/helpers.py
+    # yodapy/datasources/ooi/helpers.py
     # omit m2m_client.py
-    yodapy/datasources/ooi/m2m_client.py
+    # yodapy/datasources/ooi/m2m_client.py
 branch = True
 
 [report]

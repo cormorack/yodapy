@@ -13,10 +13,10 @@ import unittest.mock as mock
 import xarray as xr
 
 from yodapy.datasources import OOI
+from yodapy.datasources.ooi import helpers
 from yodapy.utils.creds import set_credentials_file
-from yodapy.utils.parser import get_midnight
+from yodapy.utils.parser import get_midnight, get_nc_urls
 from unittest.mock import patch
-
 
 
 class TestOOIDataSource:
@@ -104,10 +104,15 @@ class TestOOIDataSource:
     
     def test_request_data_check(self):
         self.search_results._data_urls = self._data_urls
-        url_len = self.search_results._perform_check()
+        turls = self.search_results._perform_check()
+        nc_urls = get_nc_urls(turls[0], download=True)
+        ncurl_list = helpers.filter_ncurls(nc_urls, begin_date = self.start_date, end_date = self.end_date)
 
-        assert isinstance(url_len, list)
-        assert url_len
+        assert isinstance(ncurl_list, list)
+        assert isinstance(turls, list)
+        assert ncurl_list
+        assert turls
+
 
     def test_preferred_stream_availability(self):
         inst = pd.DataFrame({'reference_designator': 'RS03AXPS-PC03A-4A-CTDPFA303',
