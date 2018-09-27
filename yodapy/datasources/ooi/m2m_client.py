@@ -766,8 +766,7 @@ class M2MClient:
             try:
                 end_dt = parser.parse(end_ts).replace(tzinfo=pytz.UTC)
             except ValueError as e:
-                self._logger.error(
-                    'Invalid end_dt: {:s} ({:s})'.format(end_ts, e.message))
+                self._logger.error(f'Invalid end_dt: {end_ts} ({e})')
                 return urls
 
         for instrument in instruments:
