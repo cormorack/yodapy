@@ -52,5 +52,5 @@ script:
   -m doctr deploy --sync --no-require-master --built-docs docs/build/html "docs-$TRAVIS_BRANCH"
   ; fi
 after_success:
-- echo $pwd
+- cd $TRAVIS_BUILD_DIR
 - coveralls
