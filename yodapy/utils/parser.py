@@ -22,6 +22,7 @@ def get_nc_urls(thredds_url, download=False, cloud_source=False, **kwargs):
     caturl = thredds_url.replace('.html', '.xml')
     cat = TDSCatalog(caturl)
     datasets = cat.datasets
+    dataset_urls = []
     if cloud_source:
         # TODO: Add bd and ed time checking, and warn user if data not available.
         bd = parser.parse(kwargs.get('begin_date'))
