@@ -10,20 +10,29 @@ import datetime
 import netCDF4 as nc
 import pandas as pd
 import numpy as np
+from dateutil import parser
 
 from siphon.catalog import TDSCatalog
 
 
-def get_nc_urls(thredds_url, download=False):
+def get_nc_urls(thredds_url, download=False, cloud_source=False, **kwargs):
     urltype = 'OPENDAP'
     if download:
         urltype = 'HTTPServer'
     caturl = thredds_url.replace('.html', '.xml')
     cat = TDSCatalog(caturl)
     datasets = cat.datasets
-    ncfiles = list(filter(lambda d: not any(w in d.name for w in ['json', 'txt', 'ncml']),  # noqa
-                      [cat.datasets[i] for i, d in enumerate(datasets)]))  # noqa
-    dataset_urls = [d.access_urls[urltype] for d in ncfiles]
+    if cloud_source:
+        # TODO: Add bd and ed time checking, and warn user if data not available.
+        bd = parser.parse(kwargs.get('begin_date'))
+        ed = parser.parse(kwargs.get('end_date'))
+        dataset_urls = list(map(lambda x: x.access_urls[urltype],
+                                datasets.filter_time_range(bd, ed,
+                                                           regex=r'(?P<year>\d{4})(?P<month>[01]\d)(?P<day>[0123]\d)')))
+    else:
+        ncfiles = list(filter(lambda d: not any(w in d.name for w in ['json', 'txt', 'ncml']),  # noqa
+                        [cat.datasets[i] for i, d in enumerate(datasets)]))  # noqa
+        dataset_urls = [d.access_urls[urltype] for d in ncfiles]
     return dataset_urls
 
 
