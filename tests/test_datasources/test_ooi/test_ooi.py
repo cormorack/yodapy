@@ -50,6 +50,9 @@ class TestOOIDataSource:
         self.search_results = self.OOI.search(region=self.region,
                                          site=self.site,
                                          instrument=self.instrument)
+        self.user = 'Test'
+        self.stream = 'ctdpf_optode_calibration_coefficients'
+        self.ref_designator = 'RS03AXPS-PC03A-4A-CTDPFA303'
         
     def test_search(self):
 
@@ -151,11 +154,22 @@ class TestOOIDataSource:
         response_metadata = m2m_client.fetch_instrument_metadata(ref_des = 'RS03AXPS-PC03A-4A-CTDPFA303')
         response_deployment = m2m_client.fetch_instrument_deployments(ref_des = 'RS03AXPS-PC03A-4A-CTDPFA303')
 
-        assert isinstance(response_metadata, dict)
         assert isinstance(response_parameters, list)
+        assert isinstance(response_metadata, dict)
         assert isinstance(response_deployment, list)
-        assert response_metadata
         assert response_parameters
+        assert response_metadata
         assert response_deployment
+    
+    def test_m2m_client_urls(self):
+        m2m_client = M2MClient()
 
+        request_urls = m2m_client.instrument_to_query(ref_des = 'RS03AXPS-PC03A-4A-CTDPFA303', user=self.user, limit=10, time_delta_type='months',
+                                                 time_delta_value= 1, begin_ts=self.start_date, end_ts=self.end_date, stream=self.stream)
+        request_urls_empty = m2m_client.instrument_to_query(ref_des = 'RS03AXPS-PC03A-4A-CTDPFA303', user=self.user, limit=10, time_delta_type='months',
+                                                 time_delta_value= 1, begin_ts='2018-13-01', end_ts=self.end_date, stream=self.stream)
+        assert isinstance(request_urls, list)
+        assert request_urls
+        assert isinstance(request_urls_empty, list)
+        assert not request_urls_empty
 
