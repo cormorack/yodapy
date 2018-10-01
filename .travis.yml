@@ -35,6 +35,8 @@ before_install:
 - conda create --yes -n TEST python=$TRAVIS_PYTHON_VERSION --file requirements.txt
   --file requirements-dev.txt
 - source activate TEST
+# temporary fix see https://github.com/conda-forge/testpath-feedstock/issues/7
+- conda install -c conda-forge "testpath<0.4"
 install:
 - python setup.py sdist && version=$(python setup.py --version) && pushd dist  &&
   pip install yodapy-${version}.tar.gz && popd
