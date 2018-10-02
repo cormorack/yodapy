@@ -72,7 +72,7 @@ class TestOOIDataSource:
         assert isinstance(inst, pd.DataFrame)
 
     def test_data_availibility(self):
-
+        print(self.search_results)
         assert isinstance(self.search_results.data_availability(), dict)
         assert isinstance(self.search_results._get_cloud_thredds_url(self.search_results._filtered_instruments.iloc[0]), str)
 
@@ -107,11 +107,10 @@ class TestOOIDataSource:
         self.search_results._data_urls = self._data_urls
         turls = self.search_results._perform_check()
         nc_urls = get_nc_urls(turls[0], download=True)
-        ncurl_list = helpers.filter_ncurls(nc_urls, begin_date = self.start_date, end_date = self.end_date)
 
-        assert isinstance(ncurl_list, list)
+        assert isinstance(nc_urls, list)
         assert isinstance(turls, list)
-        assert ncurl_list
+        assert nc_urls
         assert turls
 
     def test_preferred_stream_availability(self):
