@@ -75,36 +75,25 @@ def download_all_nc(turl, folder):
 
 def fetch_xr(params, **kwargs):
     turl, ref_degs = params
-    datasets = get_nc_urls(turl)
     if kwargs.get('cloud_source'):
-        datasets = filter_ncurls(datasets,
-                                 begin_date=kwargs.get('begin_date'),
-                                 end_date=kwargs.get('end_date'))
+        filt_ds = get_nc_urls(turl,
+                              cloud_source=True,
+                              begin_date=kwargs.get('begin_date'),
+                              end_date=kwargs.get('end_date'))
         # cleanup kwargs
         kwargs.pop('begin_date')
         kwargs.pop('end_date')
         kwargs.pop('cloud_source')
+    else:
+        datasets = get_nc_urls(turl)
+        # only include instruments where ref_deg appears twice (i.e. was in original filter)
+        filt_ds = list(filter(lambda x: any(x.count(ref) > 1 for ref in ref_degs), datasets))
 
-    # only include instruments where ref_deg appears twice (i.e. was in original filter)
-    filt_ds = list(filter(lambda x: any(x.count(ref) > 1 for ref in ref_degs), datasets))
     # TODO: Place some chunking here
-    # TODO: For cloud copy, how do I filter a specific time?
     return xr.open_mfdataset(
         filt_ds,
         engine='netcdf4',
         **kwargs)
-
-
-def get_start_end_dates(ncurl):
-    import re
-    import pandas as pd
-    regex = r'(?P<start_date>\d{4}[01]\d[0123]\dT[012]\d\d{2}\d+.\d+)-(?P<end_date>\d{4}[01]\d[0123]\dT[012]\d\d{2}\d+.\d+)'  # noqa
-    sres = re.search(regex, ncurl)
-    return {
-        'ncurl': ncurl,
-        'start_date': pd.to_datetime(sres.group('start_date')),
-        'end_date': pd.to_datetime(sres.group('end_date'))
-    }
 
 
 def create_range_df(row):
@@ -115,9 +104,3 @@ def create_range_df(row):
     bdf.loc[:, 'time'] = dr
     bdf.loc[:, 'ncurl'] = row.ncurl
     return bdf
-
-
-def filter_ncurls(nc_urls, begin_date, end_date):
-    ncdf = pd.DataFrame.from_records([get_start_end_dates(ncurl) for ncurl in nc_urls])[['ncurl', 'start_date', 'end_date']]  # noqa
-    clean_ncdf = pd.concat([create_range_df(row) for idx, row in ncdf.iterrows()]).set_index('time').sort_index()  # noqa
-    return list(clean_ncdf.loc[begin_date:end_date]['ncurl'].unique())
