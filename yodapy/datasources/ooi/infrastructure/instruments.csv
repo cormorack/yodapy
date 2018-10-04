@@ -117,7 +117,7 @@ CE04OSPS-SF01B-3C-PARADA102,Photosynthetically Available Radiation,20,200,,parad
 CE04OSPS-SF01B-3D-SPKIRA102,Spectral Irradiance,20,200,,spkir_data_record,2645,Shallow Profiler
 CE04OSPS-SF01B-4A-NUTNRA102,Nitrate,20,200,,nutnr_a_sample,18,Shallow Profiler
 CE04OSPS-SF01B-4B-VELPTD106,Single Point Velocity Meter,20,200,,velpt_velocity_data,3230,Shallow Profiler
-CE04OSPS-SF01B-4F-PCO2WA102,pCO2 Water,20,200,,pco2w_b_sami_data_record,931,Shallow Profiler
+CE04OSPS-SF01B-4F-PCO2WA102,pCO2 Water,20,200,,pco2w_a_sami_data_record,931,Shallow Profiler
 CE04OSSM-RIC21-00-CPMENG000,Platform Controller,7,7,Engineering,,,
 CE04OSSM-RID26-00-DCLENG000,Data Concentrator Logger (DCL),7,7,Engineering,,,
 CE04OSSM-RID26-01-ADCPTC000,Velocity Profiler (300kHz),7,7,,adcp_velocity_earth,,Near Surface Instrument Frame
