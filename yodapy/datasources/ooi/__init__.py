@@ -242,6 +242,7 @@ class OOI(DataSource):
                 ax.set_yticklabels(x)
                 ax.xaxis_date()
 
+                plt.close()
                 return instruments_avail
             else:
                 self._logger.warning('Dataframe is empty...')
