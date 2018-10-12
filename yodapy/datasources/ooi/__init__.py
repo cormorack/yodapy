@@ -213,6 +213,9 @@ class OOI(DataSource):
         import matplotlib.pyplot as plt
         import matplotlib.dates as mdates
 
+        plt.clf()
+        plt.close('all')
+
         inst = self._filtered_instruments
         if isinstance(inst, pd.DataFrame):
             if len(self._filtered_instruments) > 0:
