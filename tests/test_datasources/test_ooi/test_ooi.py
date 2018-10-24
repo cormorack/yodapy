@@ -9,6 +9,7 @@ import os
 import pandas as pd
 import pytest
 import unittest.mock as mock
+import numpy as np
 
 import xarray as xr
 
@@ -25,6 +26,7 @@ class TestOOIDataSource:
 
     def setup(self):
         self.OOI = OOI()
+        self.OOI_CLOUD = OOI(cloud_source=True)
         self.region = 'cabled array'
         self.site = 'axial base shallow profiler'
         # self.platform = 'Shallow Profiler'
@@ -48,6 +50,9 @@ class TestOOIDataSource:
         self.dt_val = datetime.datetime.utcnow()
         set_credentials_file(data_source='ooi', username=os.environ.get('OOI_USERNAME'), token=os.environ.get('OOI_TOKEN'))
         self.search_results = self.OOI.search(region=self.region,
+                                         site=self.site,
+                                         instrument=self.instrument)
+        self.search_results_cloud = self.OOI_CLOUD.search(region=self.region,
                                          site=self.site,
                                          instrument=self.instrument)
         self.user = 'Test'
@@ -79,18 +84,30 @@ class TestOOIDataSource:
         assert isinstance(self.search_results.data_availability(), dict)
         assert isinstance(self.search_results._get_cloud_thredds_url(self.search_results._filtered_instruments.iloc[0]), str)
 
-    @patch('builtins.input', side_effect= ['yes'])
+    @patch('builtins.input', side_effect= ['yes','yes'])
     def test_to_xarray(self, input):
         data_request = self.search_results.request_data(begin_date=self.start_date,
                                          end_date=self.end_date,
                                          data_type='netcdf')
+        data_request_cloud = self.search_results_cloud.request_data(begin_date='2018-06-01',
+                                         end_date='2018-06-01',
+                                         data_type='netcdf')
         dataset_list = data_request.to_xarray()
+        dataset_list_cloud = data_request_cloud.to_xarray()
 
         download_nc_dataset_list = data_request.download_ncfiles()
-
+        download_nc_dataset_cloud_list = data_request_cloud.download_ncfiles()
+        
+        assert not np.testing.assert_array_equal(dataset_list[1].data_vars['conductivity'].values, dataset_list_cloud[0].data_vars['conductivity'].values)
         assert isinstance(download_nc_dataset_list, list)
+        assert download_nc_dataset_list
+        assert isinstance(download_nc_dataset_cloud_list, list)
         assert isinstance(dataset_list, list)
+        assert dataset_list
+        assert isinstance(dataset_list_cloud, list)
+        assert dataset_list_cloud
         assert all(isinstance(data, xr.Dataset) for data in dataset_list)
+        assert all(isinstance(data, xr.Dataset) for data in dataset_list_cloud)
 
     def test_midnight_check(self):
         midnight = get_midnight(self.dt_val)
