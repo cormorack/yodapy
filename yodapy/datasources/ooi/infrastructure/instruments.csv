@@ -107,7 +107,7 @@ CE04OSPS-PC01B-05-ZPLSCB102,Bio-acoustic Sonar (Coastal),200,200,,zplsc_c_instru
 CE04OSPS-PC01B-4A-CTDPFA109,CTD,200,200,,ctdpf_optode_sample,908,Mid-Water Platform
 CE04OSPS-PC01B-4A-DOSTAD109,Dissolved Oxygen,200,200,,ctdpf_optode_sample,908,Mid-Water Platform
 CE04OSPS-PC01B-4B-PHSENA106,Seawater pH,200,200,,phsen_data_record,939,Mid-Water Platform
-CE04OSPS-PC01B-4D-PCO2WA105,pCO2 Water,200,200,,pco2w_b_sami_data_record,931,Mid-Water Platform
+CE04OSPS-PC01B-4D-PCO2WA105,pCO2 Water,200,200,,pco2w_a_sami_data_record,931,Mid-Water Platform
 CE04OSPS-SF01B-2A-CTDPFA107,CTD,20,200,,ctdpf_sbe43_sample,908,Shallow Profiler
 CE04OSPS-SF01B-2A-DOFSTA107,Dissolved Oxygen,20,200,,ctdpf_sbe43_sample,908,Shallow Profiler
 CE04OSPS-SF01B-2B-PHSENA108,Seawater pH,20,200,,phsen_data_record,939,Shallow Profiler
