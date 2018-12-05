@@ -9,6 +9,7 @@ import os
 import pandas as pd
 import pytest
 import unittest.mock as mock
+import numpy as np
 
 import xarray as xr
 
@@ -25,12 +26,15 @@ class TestOOIDataSource:
 
     def setup(self):
         self.OOI = OOI()
+        self.OOI_CLOUD = OOI(cloud_source=True)
         self.region = 'cabled array'
         self.site = 'axial base shallow profiler'
-        # self.platform = 'Shallow Profiler'
+        self.node = 'shallow profiler'
         self.instrument = 'CTD'
         self.start_date = '2018-06-01'
         self.end_date = '2018-06-02'
+        self.start_date_ooi = '2018-06-01'
+        self.end_date_ooi = '2018-06-01'
         self._data_urls = [{'requestUUID': '609c7970-8065-46fa-9fd3-0975c97a1f28',
           'outputURL': 'https://opendap.oceanobservatories.org/thredds/catalog/ooi/landungs@uw.edu/20180625T215711-RS03AXPS-SF03A-2A-CTDPFA302-streamed-ctdpf_sbe43_sample/catalog.html',
           'allURLs': ['https://opendap.oceanobservatories.org/thredds/catalog/ooi/landungs@uw.edu/20180625T215711-RS03AXPS-SF03A-2A-CTDPFA302-streamed-ctdpf_sbe43_sample/catalog.html',
@@ -47,7 +51,10 @@ class TestOOIDataSource:
           'numberOfSubJobs': 1}]
         self.dt_val = datetime.datetime.utcnow()
         set_credentials_file(data_source='ooi', username=os.environ.get('OOI_USERNAME'), token=os.environ.get('OOI_TOKEN'))
-        self.search_results = self.OOI.search(region=self.region,
+        self.search_results = self.OOI.search(region=self.region, node=self.node,
+                                         site=self.site,
+                                         instrument=self.instrument)
+        self.search_results_cloud = self.OOI_CLOUD.search(region=self.region, node=self.node,
                                          site=self.site,
                                          instrument=self.instrument)
         self.user = 'Test'
@@ -57,7 +64,7 @@ class TestOOIDataSource:
     def test_search(self):
 
         assert isinstance(self.search_results, OOI)
-        assert len(self.search_results) == 2
+        assert len(self.search_results) == 1
 
     def test_view_instruments(self):
         inst = self.OOI.view_instruments()
@@ -75,22 +82,35 @@ class TestOOIDataSource:
         assert isinstance(inst, pd.DataFrame)
 
     def test_data_availibility(self):
-        print(self.search_results)
+
         assert isinstance(self.search_results.data_availability(), dict)
         assert isinstance(self.search_results._get_cloud_thredds_url(self.search_results._filtered_instruments.iloc[0]), str)
 
-    @patch('builtins.input', side_effect= ['yes'])
+    @patch('builtins.input', side_effect= ['yes','yes'])
     def test_to_xarray(self, input):
         data_request = self.search_results.request_data(begin_date=self.start_date,
                                          end_date=self.end_date,
                                          data_type='netcdf')
+        data_request_cloud = self.search_results_cloud.request_data(begin_date=self.start_date_ooi,
+                                         end_date=self.end_date_ooi,
+                                         data_type='netcdf')
         dataset_list = data_request.to_xarray()
+        dataset_list_cloud = data_request_cloud.to_xarray()
 
         download_nc_dataset_list = data_request.download_ncfiles()
+        download_nc_dataset_cloud_list = data_request_cloud.download_ncfiles()
 
+        assert len(dataset_list[0]['conductivity'].values) == len(dataset_list_cloud[0]['conductivity'].values)
+        np.testing.assert_array_equal(dataset_list[0]['conductivity'].values, dataset_list_cloud[0]['conductivity'].values)
         assert isinstance(download_nc_dataset_list, list)
+        assert download_nc_dataset_list
+        assert isinstance(download_nc_dataset_cloud_list, list)
         assert isinstance(dataset_list, list)
+        assert dataset_list
+        assert isinstance(dataset_list_cloud, list)
+        assert dataset_list_cloud
         assert all(isinstance(data, xr.Dataset) for data in dataset_list)
+        assert all(isinstance(data, xr.Dataset) for data in dataset_list_cloud)
 
     def test_midnight_check(self):
         midnight = get_midnight(self.dt_val)
@@ -110,11 +130,11 @@ class TestOOIDataSource:
         self.search_results._data_urls = self._data_urls
         turls = self.search_results._perform_check()
         nc_urls = get_nc_urls(turls[0], download=True)
-
-        assert isinstance(nc_urls, list)
+        # ncurl_list = helpers.filter_ncurls(nc_urls, begin_date = self.start_date, end_date = self.end_date)
         assert isinstance(turls, list)
-        assert nc_urls
+        assert isinstance(nc_urls, list)
         assert turls
+        assert nc_urls
 
     def test_preferred_stream_availability(self):
         inst = pd.DataFrame({'reference_designator': 'RS03AXPS-PC03A-4A-CTDPFA303',
