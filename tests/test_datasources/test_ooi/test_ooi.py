@@ -8,6 +8,7 @@ import datetime
 import os
 import pandas as pd
 import pytest
+import random
 import unittest.mock as mock
 import numpy as np
 
@@ -31,10 +32,11 @@ class TestOOIDataSource:
         self.site = 'axial base shallow profiler'
         self.node = 'shallow profiler'
         self.instrument = 'CTD'
-        self.start_date = '2018-06-01'
-        self.end_date = '2018-06-02'
-        self.start_date_ooi = '2018-06-01'
-        self.end_date_ooi = '2018-06-01'
+        self.date_lookback = random.randint(187,187)
+        self.date_diff = random.randint(1,1)
+        self.start_date = (datetime.datetime.now() - datetime.timedelta(days = 187)).strftime("%Y-%m-%d")
+        self.end_date = (datetime.datetime.now() - datetime.timedelta(days = self.date_lookback - self.date_diff)).strftime("%Y-%m-%d")
+        self.end_date_ooi = (datetime.datetime.now() - datetime.timedelta(days = self.date_lookback - self.date_diff + 1)).strftime("%Y-%m-%d")
         self._data_urls = [{'requestUUID': '609c7970-8065-46fa-9fd3-0975c97a1f28',
           'outputURL': 'https://opendap.oceanobservatories.org/thredds/catalog/ooi/landungs@uw.edu/20180625T215711-RS03AXPS-SF03A-2A-CTDPFA302-streamed-ctdpf_sbe43_sample/catalog.html',
           'allURLs': ['https://opendap.oceanobservatories.org/thredds/catalog/ooi/landungs@uw.edu/20180625T215711-RS03AXPS-SF03A-2A-CTDPFA302-streamed-ctdpf_sbe43_sample/catalog.html',
@@ -91,7 +93,7 @@ class TestOOIDataSource:
         data_request = self.search_results.request_data(begin_date=self.start_date,
                                          end_date=self.end_date,
                                          data_type='netcdf')
-        data_request_cloud = self.search_results_cloud.request_data(begin_date=self.start_date_ooi,
+        data_request_cloud = self.search_results_cloud.request_data(begin_date=self.start_date,
                                          end_date=self.end_date_ooi,
                                          data_type='netcdf')
         dataset_list = data_request.to_xarray()
@@ -191,4 +193,3 @@ class TestOOIDataSource:
         assert request_urls
         assert isinstance(request_urls_empty, list)
         assert not request_urls_empty
-
