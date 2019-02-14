@@ -121,9 +121,13 @@ def get_instrument_list(filtdcat):
          'instrument_name',
          'stream_method',
          'stream_rd']
-    ].sort_values(by=['site_name',
-                      'infrastructure_name',
-                      'instrument_name']).reset_index(drop='index')
+    ].sort_values(
+        by=['site_name',
+            'infrastructure_name',
+            'instrument_name']
+    ).reset_index(
+        drop='index'
+    )
 
 
 def parse_toc_instruments(instruments_json):
@@ -169,6 +173,12 @@ def parse_raw_data_catalog(raw_data_catalog):
                                      'stream_rd', 'instrument_name', 'instrument_manufacturer',  # noqa
                                      'instrument_model', 'parameter_rd', 'standard_name',  # noqa
                                      'unit', 'display_name', 'description']
+
+    # Ensure that cabled array sub regions are highlighted
+    filtered_data_catalog.loc[:, 'array_name'] = filtered_data_catalog.array_name.apply(  # noqa
+        lambda row: f'{row} (Cabled Array)' if row in ['Cabled Continental Margin',  # noqa
+                                                       'Cabled Axial Seamount'] else row)  # noqa
+
     return filtered_data_catalog
 
 

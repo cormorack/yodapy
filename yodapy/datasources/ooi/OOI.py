@@ -224,16 +224,20 @@ class OOI(CAVA):
 
     def __repr__(self):
         """ Prints out the representation of the OOI object """
-        inst_text = 'Instrument'
+        inst_text = 'Instrument Stream'
         if isinstance(self._current_data_catalog, pd.DataFrame):
             data_length = len(self._current_data_catalog.drop_duplicates(
-                subset='reference_designator'))
+                subset=['reference_designator',
+                        'stream_method',
+                        'stream_rd']))
         else:
             data_length = 0
 
         if isinstance(self._filtered_data_catalog, pd.DataFrame):
             data_length = len(self._filtered_data_catalog.drop_duplicates(
-                subset=['reference_designator']))
+                subset=['reference_designator',
+                        'stream_method',
+                        'stream_rd']))
         if data_length > 1:
             inst_text = inst_text + 's'
 
@@ -242,7 +246,11 @@ class OOI(CAVA):
     def __len__(self):
         """ Prints the length of the object """
         if isinstance(self._filtered_data_catalog, pd.DataFrame):
-            return len(self._filtered_data_catalog.drop_duplicates(subset=['reference_designator']))  # noqa
+            return len(self._filtered_data_catalog.drop_duplicates(
+                subset=['reference_designator',
+                        'stream_method',
+                        'stream_rd']
+            ))
         else:
             return 0
 
@@ -370,20 +378,23 @@ class OOI(CAVA):
         if stream:
             stream_search = list(map(lambda x: x.strip(' '), stream.split(',')))  # noqa
             current_dcat = current_dcat[current_dcat.stream_rd.astype(str).str.contains('|'.join(stream_search), flags=re.IGNORECASE)]  # noqa
-        self._filtered_data_catalog = current_dcat.drop_duplicates(subset=['reference_designator',  # noqa
-                                                                           'stream_rd'])[['array_name',  # noqa
-                                                                                          'site_name',  # noqa
-                                                                                          'infrastructure_name',  # noqa
-                                                                                          'instrument_name',  # noqa
-                                                                                          'site_rd',  # noqa
-                                                                                          'infrastructure_rd',  # noqa
-                                                                                          'instrument_rd',  # noqa
-                                                                                          'reference_designator',  # noqa
-                                                                                          'stream_method',  # noqa
-                                                                                          'stream_type',  # noqa
-                                                                                          'stream_rd',  # noqa
-                                                                                          'begin_date',  # noqa
-                                                                                          'end_date']].reset_index(drop='index')  # noqa
+        self._filtered_data_catalog = current_dcat.drop_duplicates(
+            subset=['reference_designator',
+                    'stream_method',
+                    'stream_rd']
+        )[['array_name',
+           'site_name',
+           'infrastructure_name',
+           'instrument_name',
+           'site_rd',
+           'infrastructure_rd',
+           'instrument_rd',
+           'reference_designator',
+           'stream_method',
+           'stream_type',
+           'stream_rd',
+           'begin_date',
+           'end_date']].reset_index(drop='index')
 
         return self
 
@@ -417,6 +428,7 @@ class OOI(CAVA):
     def to_xarray(self, **kwargs):
         """ Convert thredds data url into xarray dataset, saving in memory """
         ref_degs = self._filtered_data_catalog['reference_designator'].values
+        dataset_list = []
         if self._data_type == 'netcdf':
             if self._cloud_source:
                 turls = self._data_urls
@@ -436,7 +448,8 @@ class OOI(CAVA):
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
-        self._dataset_list = dataset_list
+        if dataset_list:
+            self._dataset_list = dataset_list
 
         return self._dataset_list
 
@@ -509,6 +522,7 @@ class OOI(CAVA):
                 plt.ylabel('Instruments', rotation=0, labelpad=60)
                 plt.xlabel('Months', labelpad=30)
                 plt.yticks(rotation=0)
+                plt.tight_layout()
                 plt.show()
 
                 legend = raw_plotdf[
