@@ -52,6 +52,32 @@ DATA_TEAM_GITHUB_INFRASTRUCTURE = 'https://raw.githubusercontent.com/ooi-data-re
 
 
 class OOI(CAVA):
+    """OOI Object for Ocean Observatories Initiative Data Retrieval.
+
+    Attributes:
+        ooi_name (str): Username for OOI API Data Access.
+        ooi_token (str): Token for OOI API Data Access.
+        source_name (str): Data source name.
+        regions (pandas.DataFrame): Table of OOI regions.
+        sites (pandas.DataFrame): Table of OOI sites.
+        instruments (pandas.DataFrame): Table of available instrument streams.
+        global_ranges (pandas.DataFrame): Table of global ranges for each instrument streams.
+        deployments (pandas.DataFrame): Table of deployments for filtered instrument streams.
+        annotations (pandas.DataFrame): Table of annotations for filtered instrument streams.
+        start_date (list): List of start dates requested.
+        end_date (list): List of end dates requested.
+        last_request (list): List of requested urls and parameters.
+        last_m2m_urls (list): List of requested M2M urls.
+
+        cava_arrays (pandas.DataFrame): Cabled array team Arrays vocab table.
+        cava_sites (pandas.DataFrame): Cabled array team Sites vocab table.
+        cava_infrastructures (pandas.DataFrame): Cabled array team Infrastructures vocab table.
+        cava_instruments (pandas.DataFrame): Cabled array team Instruments vocab table.
+        cava_parameters (pandas.DataFrame): Cabled array team Parameters vocab table.
+
+
+    """
+
     def __init__(self,
                  ooi_username=None,
                  ooi_token=None,
@@ -193,39 +219,47 @@ class OOI(CAVA):
 
     @property
     def start_date(self):
+        """ Return requested start date(s) """
         if isinstance(self._start_date, pd.Series):
             return self._start_date
         return 'Start date(s) can\'t be found.'
 
     @property
     def end_date(self):
+        """ Return requested end date(s) """
         if isinstance(self._end_date, pd.Series):
             return self._end_date
         return 'End date(s) can\'t be found.'
 
     @property
     def source_name(self):
+        """ Return data source name """
         return self._source_name
 
     @property
     def last_requests(self):
+        """ Return last request url and parameters """
         if self._request_urls:
             return self._request_urls
         return 'Data request has not been made.'
 
     @property
     def last_m2m_urls(self):
+        """ Return last request m2m urls """
         if self._last_m2m_urls:
             return self._last_m2m_urls
         return 'Data request has not been made.'
 
     @property
     def global_ranges(self):
+        """ Return global ranges """
         return self._get_global_ranges()
 
     def view_instruments(self):
         """
+        **DEPRECATED.** 
         Shows the current instruments requested.
+        Use OOI.instruments attribute instead.
 
         Returns:
             DataFrame: Pandas dataframe of the instruments.
@@ -237,7 +271,9 @@ class OOI(CAVA):
 
     def view_regions(self):
         """
+        **DEPRECATED.**
         Shows the regions within OOI.
+        Use OOI.regions attribute instead.
 
         Returns:
             DataFrame: Pandas dataframe of the regions.
@@ -249,7 +285,9 @@ class OOI(CAVA):
 
     def view_sites(self):
         """
+        **DEPRECATED.**
         Shows the sites within OOI.
+        Use OOI.sites attribute instead.
 
         Returns:
             DataFrame: Pandas dataframe of the sites.
@@ -311,7 +349,23 @@ class OOI(CAVA):
 
     def request_data(self, begin_date=None, end_date=None,
                      data_type='netcdf', limit=-1, **kwargs):
-        """ Send data request to OOI via M2M for the desired instruments """
+        """
+        Request data for filtered instruments.
+
+        Args:
+            begin_date (str, optional): Begin date of desired data in ISO-8601 Format.
+            end_date (str, optional): End date of desired data in ISO-8601 Format.
+            data_type (str): Desired data type. Either 'netcdf' or 'json'.
+            limit (int, optional): Desired data points. Required for 'json' ``data_type``. Max is 20000.
+            **kwargs: Optional Keyword arguments. \n
+                **time_check** - set to true (default) to ensure the request times fall within the stream data availability \n
+                **exec_dpa** - boolean value specifying whether to execute all data product algorithms to return L1/L2 parameters (Default is True) \n
+                **provenance** - boolean value specifying whether provenance information should be included in the data set (Default is True) \n
+                **email** - provide email.
+        Returns:
+            self: Modified OOI Object. Use ``raw()`` to see either data url for netcdf or json result for json.
+
+        """
 
         self._data_type = data_type
         begin_dates = list(map(lambda x: x.strip(' '), begin_date.split(',')))
@@ -385,7 +439,23 @@ class OOI(CAVA):
                stream_method=None,
                stream=None,
                parameter=None):
-        """ Perform a search, and filters data catalog """
+        """
+        Perform a search, and filters data catalog
+
+        Args:
+            region (str): Region name. If multiple use comma separated.
+            site (str): Site name. If multiple use comma separated.
+            node (str): Node name. If multiple use comma separated.
+            instrument (str): Instrument name. If multiple use comma separated.
+            stream_type (str): Stream type. Either 'Science' or 'Engineering'. If multiple use comma separated.
+            stream_method (str): Stream method. If multiple use comma separated.
+            stream (str): Stream name. If multiple use comma separated.
+            parameter (str): Parameter name. If multiple use comma separated.
+
+        Returns:
+            self: Modified OOI Object
+
+        """
         if isinstance(self._current_data_catalog, pd.DataFrame):
             current_dcat = self._current_data_catalog
         else:
@@ -451,6 +521,15 @@ class OOI(CAVA):
         return [data.json() for data in filter(lambda x: x, self._raw_data)]
 
     def download_netcdfs(self, destination=os.path.curdir):
+        """
+        Download netcdf files from the catalog created from data request.
+
+        Args:
+            destination (str, optional): Location to save netcdf file. Default will save in current directory.
+
+        Returns:
+            list: List of exported netcdf.
+        """
         download_list = self._prepare_download()
         logger.info('Downloading netcdfs ...')
         jobs = [gevent.spawn(download_url,
@@ -463,7 +542,15 @@ class OOI(CAVA):
         return self._last_downloaded_netcdfs
 
     def to_xarray(self, **kwargs):
-        """ Convert thredds data url into xarray dataset, saving in memory """
+        """
+        Retrieve the OOI streams data and export to Xarray Datasets, saving in memory.
+
+        Args:
+            **kwargs: Keyword arguments for xarray open_mfdataset.
+
+        Returns:
+            list: List of xarray datasets
+        """
         ref_degs = self._filtered_data_catalog['reference_designator'].values
         dataset_list = []
         if self._data_type == 'netcdf':
@@ -508,7 +595,7 @@ class OOI(CAVA):
         Plots data availability of desired instruments.
 
         Returns:
-            dict: Instruments availability dictionary and prints out matplotlib plot of the data availibility.
+            pandas.DataFrame: Instrument Stream legend
 
         """
         import matplotlib.pyplot as plt

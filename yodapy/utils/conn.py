@@ -147,7 +147,7 @@ def instrument_to_query(ooi_url='', site_rd='',
                         begin_ts=None, end_ts=None,
                         time_check=True, exec_dpa=True,
                         application_type='netcdf', provenance=False,
-                        limit=-1, email=None):
+                        limit=-1, email=None, **kwargs):
     """ Get instrument attributes and begin and end dates,
     and convert them to request url from M2M """
 

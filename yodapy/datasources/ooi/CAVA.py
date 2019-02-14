@@ -36,22 +36,27 @@ class CAVA(DataSource):
 
     @property
     def cava_arrays(self):
+        """ Cabled array team Arrays vocab table. """
         return self._cava_arrays
 
     @property
     def cava_sites(self):
+        """ Cabled array team Sites vocab table. """
         return self._cava_sites
 
     @property
     def cava_infrastructures(self):
+        """ Cabled array team Infrastructures vocab table. """
         return self._cava_infrastructures
 
     @property
     def cava_instruments(self):
+        """ Cabled array team Instruments vocab table. """
         return self._cava_instruments
 
     @property
     def cava_parameters(self):
+        """ Cabled array team Parameters vocab table. """
         return self._cava_parameters
 
     def _retrieve_gsheet(self):
