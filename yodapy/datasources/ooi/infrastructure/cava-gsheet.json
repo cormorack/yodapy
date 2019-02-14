@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "cava-219818",
+  "private_key_id": "71944327e22c96b1a285a86e96f56d76a5fac047",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCrndbDVn8UZyHu\nzATYzRdL1alTtwDj+PJX1YewSWfnIzD4HZNJqyKAns4md9GlCoaBXhfDXyZ+H1qn\nbaL2AqRG+Yq0S9V5dUjX+gmcDYhAdP5yU0sT8PDuiq4j8CsXJXtG1h6cdgnZlyEr\nVB604lp3zFSv4QN7Y0C2ys2b//XqNtycWiBwqb3AK2S/XjOXTIDyxJnKmPmEjWb3\nFRLaGM6OvtEeGPjSBUR8lrIdJtVumSqUUtDGAOY119doCmCG9uhp0SjvxVst32Wx\nUObDdrHajwUM7kMJ6LuqXJzCTdo0sVUCRkomPHzZIJJGKY8kBJQyRrJXxFNjYe95\nWXz6vUfZAgMBAAECggEAFW2ARA835R1uxF5Z7pNGU4l/z7w7qBCh0FYQz/Hiah7f\n6Dg9IdzJ0o3Bh1Znk+KpYlwUEyioFDr9pTEQa1oaFo3lg9csy4eu4DSlNYRlB53z\n/+Sm16cPq3Z1AXdlJ0nenLzIbAMQU3LwyR8C3yqctB+MUBIuzp2ua1m4FsB8p9Ec\nONZH806HCWsU8iJGZMVSeWnUUHqJYL+v6sJTRJRiedGsyc7kFYBFGgAFzxn7xIBh\nA0cvd19r636tdAd9rYs+Rb8deQ8NKyN8v+jJSsG8sTiSwNdK3bQQwouVbQ5AfAw1\nMzkIgiXHapcybsUBYXC8IAp1SnFPz2Vyg9m2yLSCTwKBgQDmOj7fiqCvaYPDfV7E\nNNLEjsnOhS/eGVWo+Flj3CFDaLcaa+/bEh7+pFJEc0HZzNGaAWh0DZkyXJXOK0l6\nB5oD5sj9aRMSUZuhR2kP5O9ALEPG14UsW2yQVi12T69V+9ATkgNIlzf0tc+AEqeT\nTiN9mccTx2l5jdglTgNSJJ9NdwKBgQC+0/KBl92ByCiHRNPQAHPuGasT8m6Hc+G0\nBaO5Pv+eWeazC+q6EuCLYgblkJS5sFflzhMObC1uJfXlLMTEnWDJw3OF2y5KkJDW\nDR5OMbMJPguhhov3BB0/GPYaVgjntaYf2dy5E3mCeBHGjMVh8OU8l9gZQaDP2lkb\nmZ1CIBopLwKBgFuw9Ntoxag22MBhzP1NoGeiCqOSjcbhxijeiBNqV2EWcl42gLd6\nFxgJb65NTPumRBAW4Xfe9pWFJDCRMtlD78YAAypRz8Oq9tWbsC8hWVvwhSnLKgHJ\ng4pUmBSXldgjyvIQY/hkKWfvhO2YAF99bksWlJ+++rXrlRr+X/o2Fa/vAoGAJX3m\ny2dW8cStkcYIB3nPTRxl7ElZReuSkJf7Ds490pK/LLZOq7hBvaDI0hmR3tmyq0fN\nnqvKUTXMFfaxwh9ZgMqRy97APY4hpqx1I8/H6SzzhAy3OxTn2hnBYHM+1KdvuBpJ\nr2MQIH4On//QV+nIYBtFLdEjEzNHBpErwG4mNakCgYB2Zd9ajA/cl5BTI+C1uSbR\nXmre6ptxLsDLISfmMzw/W8vbkzdCV6/r2Dp7hqxjeCeMs3ss1SD434fVuuPPzCTI\nvWi2yXdSzyOBrKrCSXhPCpMeBu6EYXovcrweEv0lYtjTkbE0EHrhE53qMMn69qSo\nnZjoky2KvgtNfQhYtmgMUQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "yodapy@cava-219818.iam.gserviceaccount.com",
+  "client_id": "109062589232806078824",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/yodapy%40cava-219818.iam.gserviceaccount.com"
+}
