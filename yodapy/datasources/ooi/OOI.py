@@ -15,6 +15,7 @@ import requests
 import threading
 import time
 import logging
+import warnings
 
 from dateutil import parser
 import pytz
@@ -221,6 +222,42 @@ class OOI(CAVA):
     @property
     def global_ranges(self):
         return self._get_global_ranges()
+
+    def view_instruments(self):
+        """
+        Shows the current instruments requested.
+
+        Returns:
+            DataFrame: Pandas dataframe of the instruments.
+
+        """
+        warnings.warn('The function view_instruments is deprecated. Please use OOI.instruments attribute instead.',
+                      DeprecationWarning, stacklevel=2)
+        return self.instruments
+
+    def view_regions(self):
+        """
+        Shows the regions within OOI.
+
+        Returns:
+            DataFrame: Pandas dataframe of the regions.
+
+        """
+        warnings.warn('The function view_regions is deprecated. Please use OOI.regions attribute instead.',
+                      DeprecationWarning, stacklevel=2)
+        return self.regions
+
+    def view_sites(self):
+        """
+        Shows the sites within OOI.
+
+        Returns:
+            DataFrame: Pandas dataframe of the sites.
+
+        """
+        warnings.warn('The function view_sites is deprecated. Please use OOI.sites attribute instead.',
+                      DeprecationWarning, stacklevel=2)
+        return self.sites
 
     def __repr__(self):
         """ Prints out the representation of the OOI object """
