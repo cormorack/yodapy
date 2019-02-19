@@ -1,5 +1,4 @@
 ./_modules/index.html
-./_modules/yodapy/datasources/ooi.html
 ./_modules/yodapy/utils/creds.html
 ./_sources/index.rst.txt
 ./_sources/modules.rst.txt
@@ -17,6 +16,7 @@
 ./_static/file.png
 ./_static/jquery-3.2.1.js
 ./_static/jquery.js
+./_static/language_data.js
 ./_static/minus.png
 ./_static/plus.png
 ./_static/pygments.css
