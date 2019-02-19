@@ -12,6 +12,7 @@ import shutil
 import warnings
 
 import pytest
+import pytz
 
 from requests import Session
 
@@ -81,7 +82,7 @@ def test_get_nc_urls():
 
 
 def test_unix_time_millis():
-    dt = datetime.datetime(2018, 7, 7)
+    dt = datetime.datetime(2018, 7, 7).replace(tzinfo=pytz.UTC)
     mill = parser.unix_time_millis(dt=dt)
 
     assert isinstance(mill, int)

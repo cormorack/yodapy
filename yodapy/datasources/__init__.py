@@ -5,4 +5,5 @@ from __future__ import (division,
                         print_function,
                         unicode_literals)
 
-from yodapy.datasources.ooi import OOI
+from yodapy.datasources.ooi.OOI import OOI  # noqa
+from yodapy.datasources.ooi.CAVA import CAVA
