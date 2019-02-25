@@ -81,6 +81,8 @@ def download_url(url, data_fold, session):
             if fname:
                 logger.info(f'--- Checking {fname} ---')
                 ds = xr.open_dataset(os.path.join(data_fold, fname))
+                if isinstance(ds, xr.Dataset):
+                    logger.info(f'--- Checks passed for {fname} ---')
         except Exception:
             pass
     del ds
