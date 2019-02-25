@@ -128,6 +128,7 @@ class OOI(CAVA):
         self._q = None
         self._raw_data = []
         self._dataset_list = []
+        self._netcdf_urls = []
 
         # ----------- Session Configs ---------------------
         self._session = requests.Session()
@@ -347,14 +348,15 @@ class OOI(CAVA):
         dc.start()
         gr.start()
 
-    def request_data(self, begin_date=None, end_date=None,
+    @classmethod
+    def request_data(self, begin_date, end_date,
                      data_type='netcdf', limit=-1, **kwargs):
         """
         Request data for filtered instruments.
 
         Args:
-            begin_date (str, optional): Begin date of desired data in ISO-8601 Format.
-            end_date (str, optional): End date of desired data in ISO-8601 Format.
+            begin_date (str): Begin date of desired data in ISO-8601 Format.
+            end_date (str): End date of desired data in ISO-8601 Format.
             data_type (str): Desired data type. Either 'netcdf' or 'json'.
             limit (int, optional): Desired data points. Required for 'json' ``data_type``. Max is 20000.
             **kwargs: Optional Keyword arguments. \n
@@ -463,16 +465,16 @@ class OOI(CAVA):
             self._current_data_catalog = current_dcat
         if region:
             region_search = list(map(lambda x: x.strip(' '), region.split(',')))  # noqa
-            current_dcat = current_dcat[current_dcat.array_name.astype(str).str.contains('|'.join(region_search), flags=re.IGNORECASE) | current_dcat.site_rd.astype(str).str.contains('|'.join(region_search), flags=re.IGNORECASE)]  # noqa
+            current_dcat = current_dcat[current_dcat.array_name.astype(str).str.contains('|'.join(region_search), flags=re.IGNORECASE) | current_dcat.site_rd.astype(str).str.contains('|'.join(region_search), flags=re.IGNORECASE) | current_dcat.reference_designator.astype(str).str.contains('|'.join(region_search), flags=re.IGNORECASE)]  # noqa
         if site:
             site_search = list(map(lambda x: x.strip(' '), site.split(',')))  # noqa
-            current_dcat = current_dcat[current_dcat.site_name.astype(str).str.contains('|'.join(site_search), flags=re.IGNORECASE) | current_dcat.site_rd.astype(str).str.contains('|'.join(site_search), flags=re.IGNORECASE)]  # noqa
+            current_dcat = current_dcat[current_dcat.site_name.astype(str).str.contains('|'.join(site_search), flags=re.IGNORECASE) | current_dcat.site_rd.astype(str).str.contains('|'.join(site_search), flags=re.IGNORECASE) | current_dcat.reference_designator.astype(str).str.contains('|'.join(site_search), flags=re.IGNORECASE)]  # noqa
         if node:
             node_search = list(map(lambda x: x.strip(' '), node.split(',')))  # noqa
-            current_dcat = current_dcat[current_dcat.infrastructure_name.astype(str).str.contains('|'.join(node_search), flags=re.IGNORECASE) | current_dcat.infrastructure_rd.astype(str).str.contains('|'.join(node_search), flags=re.IGNORECASE)]  # noqa
+            current_dcat = current_dcat[current_dcat.infrastructure_name.astype(str).str.contains('|'.join(node_search), flags=re.IGNORECASE) | current_dcat.infrastructure_rd.astype(str).str.contains('|'.join(node_search), flags=re.IGNORECASE) | current_dcat.reference_designator.astype(str).str.contains('|'.join(node_search), flags=re.IGNORECASE)]  # noqa
         if instrument:
             instrument_search = list(map(lambda x: x.strip(' '), instrument.split(',')))  # noqa
-            current_dcat = current_dcat[current_dcat.instrument_name.astype(str).str.contains('|'.join(instrument_search), flags=re.IGNORECASE) | current_dcat.instrument_rd.astype(str).str.contains('|'.join(instrument_search), flags=re.IGNORECASE)]  # noqa
+            current_dcat = current_dcat[current_dcat.instrument_name.astype(str).str.contains('|'.join(instrument_search), flags=re.IGNORECASE) | current_dcat.instrument_rd.astype(str).str.contains('|'.join(instrument_search), flags=re.IGNORECASE) | current_dcat.reference_designator.astype(str).str.contains('|'.join(instrument_search), flags=re.IGNORECASE)]  # noqa
         if parameter:
             parameter_search = list(map(lambda x: x.strip(' '), parameter.split(',')))  # noqa
             current_dcat = current_dcat[current_dcat.display_name.astype(str).str.contains('|'.join(parameter_search), flags=re.IGNORECASE) | current_dcat.parameter_rd.astype(str).str.contains('|'.join(parameter_search), flags=re.IGNORECASE)]  # noqa

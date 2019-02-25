@@ -48,4 +48,7 @@ setup(
     include_package_data=True,
     packages=find_packages(),
     install_requires=install_requires,
+    setup_requires=['setuptools>=38.6.0',
+                    'wheel>=0.31.0',
+                    'twine>=1.11.0']
 )

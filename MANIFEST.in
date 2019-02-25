@@ -3,3 +3,4 @@ include *.txt
 include versioneer.py
 include yodapy/_version.py
 include yodapy/datasources/ooi/infrastructure/*.csv
+include yodapy/datasources/ooi/infrastructure/*.json
