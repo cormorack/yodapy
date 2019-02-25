@@ -431,6 +431,9 @@ class OOI(CAVA):
             self._raw_data = []
         self._process_request()
 
+        # block until all tasks are done
+        self._q.join()
+
         self._request_urls = request_urls
         return self
 
@@ -519,7 +522,7 @@ class OOI(CAVA):
 
     def raw(self):
         """ Returns the raw result from data request in json format """
-        return [data.json() for data in filter(lambda x: x, self._raw_data)]
+        return self._raw_data
 
     def download_netcdfs(self, destination=os.path.curdir):
         """
@@ -580,6 +583,8 @@ class OOI(CAVA):
 
     def check_status(self):
         """ Function for user to manually check the status of the data """
+        if not self._q.empty():
+            return None
         turls = []
         filtered_data_urls = list(filter(lambda x: 'allURLs' in x, self.raw()))
         for durl in filtered_data_urls:
@@ -736,9 +741,12 @@ class OOI(CAVA):
         """ Function that perform task from queue """
         # when this exits, the print_lock is released
         with print_lock:
-            self._raw_data.append(
-                fetch_url(prepped_request=arg,
-                          session=self._session))
+            req = fetch_url(prepped_request=arg, session=self._session)
+            if req.json():
+                jsonres = req.json()
+                if 'status_code' in jsonres:
+                    jsonres['request_url'] = req.url
+                self._raw_data.append(jsonres)
             logger.debug(arg)
 
     def _threader(self):

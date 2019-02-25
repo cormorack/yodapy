@@ -56,9 +56,16 @@ def fetch_url(prepped_request,
     if r.status_code == 200:
         logger.debug(f'URL fetch {prepped_request.url} successful.')
         return r
+    elif r.status_code == 500:
+        message = 'Server is currently down.'
+        if 'ooinet.oceanobservatories.org/api' in prepped_request.url:
+            message = 'UFrame M2M is currently down.'
+        logger.error(message)
+        return r
     else:
-        logger.error(f'Request {prepped_request.url} failed: {r.status_code}, {r.reason}')  # noqa
-        return None
+        message = f'Request {prepped_request.url} failed: {r.status_code}, {r.reason}'
+        logger.error(message)  # noqa
+        return r
 
 
 # --- OOI Data Source Specific connection methods ---
