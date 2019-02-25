@@ -348,7 +348,6 @@ class OOI(CAVA):
         dc.start()
         gr.start()
 
-    @classmethod
     def request_data(self, begin_date, end_date,
                      data_type='netcdf', limit=-1, **kwargs):
         """
