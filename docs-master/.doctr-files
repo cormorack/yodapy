@@ -1,4 +1,6 @@
 docs-master/_modules/index.html
+docs-master/_modules/yodapy/datasources/ooi/CAVA.html
+docs-master/_modules/yodapy/datasources/ooi/OOI.html
 docs-master/_modules/yodapy/utils/creds.html
 docs-master/_sources/index.rst.txt
 docs-master/_sources/modules.rst.txt
