@@ -38,24 +38,13 @@ you will need to setup your credential file.
 >>> ooi = OOI()
 >>> ooi.search(region='cabled', site='axial base shallow profiler', node='shallow profiler', instrument='CTD')
 >>> ooi.view_instruments()
-             reference_designator name  start_depth  end_depth current_status    preferred_stream preferred_parameter          location
-1287  RS03AXPS-SF03A-2A-CTDPFA302  CTD          5.0      200.0                 ctdpf_sbe43_sample                 908  Shallow Profiler
 >>> ooi.data_availability()
-{'RS03AXPS-SF03A-2A-CTDPFA302': [{'stream': 'ctdpf_sbe43_sample',
-   'method': 'streamed',
-   'count': 110547881,
-   'endTime': '2018-07-02T22:11:19.511Z',
-   'beginTime': '2014-10-07T21:32:53.602Z'}]}
 >>> begin_date = '2018-01-01'
 >>> end_date = '2018-01-02'
 >>> ooi.request_data(begin_date=begin_date, end_date=end_date)
 >>> ooi.check_status()
 Request Completed
 >>> ds_list = ooi.to_xarray()
->>> ds_list
-[<xarray.Dataset>
- Dimensions:                                 (time: 86398)
- ...]
 ```
 
 
