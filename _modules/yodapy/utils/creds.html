@@ -49,7 +49,15 @@
                                 <span class="n">check_file_permissions</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="set_credentials_file"><a class="viewcode-back" href="../../../modules.html#yodapy.utils.creds.set_credentials_file">[docs]</a><span class="k">def</span> <span class="nf">set_credentials_file</span><span class="p">(</span><span class="n">data_source</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="set_credentials_file"><a class="viewcode-back" href="../../../modules.html#yodapy.utils.creds.set_credentials_file">[docs]</a><span class="k">def</span> <span class="nf">set_credentials_file</span><span class="p">(</span><span class="n">data_source</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets and saves the credential file for a data source.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_source (str): Data source string. Currently only supports &#39;ooi&#39;.</span>
+<span class="sd">        username (str): Username value for the specified data_source.</span>
+<span class="sd">        token (str): Token or password value for the specified data_source.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">data_source</span><span class="p">:</span>
         <span class="n">data_source</span> <span class="o">=</span> <span class="n">data_source</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">data_source</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ooi&#39;</span><span class="p">]:</span>
