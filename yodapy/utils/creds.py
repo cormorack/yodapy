@@ -14,7 +14,15 @@ from yodapy.utils.files import (CREDENTIALS_FILE,
                                 check_file_permissions)
 
 
-def set_credentials_file(data_source=None, username=None, token=None):
+def set_credentials_file(data_source, username, token):
+    """
+    Sets and saves the credential file for a data source.
+
+    Args:
+        data_source (str): Data source string. Currently only supports 'ooi'.
+        username (str): Username value for the specified data_source.
+        token (str): Token or password value for the specified data_source.
+    """
     if data_source:
         data_source = data_source.lower()
         if data_source in ['ooi']:
