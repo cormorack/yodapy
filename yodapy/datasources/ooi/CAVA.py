@@ -9,7 +9,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from yodapy.datasources.datasource import DataSource
 
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='(%(threadName)-10s) %(message)s',
                     )
 

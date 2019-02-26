@@ -40,7 +40,7 @@ from yodapy.utils.parser import (parse_toc_instruments,
                                  get_nc_urls)
 
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='(%(threadName)-10s) %(message)s',
                     )
 
@@ -658,7 +658,6 @@ class OOI(CAVA):
                 plt.xlabel('Months', labelpad=30)
                 plt.yticks(rotation=0)
                 plt.tight_layout()
-                plt.show()
 
                 legend = raw_plotdf[
                     (list(raw_plotdf.columns.values[-5:]) + ['stream_method',
