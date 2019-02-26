@@ -524,25 +524,30 @@ class OOI(CAVA):
         """ Returns the raw result from data request in json format """
         return self._raw_data
 
-    def download_netcdfs(self, destination=os.path.curdir):
+    def download_netcdfs(self, destination=os.path.curdir, timeout=3600):
         """
         Download netcdf files from the catalog created from data request.
 
         Args:
             destination (str, optional): Location to save netcdf file. Default will save in current directory.
+            timeout (int, optional): Expected download time before timing out in seconds. Defaults to 30min or 3600s.
 
         Returns:
             list: List of exported netcdf.
         """
+        if not isinstance(timeout, int):
+            raise TypeError(f'Expected int; {type(int)} given.')
+
         download_list = self._prepare_download()
         logger.info('Downloading netcdfs ...')
         jobs = [gevent.spawn(download_url,
                              url,
                              destination,
                              self._session) for url in download_list]
-        gevent.joinall(jobs, timeout=300)
+        gevent.joinall(jobs, timeout=timeout)
         finished_netcdfs = [job.value for job in jobs]
-        self._last_downloaded_netcdfs = [os.path.join(os.path.abspath(destination), nc) for nc in finished_netcdfs]  # noqa
+        if finished_netcdfs:
+            self._last_downloaded_netcdfs = [os.path.join(os.path.abspath(destination), nc) for nc in finished_netcdfs]  # noqa
         return self._last_downloaded_netcdfs
 
     def to_xarray(self, **kwargs):
