@@ -1,11 +1,9 @@
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <title>yodapy.datasources.ooi.CAVA &#8212; yodapy  documentation</title>
     <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
@@ -39,8 +37,6 @@
 
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">import</span> <span class="nn">gspread</span>
-<span class="kn">from</span> <span class="nn">oauth2client.service_account</span> <span class="k">import</span> <span class="n">ServiceAccountCredentials</span>
 <span class="kn">from</span> <span class="nn">yodapy.datasources.datasource</span> <span class="k">import</span> <span class="n">DataSource</span>
 
 
@@ -50,10 +46,7 @@
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
-<span class="n">CRED_JSON</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span>
-    <span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;infrastructure&#39;</span><span class="p">,</span> <span class="s1">&#39;cava-gsheet.json&#39;</span><span class="p">)</span>
-<span class="n">SCOPE</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;https://spreadsheets.google.com/feeds&#39;</span><span class="p">,</span>
-         <span class="s1">&#39;https://www.googleapis.com/auth/drive&#39;</span><span class="p">]</span>
+<span class="n">META_PATH</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s1">&#39;infrastructure&#39;</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="CAVA"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.CAVA.CAVA">[docs]</a><span class="k">class</span> <span class="nc">CAVA</span><span class="p">(</span><span class="n">DataSource</span><span class="p">):</span>
@@ -66,6 +59,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_cava_infrastructures</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cava_instruments</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_cava_parameters</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_source_name</span> <span class="o">=</span> <span class="s1">&#39;Cabled Array Value Add Metadata&#39;</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_cava_setup</span><span class="p">()</span>
 
@@ -94,31 +88,26 @@
         <span class="sd">&quot;&quot;&quot; Cabled array team Parameters vocab table. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cava_parameters</span>
 
-    <span class="k">def</span> <span class="nf">_retrieve_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">credentials</span> <span class="o">=</span> <span class="n">ServiceAccountCredentials</span><span class="o">.</span><span class="n">from_json_keyfile_name</span><span class="p">(</span><span class="n">CRED_JSON</span><span class="p">,</span>  <span class="c1"># noqa</span>
-                                                                       <span class="n">SCOPE</span><span class="p">)</span>
-        <span class="n">gc</span> <span class="o">=</span> <span class="n">gspread</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="n">credentials</span><span class="p">)</span>
-        <span class="n">gsheet</span> <span class="o">=</span> <span class="n">gc</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;Reference_Designator_Chart&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_retrieve_meta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_arrays</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_gsheet</span><span class="p">(</span><span class="n">gsheet</span><span class="p">,</span> <span class="s1">&#39;Arrays&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_sites</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_gsheet</span><span class="p">(</span><span class="n">gsheet</span><span class="p">,</span> <span class="s1">&#39;Sites&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_infrastructures</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_gsheet</span><span class="p">(</span>
-            <span class="n">gsheet</span><span class="p">,</span> <span class="s1">&#39;Infrastructures&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_instruments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_gsheet</span><span class="p">(</span>
-            <span class="n">gsheet</span><span class="p">,</span> <span class="s1">&#39;Instruments&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_gsheet</span><span class="p">(</span><span class="n">gsheet</span><span class="p">,</span> <span class="s1">&#39;Parameters&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_arrays</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_metacsv</span><span class="p">(</span><span class="n">META_PATH</span><span class="p">,</span> <span class="s1">&#39;cava_arrays.csv&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_sites</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_metacsv</span><span class="p">(</span><span class="n">META_PATH</span><span class="p">,</span> <span class="s1">&#39;cava_sites.csv&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_infrastructures</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_metacsv</span><span class="p">(</span>
+            <span class="n">META_PATH</span><span class="p">,</span> <span class="s1">&#39;cava_infrastructures.csv&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_instruments</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_metacsv</span><span class="p">(</span>
+            <span class="n">META_PATH</span><span class="p">,</span> <span class="s1">&#39;cava_instruments.csv&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cava_parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_df_from_metacsv</span><span class="p">(</span><span class="n">META_PATH</span><span class="p">,</span> <span class="s1">&#39;cava_parameters.csv&#39;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_cava_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="n">gthread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;retrieve-gsheet&#39;</span><span class="p">,</span>
-                                   <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_retrieve_gsheet</span><span class="p">)</span>
+                                   <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_retrieve_meta</span><span class="p">)</span>
         <span class="n">gthread</span><span class="o">.</span><span class="n">setDaemon</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="n">gthread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_get_df_from_gsheet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gsheet</span><span class="p">,</span> <span class="n">worksheet_name</span><span class="p">):</span>
-        <span class="n">wksheet</span> <span class="o">=</span> <span class="n">gsheet</span><span class="o">.</span><span class="n">worksheet</span><span class="p">(</span><span class="n">worksheet_name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">wksheet</span><span class="o">.</span><span class="n">get_all_records</span><span class="p">())</span></div>
+    <span class="k">def</span> <span class="nf">_get_df_from_metacsv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">csv</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">csv</span><span class="p">))</span></div>
 </pre></div>
 
           </div>
@@ -157,8 +146,6 @@
     <form class="search" action="../../../../search.html" method="get">
       <input type="text" name="q" />
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
     </div>
 </div>
@@ -179,7 +166,7 @@
       &copy;2018, Landung Setiawan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
