@@ -1,0 +1,25 @@
+instrument_name,parameter,parameter_name,unit
+CTD-O,time,Time,UTC
+CTD-O,seawater_temperature,Temperature,ºC
+CTD-O,seawater_pressure,Pressure,dbar
+CTD-O,seawater_conductivity,Conductivity,S/m
+CTD-O,corrected_dissolved_oxygen,Dissolved Oxygen,µmol/kg
+CTD-O,dissolved_oxygen,Dissolved Oxygen,µmol/kg
+CTD-O,density,Density,kg/m^3
+CTD-O,practical_salinity,Salinity,
+Nutrient,time,Time,UTC
+Nutrient,nitrate_concentration,Dissolved Nitrate Concentration,µMol/L
+Nutrient,nutnr_nitrogen_in_nitrate,Nitrogen in Nitrate,mg/l
+Nutrient,nutnr_bromide_trace,Bromide Trace,mg/l
+Nutrient,salinity_corrected_nitrate,Nitrate Concentration (Salinity Corrected),µmol/L
+Photosynthetically Available Radiation,time,Time,UTC
+Photosynthetically Available Radiation,par_counts_output,Photosynthetically Available Radiation,µmol photons m-2 s-1
+pH,time,Time,UTC
+pH,ph_seawater,pH,
+pCO2,time,Time,UTC
+pCO2,pco2_seawater,pCO2,µatm
+3-Wavelength Fluorometer,time,Time,UTC
+3-Wavelength Fluorometer,fluorometric_chlorophyll_a,Chlorophyll-a Concentration,µg L-1
+3-Wavelength Fluorometer,fluorometric_cdom,CDOM Concentration,ppb
+3-Wavelength Fluorometer,total_volume_scattering_coefficient,Total Volume Scattering Coefficient,m-1 sr-1
+3-Wavelength Fluorometer,optical_backscatter,Optical Backscatter,m-1

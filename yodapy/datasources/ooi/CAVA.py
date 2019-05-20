@@ -4,8 +4,6 @@ import threading
 
 import pandas as pd
 
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 from yodapy.datasources.datasource import DataSource
 
 
@@ -15,10 +13,7 @@ logging.basicConfig(level=logging.INFO,
 
 logger = logging.getLogger(__name__)
 
-CRED_JSON = os.path.join(os.path.dirname(
-    __file__), 'infrastructure', 'cava-gsheet.json')
-SCOPE = ['https://spreadsheets.google.com/feeds',
-         'https://www.googleapis.com/auth/drive']
+META_PATH = os.path.join(os.path.dirname(__file__), 'infrastructure')
 
 
 class CAVA(DataSource):
@@ -31,6 +26,7 @@ class CAVA(DataSource):
         self._cava_infrastructures = None
         self._cava_instruments = None
         self._cava_parameters = None
+        self._source_name = 'Cabled Array Value Add Metadata'
 
         self._cava_setup()
 
@@ -59,28 +55,23 @@ class CAVA(DataSource):
         """ Cabled array team Parameters vocab table. """
         return self._cava_parameters
 
-    def _retrieve_gsheet(self):
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(CRED_JSON,  # noqa
-                                                                       SCOPE)
-        gc = gspread.authorize(credentials)
-        gsheet = gc.open('Reference_Designator_Chart')
+    def _retrieve_meta(self):
 
-        self._cava_arrays = self._get_df_from_gsheet(gsheet, 'Arrays')
-        self._cava_sites = self._get_df_from_gsheet(gsheet, 'Sites')
-        self._cava_infrastructures = self._get_df_from_gsheet(
-            gsheet, 'Infrastructures')
-        self._cava_instruments = self._get_df_from_gsheet(
-            gsheet, 'Instruments')
-        self._cava_parameters = self._get_df_from_gsheet(gsheet, 'Parameters')
+        self._cava_arrays = self._get_df_from_metacsv(META_PATH, 'cava_arrays.csv')
+        self._cava_sites = self._get_df_from_metacsv(META_PATH, 'cava_sites.csv')
+        self._cava_infrastructures = self._get_df_from_metacsv(
+            META_PATH, 'cava_infrastructures.csv')
+        self._cava_instruments = self._get_df_from_metacsv(
+            META_PATH, 'cava_instruments.csv')
+        self._cava_parameters = self._get_df_from_metacsv(META_PATH, 'cava_parameters.csv')
 
     def _cava_setup(self):
 
         gthread = threading.Thread(name='retrieve-gsheet',
-                                   target=self._retrieve_gsheet)
+                                   target=self._retrieve_meta)
         gthread.setDaemon(True)
 
         gthread.start()
 
-    def _get_df_from_gsheet(self, gsheet, worksheet_name):
-        wksheet = gsheet.worksheet(worksheet_name)
-        return pd.DataFrame.from_records(wksheet.get_all_records())
+    def _get_df_from_metacsv(self, path, csv):
+        return pd.read_csv(os.path.join(path, csv))

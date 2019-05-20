@@ -1,0 +1,26 @@
+reference_designator,instrument_name,formal_name,instrument_url
+2A-CTDPFA102,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+2A-CTDPFA107,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+2A-CTDPFA302,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+2B-PHSENA108,pH,pH Sensor,/instruments/ph/
+2D-PHSENA101,pH,pH Sensor,/instruments/ph/
+2D-PHSENA301,pH,pH Sensor,/instruments/ph/
+3A-FLORTD101,Fluorometer,Fluorometer (CDOM),/instruments/fluorometer/
+3A-FLORTD104,Fluorometer,Fluorometer (CDOM),/instruments/fluorometer/
+3A-FLORTD301,Fluorometer,Fluorometer (CDOM),/instruments/fluorometer/
+3C-PARADA101,Photosynthetically Available Radiation,Photosynthetically Available Radiation (PAR) Sensor,/instruments/photosynthetically-active-radiation/
+3C-PARADA102,Photosynthetically Available Radiation ,Photosynthetically Available Radiation (PAR) Sensor,/instruments/photosynthetically-active-radiation/
+3C-PARADA301,Photosynthetically Available Radiation,Photosynthetically Available Radiation (PAR) Sensor,/instruments/photosynthetically-active-radiation/
+4A-CTDPFA103,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+4A-CTDPFA109,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+4A-CTDPFA303,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+4A-NUTNRA101,Nitrate,Nitrate Sensor,/instruments/nitrate-sensor/
+4A-NUTNRA102,Nitrate,Nitrate Sensor,/instruments/nitrate-sensor/
+4A-NUTNRA301,Nitrate,Nitrate Sensor,/instruments/nitrate-sensor/
+4B-PHSENA102,pH,pH Sensor,/instruments/ph/
+4B-PHSENA106,pH,pH Sensor,/instruments/ph/
+4B-PHSENA302,pH,pH Sensor,/instruments/ph/
+4D-PCO2WA105,pCO2,pH and Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+4F-PCO2WA101,pCO2,pH and Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+4F-PCO2WA102,pCO2,pH and Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+4F-PCO2WA301,pCO2,pH and Carbon Dioxide Sensor,/instruments/carbon-dioxide/
