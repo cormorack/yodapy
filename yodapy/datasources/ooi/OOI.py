@@ -336,17 +336,26 @@ class OOI(CAVA):
         if not self.ooi_username or not self.ooi_token:
             self._use_existing_credentials()
 
-        logger.debug('Fetching data catalog')
-        dc = threading.Thread(name='get-data-catalog',
-                              target=self._get_data_catalog)
-        dc.setDaemon(True)
+        # Check if ooinet is available
+        try:
+            req = requests.get('https://ooinet.oceanobservatories.org')
 
-        gr = threading.Thread(name='get-global-ranges',
-                              target=self._get_global_ranges)
-        gr.setDaemon(True)
+            if req.status_code == 200:
+                logger.debug('Fetching data catalog')
+                dc = threading.Thread(name='get-data-catalog',
+                                      target=self._get_data_catalog)
+                dc.setDaemon(True)
 
-        dc.start()
-        gr.start()
+                gr = threading.Thread(name='get-global-ranges',
+                                      target=self._get_global_ranges)
+                gr.setDaemon(True)
+
+                dc.start()
+                gr.start()
+            else:
+                logger.warning(f'Server not available, please try again later: {req.status_code}')
+        except Exception as e:
+            logger.error(f'Server not available, please try again later: {e}')
 
     def request_data(self, begin_date, end_date,
                      data_type='netcdf', limit=-1, **kwargs):
@@ -692,7 +701,8 @@ class OOI(CAVA):
             time.sleep(10)
             end = datetime.datetime.now()
             delta = end - start
-            logger.debug(f'Time elapsed: {delta.seconds}s')
+            logger.info(f'Data request time elapsed: {delta.seconds}s')
+            print(f'Data request time elapsed: {delta.seconds}s')
             turls = self.check_status()
         return turls
 
@@ -724,11 +734,11 @@ class OOI(CAVA):
         if status_code != 200:
             text = f'Your data ({urls["status_url"]}) is still compiling... Please wait.'
             print(text)  # noqa
-            logger.debug(text)  # noqa
+            logger.info(text)  # noqa
             return None
         text = f'Request ({urls["status_url"]}) completed.'
         print(text)  # noqa
-        logger.debug(text)  # noqa
+        logger.info(text)  # noqa
         return urls['thredds_url']
 
     def _process_request(self):
