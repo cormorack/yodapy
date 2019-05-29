@@ -12,6 +12,14 @@ Your Ocean Data Access in Python (YODAPY)
 pip install yodapy
 ```
 
+## Install directly from github
+
+For developers and testers:
+
+```bash
+pip install git+https://github.com/cormorack/yodapy.git
+```
+
 ## Development
 ```bash
 git clone https://github.com/cormorack/yodapy.git
