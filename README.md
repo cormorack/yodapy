@@ -30,6 +30,10 @@ pip install -e .
 ```
 
 ## Credentials
+To obtain credentials you are obliged to *register* at the [OOI data portal](https://ooinet.oceanobservatories.org/).
+Select the **Log In** dropdown and click **Register**. Fill out and submit the form and fairly soon you should 
+receive credentials; specifically a username and a token. The username and token are used in what follows.
+
 To start using yodapy for the ooi datasource, 
 you will need to setup your credential file. 
 *This will only need be set one time.*
