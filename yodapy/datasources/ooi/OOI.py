@@ -151,7 +151,7 @@ class OOI(CAVA):
     @property
     def regions(self):
         """ Returns the OOI regions """
-        if not self._regions:
+        if not isinstance(self._regions, pd.DataFrame):
             try:
                 self._regions = pd.read_csv(self._OOI_PORTAL_REGIONS).rename({
                     'reference_designator': 'array_rd',
@@ -164,7 +164,7 @@ class OOI(CAVA):
     @property
     def sites(self):
         """ Returns the OOI sites """
-        if not self._sites:
+        if not isinstance(self._sites, pd.DataFrame):
             try:
                 self._sites = pd.read_csv(self._OOI_PORTAL_SITES).dropna(subset=[  # noqa
                     'longitude', 'latitude'
