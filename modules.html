@@ -36,14 +36,19 @@
 <p>This part of the documentation covers all the interfaces of yodapy.</p>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">Data</span> <span class="pre">Sources</span></code></p>
 <span class="target" id="module-yodapy.datasources.ooi.OOI"></span><p>OOI Object</p>
+<dl class="data">
+<dt id="yodapy.datasources.ooi.OOI.DATA_TEAM_GITHUB_INFRASTRUCTURE">
+<code class="sig-prename descclassname">yodapy.datasources.ooi.OOI.</code><code class="sig-name descname">DATA_TEAM_GITHUB_INFRASTRUCTURE</code><em class="property"> = 'https://raw.githubusercontent.com/ooi-data-review/datateam-portal-backend/master/infrastructure'</em><a class="headerlink" href="#yodapy.datasources.ooi.OOI.DATA_TEAM_GITHUB_INFRASTRUCTURE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="class">
 <dt id="yodapy.datasources.ooi.OOI.OOI">
-<em class="property">class </em><code class="descclassname">yodapy.datasources.ooi.OOI.</code><code class="descname">OOI</code><span class="sig-paren">(</span><em>ooi_username=None</em>, <em>ooi_token=None</em>, <em>cloud_source=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">yodapy.datasources.ooi.OOI.</code><code class="sig-name descname">OOI</code><span class="sig-paren">(</span><em class="sig-param">ooi_username=None</em>, <em class="sig-param">ooi_token=None</em>, <em class="sig-param">cloud_source=False</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#yodapy.datasources.ooi.CAVA.CAVA" title="yodapy.datasources.ooi.CAVA.CAVA"><code class="xref py py-class docutils literal notranslate"><span class="pre">yodapy.datasources.ooi.CAVA.CAVA</span></code></a></p>
 <p>OOI Object for Ocean Observatories Initiative Data Retrieval.</p>
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.ooi_name">
-<code class="descname">ooi_name</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.ooi_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ooi_name</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.ooi_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Username for OOI API Data Access.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -54,7 +59,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.ooi_token">
-<code class="descname">ooi_token</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.ooi_token" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ooi_token</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.ooi_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Token for OOI API Data Access.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -65,7 +70,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.source_name">
-<code class="descname">source_name</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.source_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">source_name</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.source_name" title="Permalink to this definition">¶</a></dt>
 <dd><p>Data source name.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -76,7 +81,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.regions">
-<code class="descname">regions</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.regions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">regions</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Table of OOI regions.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -87,7 +92,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.sites">
-<code class="descname">sites</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.sites" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sites</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.sites" title="Permalink to this definition">¶</a></dt>
 <dd><p>Table of OOI sites.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -98,7 +103,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.instruments">
-<code class="descname">instruments</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.instruments" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">instruments</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.instruments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Table of available instrument streams.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -109,7 +114,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.global_ranges">
-<code class="descname">global_ranges</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.global_ranges" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">global_ranges</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.global_ranges" title="Permalink to this definition">¶</a></dt>
 <dd><p>Table of global ranges for each instrument streams.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -120,7 +125,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.deployments">
-<code class="descname">deployments</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.deployments" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">deployments</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.deployments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Table of deployments for filtered instrument streams.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -131,7 +136,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.annotations">
-<code class="descname">annotations</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.annotations" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">annotations</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.annotations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Table of annotations for filtered instrument streams.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -142,7 +147,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.start_date">
-<code class="descname">start_date</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.start_date" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">start_date</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.start_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of start dates requested.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -153,7 +158,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.end_date">
-<code class="descname">end_date</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.end_date" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">end_date</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.end_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of end dates requested.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -164,7 +169,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.last_request">
-<code class="descname">last_request</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.last_request" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">last_request</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.last_request" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of requested urls and parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -175,7 +180,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.last_m2m_urls">
-<code class="descname">last_m2m_urls</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.last_m2m_urls" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">last_m2m_urls</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.last_m2m_urls" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of requested M2M urls.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -186,7 +191,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.cava_arrays">
-<code class="descname">cava_arrays</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_arrays" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cava_arrays</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_arrays" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Arrays vocab table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -197,7 +202,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.cava_sites">
-<code class="descname">cava_sites</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_sites" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cava_sites</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_sites" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Sites vocab table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -208,7 +213,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.cava_infrastructures">
-<code class="descname">cava_infrastructures</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_infrastructures" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cava_infrastructures</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_infrastructures" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Infrastructures vocab table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -219,7 +224,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.cava_instruments">
-<code class="descname">cava_instruments</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_instruments" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cava_instruments</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_instruments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Instruments vocab table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -230,7 +235,7 @@
 
 <dl class="attribute">
 <dt id="yodapy.datasources.ooi.OOI.OOI.cava_parameters">
-<code class="descname">cava_parameters</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_parameters" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">cava_parameters</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.cava_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Parameters vocab table.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type</dt>
@@ -239,21 +244,21 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">annotations</code></dt>
+<em class="property">property </em><code class="sig-name descname">annotations</code></dt>
 <dd><p>Return instruments annotations</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.check_status">
-<code class="descname">check_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.check_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.check_status" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">check_status</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.check_status"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.check_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function for user to manually check the status of the data</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.clear">
-<code class="descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.clear" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.clear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears the search filter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -267,7 +272,7 @@
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.data_availability">
-<code class="descname">data_availability</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.data_availability"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.data_availability" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">data_availability</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.data_availability"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.data_availability" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots data availability of desired instruments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -279,15 +284,15 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">deployments</code></dt>
+<em class="property">property </em><code class="sig-name descname">deployments</code></dt>
 <dd><p>Return instruments deployments</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.download_netcdfs">
-<code class="descname">download_netcdfs</code><span class="sig-paren">(</span><em>destination='.'</em>, <em>timeout=3600</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.download_netcdfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.download_netcdfs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">download_netcdfs</code><span class="sig-paren">(</span><em class="sig-param">destination='.'</em>, <em class="sig-param">timeout=3600</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.download_netcdfs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.download_netcdfs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download netcdf files from the catalog created from data request.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -305,51 +310,51 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">end_date</code></dt>
+<em class="property">property </em><code class="sig-name descname">end_date</code></dt>
 <dd><p>Return requested end date(s)</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">global_ranges</code></dt>
+<em class="property">property </em><code class="sig-name descname">global_ranges</code></dt>
 <dd><p>Return global ranges</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">instruments</code></dt>
+<em class="property">property </em><code class="sig-name descname">instruments</code></dt>
 <dd><p>Returns instruments dataframe</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">last_m2m_urls</code></dt>
+<em class="property">property </em><code class="sig-name descname">last_m2m_urls</code></dt>
 <dd><p>Return last request m2m urls</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.last_requests">
-<code class="descname">last_requests</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.last_requests" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">last_requests</code><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.last_requests" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return last request url and parameters</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.raw">
-<code class="descname">raw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.raw" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">raw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.raw"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.raw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the raw result from data request in json format</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">regions</code></dt>
+<em class="property">property </em><code class="sig-name descname">regions</code></dt>
 <dd><p>Returns the OOI regions</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.request_data">
-<code class="descname">request_data</code><span class="sig-paren">(</span><em>begin_date</em>, <em>end_date</em>, <em>data_type='netcdf'</em>, <em>limit=-1</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.request_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.request_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">request_data</code><span class="sig-paren">(</span><em class="sig-param">begin_date</em>, <em class="sig-param">end_date</em>, <em class="sig-param">data_type='netcdf'</em>, <em class="sig-param">limit=-1</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.request_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.request_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Request data for filtered instruments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -377,7 +382,7 @@
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.search">
-<code class="descname">search</code><span class="sig-paren">(</span><em>region=None</em>, <em>site=None</em>, <em>node=None</em>, <em>instrument=None</em>, <em>stream_type='Science'</em>, <em>stream_method=None</em>, <em>stream=None</em>, <em>parameter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.search" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">search</code><span class="sig-paren">(</span><em class="sig-param">region=None</em>, <em class="sig-param">site=None</em>, <em class="sig-param">node=None</em>, <em class="sig-param">instrument=None</em>, <em class="sig-param">stream_type='Science'</em>, <em class="sig-param">stream_method=None</em>, <em class="sig-param">stream=None</em>, <em class="sig-param">parameter=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.search"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.search" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform a search, and filters data catalog</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -401,27 +406,27 @@
 </dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">sites</code></dt>
+<em class="property">property </em><code class="sig-name descname">sites</code></dt>
 <dd><p>Returns the OOI sites</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">source_name</code></dt>
+<em class="property">property </em><code class="sig-name descname">source_name</code></dt>
 <dd><p>Return data source name</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt>
-<code class="descname">start_date</code></dt>
+<em class="property">property </em><code class="sig-name descname">start_date</code></dt>
 <dd><p>Return requested start date(s)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.to_xarray">
-<code class="descname">to_xarray</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.to_xarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.to_xarray" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">to_xarray</code><span class="sig-paren">(</span><em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.to_xarray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.to_xarray" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the OOI streams data and export to Xarray Datasets, saving in memory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -438,7 +443,7 @@
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.view_instruments">
-<code class="descname">view_instruments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.view_instruments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.view_instruments" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">view_instruments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.view_instruments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.view_instruments" title="Permalink to this definition">¶</a></dt>
 <dd><p><strong>DEPRECATED.</strong>
 Shows the current instruments requested.
 Use OOI.instruments attribute instead.</p>
@@ -454,7 +459,7 @@ Use OOI.instruments attribute instead.</p>
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.view_regions">
-<code class="descname">view_regions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.view_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.view_regions" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">view_regions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.view_regions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.view_regions" title="Permalink to this definition">¶</a></dt>
 <dd><p><strong>DEPRECATED.</strong>
 Shows the regions within OOI.
 Use OOI.regions attribute instead.</p>
@@ -470,7 +475,7 @@ Use OOI.regions attribute instead.</p>
 
 <dl class="method">
 <dt id="yodapy.datasources.ooi.OOI.OOI.view_sites">
-<code class="descname">view_sites</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.view_sites"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.view_sites" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">view_sites</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/datasources/ooi/OOI.html#OOI.view_sites"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.OOI.OOI.view_sites" title="Permalink to this definition">¶</a></dt>
 <dd><p><strong>DEPRECATED.</strong>
 Shows the sites within OOI.
 Use OOI.sites attribute instead.</p>
@@ -486,46 +491,66 @@ Use OOI.sites attribute instead.</p>
 
 </dd></dl>
 
+<dl class="data">
+<dt id="yodapy.datasources.ooi.OOI.logger">
+<code class="sig-prename descclassname">yodapy.datasources.ooi.OOI.</code><code class="sig-name descname">logger</code><em class="property"> = &lt;Logger yodapy.datasources.ooi.OOI (INFO)&gt;</em><a class="headerlink" href="#yodapy.datasources.ooi.OOI.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="yodapy.datasources.ooi.OOI.print_lock">
+<code class="sig-prename descclassname">yodapy.datasources.ooi.OOI.</code><code class="sig-name descname">print_lock</code><em class="property"> = &lt;unlocked _thread.lock object&gt;</em><a class="headerlink" href="#yodapy.datasources.ooi.OOI.print_lock" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <span class="target" id="module-yodapy.datasources.ooi.CAVA"></span><dl class="class">
 <dt id="yodapy.datasources.ooi.CAVA.CAVA">
-<em class="property">class </em><code class="descclassname">yodapy.datasources.ooi.CAVA.</code><code class="descname">CAVA</code><a class="reference internal" href="_modules/yodapy/datasources/ooi/CAVA.html#CAVA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">yodapy.datasources.ooi.CAVA.</code><code class="sig-name descname">CAVA</code><a class="reference internal" href="_modules/yodapy/datasources/ooi/CAVA.html#CAVA"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">yodapy.datasources.datasource.DataSource</span></code></p>
-<dl class="attribute">
+<dl class="method">
 <dt id="yodapy.datasources.ooi.CAVA.CAVA.cava_arrays">
-<code class="descname">cava_arrays</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_arrays" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">cava_arrays</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_arrays" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Arrays vocab table.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="yodapy.datasources.ooi.CAVA.CAVA.cava_infrastructures">
-<code class="descname">cava_infrastructures</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_infrastructures" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">cava_infrastructures</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_infrastructures" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Infrastructures vocab table.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="yodapy.datasources.ooi.CAVA.CAVA.cava_instruments">
-<code class="descname">cava_instruments</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_instruments" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">cava_instruments</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_instruments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Instruments vocab table.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="yodapy.datasources.ooi.CAVA.CAVA.cava_parameters">
-<code class="descname">cava_parameters</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_parameters" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">cava_parameters</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_parameters" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Parameters vocab table.</p>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="method">
 <dt id="yodapy.datasources.ooi.CAVA.CAVA.cava_sites">
-<code class="descname">cava_sites</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_sites" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">cava_sites</code><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.CAVA.cava_sites" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cabled array team Sites vocab table.</p>
 </dd></dl>
 
 </dd></dl>
 
+<dl class="data">
+<dt id="yodapy.datasources.ooi.CAVA.META_PATH">
+<code class="sig-prename descclassname">yodapy.datasources.ooi.CAVA.</code><code class="sig-name descname">META_PATH</code><em class="property"> = '/home/travis/miniconda/envs/TEST/lib/python3.6/site-packages/yodapy/datasources/ooi/infrastructure'</em><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.META_PATH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="data">
+<dt id="yodapy.datasources.ooi.CAVA.logger">
+<code class="sig-prename descclassname">yodapy.datasources.ooi.CAVA.</code><code class="sig-name descname">logger</code><em class="property"> = &lt;Logger yodapy.datasources.ooi.CAVA (INFO)&gt;</em><a class="headerlink" href="#yodapy.datasources.ooi.CAVA.logger" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">Utilities</span></code></p>
 <span class="target" id="module-yodapy.utils.creds"></span><dl class="function">
 <dt id="yodapy.utils.creds.set_credentials_file">
-<code class="descclassname">yodapy.utils.creds.</code><code class="descname">set_credentials_file</code><span class="sig-paren">(</span><em>data_source</em>, <em>username</em>, <em>token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/utils/creds.html#set_credentials_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.utils.creds.set_credentials_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">yodapy.utils.creds.</code><code class="sig-name descname">set_credentials_file</code><span class="sig-paren">(</span><em class="sig-param">data_source</em>, <em class="sig-param">username</em>, <em class="sig-param">token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/yodapy/utils/creds.html#set_credentials_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#yodapy.utils.creds.set_credentials_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets and saves the credential file for a data source.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -571,10 +596,10 @@ Use OOI.sites attribute instead.</p>
 </ul>
 </div>
 <div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
+  <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" />
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -596,7 +621,7 @@ Use OOI.sites attribute instead.</p>
       &copy;2018, Landung Setiawan.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.0.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

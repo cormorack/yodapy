@@ -1,4 +1,5 @@
 ./_modules/index.html
+./_modules/logging.html
 ./_modules/yodapy/datasources/ooi/CAVA.html
 ./_modules/yodapy/datasources/ooi/OOI.html
 ./_modules/yodapy/utils/creds.html
