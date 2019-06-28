@@ -125,7 +125,7 @@ def get_instrument_list(filtdcat):
         by=['site_name',
             'infrastructure_name',
             'instrument_name']
-    ).reset_index(
+    ).drop_duplicates().reset_index(
         drop='index'
     )
 

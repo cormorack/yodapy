@@ -7,6 +7,7 @@ from __future__ import (division,
 
 import logging
 import os
+import threading
 
 import dask
 import xarray as xr
@@ -18,6 +19,18 @@ from yodapy.utils.conn import requests_retry_session
 from yodapy.utils.parser import get_nc_urls
 
 logger = logging.getLogger(__name__)
+
+
+def set_thread(name='', target=''):
+    try:
+        logger.debug(f'Setting thread: {name}')
+        dc = threading.Thread(name=name,
+                              target=target)
+        dc.setDaemon(True)
+        dc.start()
+        return dc
+    except Exception as e:
+        logger.error(e)
 
 
 def check_data_status(session, data, **kwargs):
@@ -87,7 +100,8 @@ def fetch_xr(params, **kwargs):
     else:
         datasets = get_nc_urls(turl)
         # only include instruments where ref_deg appears twice (i.e. was in original filter)
-        filt_ds = list(filter(lambda x: any(x.count(ref) > 1 for ref in ref_degs), datasets))
+        filt_ds = list(filter(lambda x: any(
+            x.count(ref) > 1 for ref in ref_degs), datasets))
 
     # TODO: Place some chunking here
     return xr.open_mfdataset(
