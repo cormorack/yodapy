@@ -173,13 +173,14 @@ def parse_raw_data_catalog(raw_data_catalog):
                                      'stream_rd', 'instrument_name', 'instrument_manufacturer',  # noqa
                                      'instrument_model', 'parameter_rd', 'standard_name',  # noqa
                                      'unit', 'display_name', 'description']
+    final_data_catalog = filtered_data_catalog.copy()
 
     # Ensure that cabled array sub regions are highlighted
-    filtered_data_catalog.loc[:, 'array_name'] = filtered_data_catalog.array_name.apply(  # noqa
+    final_data_catalog.loc[:, 'array_name'] = filtered_data_catalog.array_name.apply(  # noqa
         lambda row: f'{row} (Cabled Array)' if row in ['Cabled Continental Margin',  # noqa
                                                        'Cabled Axial Seamount'] else row)  # noqa
-
-    return filtered_data_catalog
+    del filtered_data_catalog
+    return final_data_catalog
 
 
 def parse_streams_dataframe(streamsdf):
