@@ -52,6 +52,7 @@
 
 <span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span>
 <span class="kn">import</span> <span class="nn">pytz</span>
+<span class="kn">import</span> <span class="nn">urllib3</span>
 
 <span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.CAVA</span> <span class="k">import</span> <span class="n">CAVA</span>
 
@@ -71,6 +72,8 @@
                                  <span class="n">get_instrument_list</span><span class="p">,</span>
                                  <span class="n">unix_time_millis</span><span class="p">,</span>
                                  <span class="n">get_nc_urls</span><span class="p">)</span>
+
+<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
 
 
 <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
@@ -378,7 +381,7 @@
                 <span class="n">dc</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;get-data-catalog&#39;</span><span class="p">,</span>
                                       <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_data_catalog</span><span class="p">)</span>
                 <span class="n">dc</span><span class="o">.</span><span class="n">setDaemon</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Fetching global ranges&#39;</span><span class="p">)</span>
                 <span class="n">gr</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;get-global-ranges&#39;</span><span class="p">,</span>
                                       <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_global_ranges</span><span class="p">)</span>
                 <span class="n">gr</span><span class="o">.</span><span class="n">setDaemon</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
