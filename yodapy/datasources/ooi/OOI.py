@@ -19,6 +19,7 @@ import warnings
 
 from dateutil import parser
 import pytz
+import urllib3
 
 from yodapy.datasources.ooi.CAVA import CAVA
 
@@ -38,6 +39,8 @@ from yodapy.utils.parser import (parse_toc_instruments,
                                  get_instrument_list,
                                  unix_time_millis,
                                  get_nc_urls)
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 logging.basicConfig(level=logging.INFO,
@@ -345,7 +348,7 @@ class OOI(CAVA):
                 dc = threading.Thread(name='get-data-catalog',
                                       target=self._get_data_catalog)
                 dc.setDaemon(True)
-
+                logger.debug('Fetching global ranges')
                 gr = threading.Thread(name='get-global-ranges',
                                       target=self._get_global_ranges)
                 gr.setDaemon(True)
