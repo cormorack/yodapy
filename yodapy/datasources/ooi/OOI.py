@@ -24,6 +24,7 @@ import urllib3
 from yodapy.datasources.ooi.CAVA import CAVA
 
 from yodapy.utils.files import CREDENTIALS_FILE
+from yodapy.datasources.ooi.helpers import set_thread
 from yodapy.utils.conn import (fetch_url,
                                instrument_to_query,
                                fetch_xr,
@@ -148,6 +149,7 @@ class OOI(CAVA):
         self._last_m2m_urls = []
         self._last_download_list = None
         self._last_downloaded_netcdfs = None
+        self._thread_list = []
 
         self._setup()
 
@@ -181,11 +183,18 @@ class OOI(CAVA):
 
     @property
     def instruments(self):
-        """ Returns instruments dataframe """
-        if isinstance(self._filtered_data_catalog, pd.DataFrame):
-            return get_instrument_list(self._filtered_data_catalog)
-        if isinstance(self._current_data_catalog, pd.DataFrame):
-            return get_instrument_list(self._current_data_catalog)
+
+        def threads_alive(t):
+            return not t.is_alive()
+        if all(list(map(threads_alive, self._thread_list))):
+            """ Returns instruments dataframe """
+            if isinstance(self._filtered_data_catalog, pd.DataFrame):
+                return get_instrument_list(self._filtered_data_catalog)
+            if isinstance(self._current_data_catalog, pd.DataFrame):
+                return get_instrument_list(self._current_data_catalog)
+        else:
+            message = 'Please wait while we fetch the metadata ...'
+            logger.info(message)
 
     @property
     def deployments(self):
@@ -344,19 +353,13 @@ class OOI(CAVA):
             req = requests.get('https://ooinet.oceanobservatories.org')
 
             if req.status_code == 200:
-                logger.debug('Fetching data catalog')
-                dc = threading.Thread(name='get-data-catalog',
-                                      target=self._get_data_catalog)
-                dc.setDaemon(True)
-                logger.debug('Fetching global ranges')
-                gr = threading.Thread(name='get-global-ranges',
-                                      target=self._get_global_ranges)
-                gr.setDaemon(True)
-
-                dc.start()
-                gr.start()
+                threads = [('get-data-catalog', self._get_data_catalog), ('get-global-ranges', self._get_global_ranges)]
+                for t in threads:
+                    ft = set_thread(*t)
+                    self._thread_list.append(ft)
             else:
-                logger.warning(f'Server not available, please try again later: {req.status_code}')
+                logger.warning(
+                    f'Server not available, please try again later: {req.status_code}')
         except Exception as e:
             logger.error(f'Server not available, please try again later: {e}')
 
