@@ -14,3 +14,4 @@ seaborn
 netcdf4==1.4.1
 oauth2client
 progressbar2
+s3fs

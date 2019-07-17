@@ -19,7 +19,9 @@ import warnings
 
 from dateutil import parser
 import pytz
+import s3fs
 import urllib3
+import xarray as xr
 
 from yodapy.datasources.ooi.CAVA import CAVA
 
@@ -53,6 +55,8 @@ logger = logging.getLogger(__name__)
 print_lock = threading.Lock()
 
 DATA_TEAM_GITHUB_INFRASTRUCTURE = 'https://raw.githubusercontent.com/ooi-data-review/datateam-portal-backend/master/infrastructure'
+FILE_SYSTEM = s3fs.S3FileSystem(anon=True)
+BUCKET_DATA = 'io2data/data'
 
 
 class OOI(CAVA):
@@ -124,7 +128,6 @@ class OOI(CAVA):
         self._rtoc = None
 
         self._data_type = None
-        self._cloud_source = cloud_source
 
         self._current_data_catalog = None
         self._filtered_data_catalog = None
@@ -134,6 +137,9 @@ class OOI(CAVA):
         self._dataset_list = []
         self._netcdf_urls = []
 
+        # Cloud copy
+        self._s3content = None
+        self._cloud_source = cloud_source
         # ----------- Session Configs ---------------------
         self._session = requests.Session()
         self._pool_connections = kwargs.get('pool_connections', 100)
@@ -353,7 +359,8 @@ class OOI(CAVA):
             req = requests.get('https://ooinet.oceanobservatories.org')
 
             if req.status_code == 200:
-                threads = [('get-data-catalog', self._get_data_catalog), ('get-global-ranges', self._get_global_ranges)]
+                threads = [('get-data-catalog', self._get_data_catalog),
+                           ('get-global-ranges', self._get_global_ranges)]
                 for t in threads:
                     ft = set_thread(*t)
                     self._thread_list.append(ft)
@@ -362,6 +369,13 @@ class OOI(CAVA):
                     f'Server not available, please try again later: {req.status_code}')
         except Exception as e:
             logger.error(f'Server not available, please try again later: {e}')
+
+        # Retrieve datasets info in the s3 bucket.
+        try:
+            self._s3content = [os.path.basename(
+                rd) for rd in FILE_SYSTEM.ls(BUCKET_DATA)]
+        except Exception as e:
+            logger.error(e)
 
     def request_data(self, begin_date, end_date,
                      data_type='netcdf', limit=-1, **kwargs):
@@ -392,8 +406,8 @@ class OOI(CAVA):
         self._q = Queue()
 
         # Limit the number of request
-        if len(data_catalog_copy) > 5:
-            text = f'Too many instruments to request data for! Max is 5, you have {len(data_catalog_copy)}'  # noqa
+        if len(data_catalog_copy) > 6:
+            text = f'Too many instruments to request data for! Max is 6, you have {len(data_catalog_copy)}'  # noqa
             logger.error(text)
             raise Exception(text)
 
@@ -412,35 +426,55 @@ class OOI(CAVA):
         self._start_date = begin_date,
         self._end_date = end_dates
 
-        data_catalog_copy['user_begin'] = begin_dates
-        data_catalog_copy['user_end'] = end_dates
+        if self._cloud_source:
+            data_catalog_copy.loc[:, 'user_begin'] = pd.to_datetime(
+                begin_dates)
+            data_catalog_copy.loc[:, 'user_end'] = pd.to_datetime(end_dates)
+            data_catalog_copy.loc[:, 'full_rd'] = data_catalog_copy.apply(
+                lambda row: '-'.join([row['reference_designator'], row['stream_method'], row['stream_rd']]), axis=1)
+            data_catalog_copy.loc[:, 'rd_path'] = data_catalog_copy['full_rd'].apply(
+                lambda row: '/'.join([BUCKET_DATA, row]))
+            request_urls = data_catalog_copy['rd_path'].values.tolist()
 
-        request_urls = [instrument_to_query(
-            ooi_url=self._OOI_DATA_URL,
-            site_rd=row.site_rd,
-            infrastructure_rd=row.infrastructure_rd,
-            instrument_rd=row.instrument_rd,
-            stream_method=row.stream_method,
-            stream_rd=row.stream_rd,
-            begin_ts=row.user_begin,
-            end_ts=row.user_end,
-            stream_start=row.begin_date,
-            stream_end=row.end_date,
-            application_type=data_type,
-            limit=limit,
-            **kwargs
-        ) for idx, row in data_catalog_copy.iterrows()]
+            for idx, row in data_catalog_copy.iterrows():
+                tempdf = pd.DataFrame(FILE_SYSTEM.ls(
+                    row['rd_path']), columns=['uri'])
+                tempdf.loc[:, 'time'] = tempdf.apply(
+                    lambda r: pd.to_datetime(os.path.basename(r['uri'])), axis=1)
+                selected = tempdf[(tempdf.time >= row['user_begin']) & (
+                    tempdf.time <= row['user_end'])]
+                if len(selected) > 0:
+                    self._q.put([selected, row['user_begin'], row['user_end']])
 
-        prepared_requests = [requests.Request('GET',
-                                              data_url,
-                                              auth=(self.ooi_username,
-                                                    self.ooi_token),
-                                              params=params) for data_url, params in request_urls]  # noqa
+        else:
+            data_catalog_copy['user_begin'] = begin_dates
+            data_catalog_copy['user_end'] = end_dates
+            request_urls = [instrument_to_query(
+                ooi_url=self._OOI_DATA_URL,
+                site_rd=row.site_rd,
+                infrastructure_rd=row.infrastructure_rd,
+                instrument_rd=row.instrument_rd,
+                stream_method=row.stream_method,
+                stream_rd=row.stream_rd,
+                begin_ts=row.user_begin,
+                end_ts=row.user_end,
+                stream_start=row.begin_date,
+                stream_end=row.end_date,
+                application_type=data_type,
+                limit=limit,
+                **kwargs
+            ) for idx, row in data_catalog_copy.iterrows()]
 
-        for job in prepared_requests:
-            prepped = job.prepare()
-            self._last_m2m_urls.append(prepped.url)
-            self._q.put(prepped)
+            prepared_requests = [requests.Request('GET',
+                                                data_url,
+                                                auth=(self.ooi_username,
+                                                        self.ooi_token),
+                                                params=params) for data_url, params in request_urls]  # noqa
+
+            for job in prepared_requests:
+                prepped = job.prepare()
+                self._last_m2m_urls.append(prepped.url)
+                self._q.put(prepped)
 
         if len(self._raw_data) > 0:
             self._raw_data = []
@@ -480,6 +514,11 @@ class OOI(CAVA):
         else:
             current_dcat = self._get_data_catalog()
             self._current_data_catalog = current_dcat
+
+        if self._cloud_source:
+            current_dcat = current_dcat[current_dcat.apply(lambda row: '-'.join(
+                [row['reference_designator'], row['stream_method'], row['stream_rd']]) in self._s3content, axis=1)].reset_index(drop='index')
+
         if region:
             region_search = list(map(lambda x: x.strip(' '), region.split(',')))  # noqa
             current_dcat = current_dcat[current_dcat.array_name.astype(str).str.contains('|'.join(region_search), flags=re.IGNORECASE) | current_dcat.site_rd.astype(str).str.contains('|'.join(region_search), flags=re.IGNORECASE) | current_dcat.reference_designator.astype(str).str.contains('|'.join(region_search), flags=re.IGNORECASE)]  # noqa
@@ -578,21 +617,16 @@ class OOI(CAVA):
         ref_degs = self._filtered_data_catalog['reference_designator'].values
         dataset_list = []
         if self._data_type == 'netcdf':
-            if self._cloud_source:
-                turls = self._data_urls
-                kwargs['begin_date'] = self._requested_time_range[0]
-                kwargs['end_date'] = self._requested_time_range[1]
-                kwargs['cloud_source'] = self._cloud_source
-            else:
+            if not self._cloud_source:
                 turls = self._perform_check()
 
-            if len(turls) > 0:
-                self._netcdf_urls = [get_nc_urls(turl) for turl in turls]
-                logger.info('Acquiring data from opendap urls ...')
-                jobs = [gevent.spawn(fetch_xr, (url, ref_degs), **kwargs)
-                        for url in turls]
-                gevent.joinall(jobs, timeout=300)
-                dataset_list = [job.value for job in jobs]
+                if len(turls) > 0:
+                    self._netcdf_urls = [get_nc_urls(turl) for turl in turls]
+                    logger.info('Acquiring data from opendap urls ...')
+                    jobs = [gevent.spawn(fetch_xr, (url, ref_degs), **kwargs)
+                            for url in turls]
+                    gevent.joinall(jobs, timeout=300)
+                    dataset_list = [job.value for job in jobs]
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
@@ -769,10 +803,30 @@ class OOI(CAVA):
                 self._raw_data.append(jsonres)
             logger.debug(arg)
 
+    def _perform_cloud_request(self, arg):
+        """ Function that perform task from queue """
+        # when this exits, the print_lock is released
+        with print_lock:
+            selected, start_dt, end_dt = arg
+            total_ds = xr.merge([xr.open_zarr(store=s3fs.S3Map(
+                sel.uri, s3=FILE_SYSTEM)) for idx, sel in selected.iterrows()])
+            self._raw_data.append(selected)
+            if len(total_ds.coords) > 0:
+                self._dataset_list.append(
+                    total_ds.sel(time=slice(start_dt, end_dt)))
+            else:
+                message = f"{selected.iloc[0].uri} dates {start_dt} to {end_dt} is empty!"
+                logger.info(message)
+            logger.debug(selected)
+
     def _threader(self):
         """ Get job from the front of queue and pass to function """
         while True:
-            self._perform_request(self._q.get())
+            nextq = self._q.get()
+            if self._cloud_source:
+                self._perform_cloud_request(nextq)
+            else:
+                self._perform_request(nextq)
             self._q.task_done()
 
     def _get_instruments_catalog(self):
