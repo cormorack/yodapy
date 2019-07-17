@@ -85,9 +85,11 @@ class TestOOIDataSource:
         assert len(self.search_results) == 1
 
     def test_instruments(self):
-        inst = self.OOI.instruments
+        while type(self.OOI.instruments) == type(None):
+            inst = self.OOI.instruments
 
         assert isinstance(inst, pd.DataFrame)
+        assert len(inst) > 0
 
     def test_regions(self):
         inst = self.OOI.regions
@@ -99,6 +101,7 @@ class TestOOIDataSource:
         inst = self.OOI.sites
 
         assert isinstance(inst, pd.DataFrame)
+        assert len(inst) > 0
 
     def test_data_availibility(self):
 
