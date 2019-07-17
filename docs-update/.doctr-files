@@ -1,3 +1,7 @@
+docs-update/_modules/index.html
+docs-update/_modules/yodapy/datasources/ooi/CAVA.html
+docs-update/_modules/yodapy/datasources/ooi/OOI.html
+docs-update/_modules/yodapy/utils/creds.html
 docs-update/_sources/index.rst.txt
 docs-update/_sources/modules.rst.txt
 docs-update/_static/alabaster.css
@@ -19,5 +23,6 @@ docs-update/genindex.html
 docs-update/index.html
 docs-update/modules.html
 docs-update/objects.inv
+docs-update/py-modindex.html
 docs-update/search.html
 docs-update/searchindex.js
