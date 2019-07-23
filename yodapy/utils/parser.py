@@ -234,7 +234,9 @@ def parse_deployments_json(dps, inst):
             'deployment_number': dep['deploymentNumber'],
             'ref_des': inst.reference_designator,
             'stream_method': inst.stream_method,
-            'stream_rd': inst.stream_rd
+            'stream_rd': inst.stream_rd,
+            'lat': dep['location']['latitude'],
+            'lon': dep['location']['longitude']
         }
         if parser.parse(inst.begin_date).replace(tzinfo=pytz.UTC) < dps_dict['begin_date']:
             dps_dict['begin_date'] = parser.parse(
