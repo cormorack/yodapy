@@ -20,7 +20,18 @@ reference_designator,instrument_name,formal_name,instrument_url
 4B-PHSENA102,pH,pH Sensor,/instruments/ph/
 4B-PHSENA106,pH,pH Sensor,/instruments/ph/
 4B-PHSENA302,pH,pH Sensor,/instruments/ph/
-4D-PCO2WA105,pCO2,pH and Carbon Dioxide Sensor,/instruments/carbon-dioxide/
-4F-PCO2WA101,pCO2,pH and Carbon Dioxide Sensor,/instruments/carbon-dioxide/
-4F-PCO2WA102,pCO2,pH and Carbon Dioxide Sensor,/instruments/carbon-dioxide/
-4F-PCO2WA301,pCO2,pH and Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+4D-PCO2WA105,pCO2,Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+4F-PCO2WA101,pCO2,Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+4F-PCO2WA102,pCO2,Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+4F-PCO2WA301,pCO2,Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+09-PCO2WB104,pCO2,Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+09-PCO2WB103,pCO2,Carbon Dioxide Sensor,/instruments/carbon-dioxide/
+10-PHSEND107,pH,pH Sensor,/instruments/ph/
+10-PHSEND103,pH,pH Sensor,/instruments/ph/
+4C-FLORDD303,Fluorometer,Fluorometer (CDOM),/instruments/fluorometer/
+4C-FLORDD103,Fluorometer,Fluorometer (CDOM),/instruments/fluorometer/
+12-CTDPFB301,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+10-CTDPFB304,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+12-CTDPFB101,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+06-CTDBPO108,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
+06-CTDBPN106,CTD-O,Conductivity-Temperature-Depth,/instruments/ctd-conductivity-temperature-depth/
