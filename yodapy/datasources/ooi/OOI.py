@@ -17,6 +17,8 @@ import time
 import logging
 import warnings
 
+from lxml.html import fromstring as html_parser
+
 from dateutil import parser
 import pytz
 import s3fs
@@ -31,7 +33,9 @@ from yodapy.utils.conn import (fetch_url,
                                instrument_to_query,
                                fetch_xr,
                                get_download_urls,
-                               download_url)
+                               download_url,
+                               perform_ek60_download,
+                               perform_ek60_processing)
 from yodapy.utils.parser import (parse_toc_instruments,
                                  parse_streams_dataframe,
                                  parse_raw_data_catalog,
@@ -126,6 +130,13 @@ class OOI(CAVA):
         self._rglobal_range = None
         self._rstreams = None
         self._rtoc = None
+
+        self._raw_datadf = None
+        self._raw_data_url = None
+
+        # For bio-acoustic sonar
+        self._zplsc_data_catalog = None
+        self._raw_file_dict = None
 
         self._data_type = None
 
@@ -360,7 +371,8 @@ class OOI(CAVA):
 
             if req.status_code == 200:
                 threads = [('get-data-catalog', self._get_data_catalog),
-                           ('get-global-ranges', self._get_global_ranges)]
+                           ('get-global-ranges', self._get_global_ranges),
+                           ('get-rawdata-filelist', self._get_rawdata_filelist)]  # noqa
                 for t in threads:
                     ft = set_thread(*t)
                     self._thread_list.append(ft)
@@ -426,6 +438,7 @@ class OOI(CAVA):
         self._start_date = begin_date,
         self._end_date = end_dates
 
+        request_urls = []
         if self._cloud_source:
             data_catalog_copy.loc[:, 'user_begin'] = pd.to_datetime(
                 begin_dates)
@@ -449,32 +462,38 @@ class OOI(CAVA):
         else:
             data_catalog_copy['user_begin'] = begin_dates
             data_catalog_copy['user_end'] = end_dates
-            request_urls = [instrument_to_query(
-                ooi_url=self._OOI_DATA_URL,
-                site_rd=row.site_rd,
-                infrastructure_rd=row.infrastructure_rd,
-                instrument_rd=row.instrument_rd,
-                stream_method=row.stream_method,
-                stream_rd=row.stream_rd,
-                begin_ts=row.user_begin,
-                end_ts=row.user_end,
-                stream_start=row.begin_date,
-                stream_end=row.end_date,
-                application_type=data_type,
-                limit=limit,
-                **kwargs
-            ) for idx, row in data_catalog_copy.iterrows()]
+            # For bio-acoustic sonar only
+            self._zplsc_data_catalog = data_catalog_copy[data_catalog_copy.instrument_name.str.contains(
+                'bio-acoustic sonar', case=False)]
+            data_catalog_copy = data_catalog_copy[~data_catalog_copy.instrument_name.str.contains(
+                'bio-acoustic sonar', case=False)]
+            if len(data_catalog_copy) > 0:
+                request_urls = [instrument_to_query(
+                    ooi_url=self._OOI_DATA_URL,
+                    site_rd=row.site_rd,
+                    infrastructure_rd=row.infrastructure_rd,
+                    instrument_rd=row.instrument_rd,
+                    stream_method=row.stream_method,
+                    stream_rd=row.stream_rd,
+                    begin_ts=row.user_begin,
+                    end_ts=row.user_end,
+                    stream_start=row.begin_date,
+                    stream_end=row.end_date,
+                    application_type=data_type,
+                    limit=limit,
+                    **kwargs
+                ) for idx, row in data_catalog_copy.iterrows()]
 
-            prepared_requests = [requests.Request('GET',
-                                                data_url,
-                                                auth=(self.ooi_username,
-                                                        self.ooi_token),
-                                                params=params) for data_url, params in request_urls]  # noqa
+                prepared_requests = [requests.Request('GET',
+                                                    data_url,
+                                                    auth=(self.ooi_username,
+                                                            self.ooi_token),
+                                                    params=params) for data_url, params in request_urls]  # noqa
 
-            for job in prepared_requests:
-                prepped = job.prepare()
-                self._last_m2m_urls.append(prepped.url)
-                self._q.put(prepped)
+                for job in prepared_requests:
+                    prepped = job.prepare()
+                    self._last_m2m_urls.append(prepped.url)
+                    self._q.put(prepped)
 
         if len(self._raw_data) > 0:
             self._raw_data = []
@@ -483,6 +502,21 @@ class OOI(CAVA):
         # block until all tasks are done
         self._q.join()
 
+        if isinstance(self._zplsc_data_catalog, pd.DataFrame):
+            if len(self._zplsc_data_catalog) > 0:
+                self._zplsc_data_catalog.loc[:, 'ref'] = self._zplsc_data_catalog.reference_designator.apply(
+                    lambda rd: rd[:14])
+                filtered_datadf = {}
+                for idx, row in self._zplsc_data_catalog.iterrows():
+                    filtered_datadf[row['ref']] = self._raw_datadf[row['ref']
+                                                                   ][row['user_begin']:row['user_end']].copy()
+                    filtered_rawdata = filtered_datadf[row['ref']]
+                    filtered_rawdata.loc[:, 'urls'] = filtered_rawdata.filename.apply(
+                        lambda f: '/'.join([self._raw_data_url[row['ref']], f]))
+
+                raw_file_dict = perform_ek60_download(filtered_datadf)
+                self._raw_file_dict = raw_file_dict
+                self._raw_data.append(raw_file_dict)
         self._request_urls = request_urls
         return self
 
@@ -618,6 +652,14 @@ class OOI(CAVA):
         dataset_list = []
         if self._data_type == 'netcdf':
             if not self._cloud_source:
+                if self._raw_file_dict:
+                    mvbsnc_list = perform_ek60_processing(self._raw_file_dict)
+                    for k, v in mvbsnc_list.items():
+                        resdf = xr.open_mfdataset(v,
+                                                  concat_dim=['ping_time'],
+                                                  combine='nested',
+                                                  **kwargs)
+                        dataset_list.append(resdf)
                 turls = self._perform_check()
 
                 if len(turls) > 0:
@@ -626,7 +668,8 @@ class OOI(CAVA):
                     jobs = [gevent.spawn(fetch_xr, (url, ref_degs), **kwargs)
                             for url in turls]
                     gevent.joinall(jobs, timeout=300)
-                    dataset_list = [job.value for job in jobs]
+                    for job in jobs:
+                        dataset_list.append(job.value)
         else:
             self._logger.warning(f'{self._data_type} cannot be converted to xarray dataset')  # noqa
 
@@ -668,61 +711,67 @@ class OOI(CAVA):
 
         if isinstance(inst, pd.DataFrame):
             if len(inst) > 0:
-                da_list = [self._fetch_monthly_stats(
-                    i) for idx, i in inst.iterrows()]
+                da_list = []
+                for idx, i in inst.iterrows():
+                    if i.instrument_name not in ['Bio-acoustic Sonar (Coastal)']:
+                        da_list.append(self._fetch_monthly_stats(i))
+                    else:
+                        print(
+                            f'{i.reference_designator} not available for data availability')
+                if len(da_list) > 0:
+                    dadf = pd.concat(da_list)
+                    dadf.loc[:, 'unique_rd'] = dadf.apply(
+                        lambda row: '-'.join([row.reference_designator,
+                                              row.stream_method,
+                                              row.stream_rd]), axis=1)
 
-                dadf = pd.concat(da_list)
-                dadf.loc[:, 'unique_rd'] = dadf.apply(
-                    lambda row: '-'.join([row.reference_designator,
-                                          row.stream_method,
-                                          row.stream_rd]), axis=1)
+                    inst.loc[:, 'unique_rd'] = inst.apply(lambda row: '-'.join([row.reference_designator,
+                                                                                row.stream_method,
+                                                                                row.stream_rd]), axis=1)
+                    name_df = inst[['array_name', 'site_name',
+                                    'infrastructure_name', 'instrument_name',
+                                    'unique_rd']]
 
-                inst.loc[:, 'unique_rd'] = inst.apply(lambda row: '-'.join([row.reference_designator,
-                                                                            row.stream_method,
-                                                                            row.stream_rd]), axis=1)
-                name_df = inst[['array_name', 'site_name',
-                                'infrastructure_name', 'instrument_name',
-                                'unique_rd']]
+                    raw_plotdf = pd.merge(dadf, name_df)
+                    plotdf = raw_plotdf.pivot_table(
+                        index='unique_rd', columns='month', values='percentage',)
 
-                raw_plotdf = pd.merge(dadf, name_df)
-                plotdf = raw_plotdf.pivot_table(
-                    index='unique_rd', columns='month', values='percentage',)
+                    sns.set(style='white')
+                    _, ax = plt.subplots(figsize=(20, 10))
 
-                sns.set(style='white')
-                _, ax = plt.subplots(figsize=(20, 10))
+                    ax.set_title('OOI Data Availability')
 
-                ax.set_title('OOI Data Availability')
+                    sns.heatmap(plotdf, annot=False,
+                                fmt='.2f', linewidths=1,
+                                ax=ax, square=True,
+                                cmap=sns.light_palette('green'),
+                                cbar_kws={
+                                    'orientation': 'horizontal',
+                                    'shrink': 0.7,
+                                    'pad': 0.3,
+                                    'aspect': 30
+                                })
+                    plt.ylabel('Instruments', rotation=0, labelpad=60)
+                    plt.xlabel('Months', labelpad=30)
+                    plt.yticks(rotation=0)
+                    plt.tight_layout()
 
-                sns.heatmap(plotdf, annot=False,
-                            fmt='.2f', linewidths=1,
-                            ax=ax, square=True,
-                            cmap=sns.light_palette('green'),
-                            cbar_kws={
-                                'orientation': 'horizontal',
-                                'shrink': 0.7,
-                                'pad': 0.3,
-                                'aspect': 30
-                            })
-                plt.ylabel('Instruments', rotation=0, labelpad=60)
-                plt.xlabel('Months', labelpad=30)
-                plt.yticks(rotation=0)
-                plt.tight_layout()
-
-                legend = raw_plotdf[
-                    (list(raw_plotdf.columns.values[-5:]) + ['stream_method',
-                                                             'stream_rd'])
-                ].drop_duplicates(subset='unique_rd')
-                legend.loc[:, 'labels'] = legend.apply(lambda row:
-                                                       [row.array_name,
-                                                        row.site_name,
-                                                        row.infrastructure_name,  # noqa
-                                                        row.instrument_name,
-                                                        row.stream_method,
-                                                        row.stream_rd], axis=1)
-                ldct = {}
-                for idx, row in legend.iterrows():
-                    ldct[row.unique_rd] = row.labels
-                return pd.DataFrame.from_dict(ldct)
+                    legend = raw_plotdf[
+                        (list(raw_plotdf.columns.values[-5:]) + ['stream_method',
+                                                                 'stream_rd'])
+                    ].drop_duplicates(subset='unique_rd')
+                    legend.loc[:, 'labels'] = legend.apply(lambda row:
+                                                        [row.array_name,
+                                                            row.site_name,
+                                                            row.infrastructure_name,  # noqa
+                                                            row.instrument_name,
+                                                            row.stream_method,
+                                                            row.stream_rd], axis=1)
+                    ldct = {}
+                    for idx, row in legend.iterrows():
+                        ldct[row.unique_rd] = row.labels
+                    return pd.DataFrame.from_dict(ldct)
+                return None
 
             elif len(inst) > 50:
                 raise Exception(f'You have {len(inst)} unique streams; too many to fetch deployments. Please filter by performing search.')  # noqa
@@ -857,6 +906,32 @@ class OOI(CAVA):
                                session=self._session)
             self._rvocab = rvocab
         return pd.DataFrame(rvocab.json())
+
+    def _get_rawdata_filelist(self):
+        raw_data_url = {
+            'CE04OSPS-PC01B': 'https://rawdata.oceanobservatories.org/files/CE04OSPS/PC01B/ZPLSCB102_10.33.10.143',
+            'CE02SHBP-MJ01C': 'https://rawdata.oceanobservatories.org/files/CE02SHBP/MJ01C/ZPLSCB101_10.33.13.7'
+        }
+        raw_datadf = {}
+        for ref, raw_url in raw_data_url.items():
+            req = requests.get(raw_url)
+            if req.status_code == 200:
+                page = html_parser(req.content)
+            else:
+                page = req.status_code
+
+            if not isinstance(page, int):
+                files = [(datetime.datetime.strptime(a.get('href'), 'OOI-D%Y%m%d-T%H%M%S.raw'), a.get('href')) for a in page.xpath("//a[re:match(@href, '(\w)+\.raw')]",
+                                                                                                                                   namespaces={"re": "http://exslt.org/regular-expressions"})]
+
+                file_df = pd.DataFrame(
+                    files, columns=['datetime', 'filename']).set_index('datetime')
+
+                raw_datadf[ref] = file_df
+
+        self._raw_datadf = raw_datadf
+        self._raw_data_url = raw_data_url
+        return self._raw_datadf, self._raw_data_url
 
     def _get_data_catalog(self):
         """ Get Data Catalog """

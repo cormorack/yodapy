@@ -7,6 +7,8 @@ from __future__ import (division,
 
 import os
 import gc
+import gevent
+import datetime
 import logging
 import requests
 from dateutil import parser
@@ -18,6 +20,15 @@ from urllib3.util.retry import Retry
 
 import xarray as xr
 from yodapy.utils.parser import get_nc_urls
+from yodapy.utils.meta import create_folder
+
+from echopype.convert import ConvertEK60
+import echopype
+
+if echopype.__version__ == '0.1.21':
+    from echopype.model import EchoData
+else:
+    from echopype.model import EchoDataEK60 as EchoData
 
 logger = logging.getLogger(__name__)
 
@@ -227,5 +238,97 @@ def instrument_to_query(ooi_url='', site_rd='',
         payload['email'] = email
 
     return (data_url, payload)
+
+
+def download_raw_file(source_folder, ref, raw):
+    """
+    Args:
+        ref (str): String. Reference to site and platform.
+        raw (Series): Pandas Series. Information containing raw url and filename
+    """
+
+    temp_folder = os.path.join(source_folder, ref)
+    if not os.path.exists(temp_folder):
+        os.mkdir(temp_folder)
+
+    temp_file = os.path.join(temp_folder, raw['filename'])
+    print(f"{datetime.datetime.now().strftime('%H:%M:%S')}  downloading: {os.path.basename(temp_file)}")
+    if os.path.exists(temp_file):
+        print("          ... this file already exists, skipping download.")
+        return temp_file
+    else:
+        r = requests.get(raw['urls'], allow_redirects=True)
+        if r.status_code == 200:
+            with open(temp_file, mode='wb') as rawfile:
+                rawfile.write(r.content)
+            return temp_file
+        else:
+            print(r.status_code)
+            return None
+
+
+def get_processed_ek60(temp_file, clean_up=True):
+    calibrated = temp_file.replace('.raw', '_Sv.nc')
+    calibrated_cleaned = temp_file.replace('.raw', '_Sv_clean.nc')
+    mvbs = temp_file.replace('.raw', '_MVBS.nc')
+
+    data_tmp = ConvertEK60(temp_file)
+    data_tmp.raw2nc()
+
+    data = EchoData(temp_file.replace('.raw', '.nc'))
+
+    # Calibration and echo-integration
+    if os.path.exists(calibrated):
+        os.unlink(calibrated)
+    data.calibrate(save=True)
+
+    # Denoising
+    if os.path.exists(calibrated_cleaned):
+        os.unlink(calibrated_cleaned)
+    data.remove_noise(save=True)
+
+    # Mean Volume Backscatter Strength
+    if os.path.exists(mvbs):
+        os.unlink(mvbs)
+    data.get_MVBS(save=True)
+
+    if os.path.exists(mvbs):
+        if clean_up:
+            print(
+                f"{datetime.datetime.now().strftime('%H:%M:%S')}  cleaning up: {temp_file.replace('.raw', '.nc')}")
+            os.unlink(temp_file.replace('.raw', '.nc'))
+            print(
+                f"{datetime.datetime.now().strftime('%H:%M:%S')}  cleaning up: {temp_file.replace('.raw', '_Sv.nc')}")
+            os.unlink(temp_file.replace('.raw', '_Sv.nc'))
+            print(
+                f"{datetime.datetime.now().strftime('%H:%M:%S')}  cleaning up: {temp_file.replace('.raw', '_Sv_clean.nc')}")
+            os.unlink(temp_file.replace('.raw', '_Sv_clean.nc'))
+        return mvbs
+
+
+def perform_ek60_download(filtered_datadf, source_name='ooi', timeout=3600):
+    raw_files = {}
+    for ref, raw_df in filtered_datadf.items():
+        raw_files[ref] = []
+        source_folder = create_folder(source_name)
+        if os.path.exists(source_folder):
+            jobs = [gevent.spawn(download_raw_file, source_folder, ref, raw)
+                    for idx, raw in raw_df.iterrows()]
+            gevent.joinall(jobs, timeout=timeout)
+            for job in jobs:
+                raw_files[ref].append(job.value)
+    return raw_files
+
+
+def perform_ek60_processing(raw_file_dict, timeout=3600, clean_up=True):
+    mvbs_files = {}
+    for ref, raw_files in raw_file_dict.items():
+        mvbs_files[ref] = []
+        jobs = [gevent.spawn(get_processed_ek60, raw, clean_up)
+                for raw in raw_files]
+        gevent.joinall(jobs, timeout=timeout)
+        for job in jobs:
+            mvbs_files[ref].append(job.value)
+    return mvbs_files
 
 # --- End OOI Data Source Specific connection methods ---
