@@ -1,0 +1,1154 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>yodapy.datasources.ooi.OOI &#8212; yodapy  documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for yodapy.datasources.ooi.OOI</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; OOI Object &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">queue</span> <span class="k">import</span> <span class="n">Queue</span>
+
+<span class="kn">import</span> <span class="nn">gevent</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">lxml.html</span> <span class="k">import</span> <span class="n">fromstring</span> <span class="k">as</span> <span class="n">html_parser</span>
+
+<span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span>
+<span class="kn">import</span> <span class="nn">pytz</span>
+<span class="kn">import</span> <span class="nn">s3fs</span>
+<span class="kn">import</span> <span class="nn">urllib3</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+
+<span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.CAVA</span> <span class="k">import</span> <span class="n">CAVA</span>
+
+<span class="kn">from</span> <span class="nn">yodapy.utils.files</span> <span class="k">import</span> <span class="n">CREDENTIALS_FILE</span>
+<span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.helpers</span> <span class="k">import</span> <span class="n">set_thread</span>
+<span class="kn">from</span> <span class="nn">yodapy.utils.conn</span> <span class="k">import</span> <span class="p">(</span><span class="n">fetch_url</span><span class="p">,</span>
+                               <span class="n">instrument_to_query</span><span class="p">,</span>
+                               <span class="n">fetch_xr</span><span class="p">,</span>
+                               <span class="n">get_download_urls</span><span class="p">,</span>
+                               <span class="n">download_url</span><span class="p">,</span>
+                               <span class="n">perform_ek60_download</span><span class="p">,</span>
+                               <span class="n">perform_ek60_processing</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">yodapy.utils.parser</span> <span class="k">import</span> <span class="p">(</span><span class="n">parse_toc_instruments</span><span class="p">,</span>
+                                 <span class="n">parse_streams_dataframe</span><span class="p">,</span>
+                                 <span class="n">parse_raw_data_catalog</span><span class="p">,</span>
+                                 <span class="n">parse_parameter_streams_dataframe</span><span class="p">,</span>
+                                 <span class="n">parse_global_range_dataframe</span><span class="p">,</span>
+                                 <span class="n">parse_deployments_json</span><span class="p">,</span>
+                                 <span class="n">parse_annotations_json</span><span class="p">,</span>
+                                 <span class="n">get_instrument_list</span><span class="p">,</span>
+                                 <span class="n">unix_time_millis</span><span class="p">,</span>
+                                 <span class="n">get_nc_urls</span><span class="p">)</span>
+
+<span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
+
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+                    <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;(</span><span class="si">%(threadName)-10s</span><span class="s1">) </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">print_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+
+<span class="n">DATA_TEAM_GITHUB_INFRASTRUCTURE</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/ooi-data-review/datateam-portal-backend/master/infrastructure&#39;</span>
+<span class="n">FILE_SYSTEM</span> <span class="o">=</span> <span class="n">s3fs</span><span class="o">.</span><span class="n">S3FileSystem</span><span class="p">(</span><span class="n">anon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">BUCKET_DATA</span> <span class="o">=</span> <span class="s1">&#39;io2data/data&#39;</span>
+
+
+<div class="viewcode-block" id="OOI"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI">[docs]</a><span class="k">class</span> <span class="nc">OOI</span><span class="p">(</span><span class="n">CAVA</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;OOI Object for Ocean Observatories Initiative Data Retrieval.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        ooi_name (str): Username for OOI API Data Access.</span>
+<span class="sd">        ooi_token (str): Token for OOI API Data Access.</span>
+<span class="sd">        source_name (str): Data source name.</span>
+<span class="sd">        regions (pandas.DataFrame): Table of OOI regions.</span>
+<span class="sd">        sites (pandas.DataFrame): Table of OOI sites.</span>
+<span class="sd">        instruments (pandas.DataFrame): Table of available instrument streams.</span>
+<span class="sd">        global_ranges (pandas.DataFrame): Table of global ranges for each instrument streams.</span>
+<span class="sd">        deployments (pandas.DataFrame): Table of deployments for filtered instrument streams.</span>
+<span class="sd">        annotations (pandas.DataFrame): Table of annotations for filtered instrument streams.</span>
+<span class="sd">        start_date (list): List of start dates requested.</span>
+<span class="sd">        end_date (list): List of end dates requested.</span>
+<span class="sd">        last_request (list): List of requested urls and parameters.</span>
+<span class="sd">        last_m2m_urls (list): List of requested M2M urls.</span>
+
+<span class="sd">        cava_arrays (pandas.DataFrame): Cabled array team Arrays vocab table.</span>
+<span class="sd">        cava_sites (pandas.DataFrame): Cabled array team Sites vocab table.</span>
+<span class="sd">        cava_infrastructures (pandas.DataFrame): Cabled array team Infrastructures vocab table.</span>
+<span class="sd">        cava_instruments (pandas.DataFrame): Cabled array team Instruments vocab table.</span>
+<span class="sd">        cava_parameters (pandas.DataFrame): Cabled array team Parameters vocab table.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">ooi_username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">ooi_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">cloud_source</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_source_name</span> <span class="o">=</span> <span class="s1">&#39;OOI&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_date</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_date</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Private global variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_VOCAB</span> <span class="o">=</span> <span class="s1">&#39;https://ooinet.oceanobservatories.org/api/m2m/12586/vocab&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_TOC</span> <span class="o">=</span> <span class="s1">&#39;https://ooinet.oceanobservatories.org/api/m2m/12576/sensor/inv/toc&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_STREAMS</span> <span class="o">=</span> <span class="s1">&#39;https://ooinet.oceanobservatories.org/api/m2m/12575/stream&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_DATA_URL</span> <span class="o">=</span> <span class="s1">&#39;https://ooinet.oceanobservatories.org/api/m2m/12576/sensor/inv&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_ANNOTATIONS</span> <span class="o">=</span> <span class="s1">&#39;https://ooinet.oceanobservatories.org/api/m2m/12580/anno/find&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_DEPLOYMENT_QUERY</span> <span class="o">=</span> <span class="s1">&#39;https://ooinet.oceanobservatories.org/api/m2m/12587/events/deployment/query&#39;</span>
+
+        <span class="c1"># From visualocean</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_VISUALOCEAN_M_STATS</span> <span class="o">=</span> <span class="s1">&#39;https://ooi-visualocean.whoi.edu/instruments/stats-monthly&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_GLOBAL_RANGE</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/ooi-integration/qc-lookup/master/data_qc_global_range_values.csv&#39;</span>
+
+        <span class="c1"># From GitHub</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_PORTAL_REGIONS</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{DATA_TEAM_GITHUB_INFRASTRUCTURE}</span><span class="s1">/regions.csv&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_PORTAL_SITES</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{DATA_TEAM_GITHUB_INFRASTRUCTURE}</span><span class="s1">/sites.csv&#39;</span>
+        <span class="c1"># Not used</span>
+        <span class="c1"># self._OOI_VOCAB = &#39;https://raw.githubusercontent.com/ooi-integration/asset-management/master/vocab/vocab.csv&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regions</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sites</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># User inputs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span> <span class="o">=</span> <span class="n">ooi_username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span> <span class="o">=</span> <span class="n">ooi_token</span>
+
+        <span class="c1"># Private cache variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvocab</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rglobal_range</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rstreams</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rtoc</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datadf</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data_url</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># For bio-acoustic sonar</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_zplsc_data_catalog</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_file_dict</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_q</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_netcdf_urls</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Cloud copy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_s3content</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span> <span class="o">=</span> <span class="n">cloud_source</span>
+        <span class="c1"># ----------- Session Configs ---------------------</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pool_connections</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pool_connections&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pool_maxsize</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pool_maxsize&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_adapter</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">adapters</span><span class="o">.</span><span class="n">HTTPAdapter</span><span class="p">(</span>
+            <span class="n">pool_connections</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_pool_connections</span><span class="p">,</span>
+            <span class="n">pool_maxsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_pool_maxsize</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">mount</span><span class="p">(</span><span class="s1">&#39;https://&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_adapter</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">verify</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># --------------------------------------------------</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_request_urls</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_m2m_urls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_download_list</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_downloaded_netcdfs</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_thread_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_setup</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">regions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the OOI regions &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_regions</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_regions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_OOI_PORTAL_REGIONS</span><span class="p">)</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span>
+                    <span class="s1">&#39;reference_designator&#39;</span><span class="p">:</span> <span class="s1">&#39;array_rd&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;region_name&#39;</span>
+                <span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regions</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the OOI sites &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sites</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_sites</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_OOI_PORTAL_SITES</span><span class="p">)</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span>  <span class="c1"># noqa</span>
+                    <span class="s1">&#39;longitude&#39;</span><span class="p">,</span> <span class="s1">&#39;latitude&#39;</span>
+                <span class="p">])</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span>
+                    <span class="s1">&#39;reference_designator&#39;</span><span class="p">:</span> <span class="s1">&#39;site_rd&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;site_name&#39;</span>
+                <span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sites</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">instruments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">def</span> <span class="nf">threads_alive</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+            <span class="k">return</span> <span class="ow">not</span> <span class="n">t</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">threads_alive</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thread_list</span><span class="p">))):</span>
+            <span class="sd">&quot;&quot;&quot; Returns instruments dataframe &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">get_instrument_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">get_instrument_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;Please wait while we fetch the metadata ...&#39;</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">deployments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return instruments deployments &quot;&quot;&quot;</span>
+        <span class="n">instrument_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">instrument_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">instrument_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">50</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Fetching deployments from {len(instrument_list)} unique instrument streams...&#39;</span>  <span class="c1"># noqa</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+            <span class="n">dflist</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_deployments</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instrument_list</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>  <span class="c1"># noqa</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dflist</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;You have {len(instrument_list)} unique streams; too many to fetch deployments. Please filter by performing search.&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return instruments annotations &quot;&quot;&quot;</span>
+        <span class="n">instrument_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">instrument_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">instrument_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Fetching annotations from {len(instrument_list)} unique instrument streams...&#39;</span>  <span class="c1"># noqa</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+            <span class="n">dflist</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_annotations</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instrument_list</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>  <span class="c1"># noqa</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dflist</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;You have {len(instrument_list)} unique streams; too many to fetch annotations. Please filter by performing search.&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">start_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return requested start date(s) &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_start_date</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_start_date</span>
+        <span class="k">return</span> <span class="s1">&#39;Start date(s) can</span><span class="se">\&#39;</span><span class="s1">t be found.&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">end_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return requested end date(s) &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_end_date</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_end_date</span>
+        <span class="k">return</span> <span class="s1">&#39;End date(s) can</span><span class="se">\&#39;</span><span class="s1">t be found.&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">source_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return data source name &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">last_requests</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return last request url and parameters &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request_urls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_request_urls</span>
+        <span class="k">return</span> <span class="s1">&#39;Data request has not been made.&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">last_m2m_urls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return last request m2m urls &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_m2m_urls</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_m2m_urls</span>
+        <span class="k">return</span> <span class="s1">&#39;Data request has not been made.&#39;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">global_ranges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return global ranges &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_global_ranges</span><span class="p">()</span>
+
+<div class="viewcode-block" id="OOI.view_instruments"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.view_instruments">[docs]</a>    <span class="k">def</span> <span class="nf">view_instruments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        **DEPRECATED.** </span>
+<span class="sd">        Shows the current instruments requested.</span>
+<span class="sd">        Use OOI.instruments attribute instead.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DataFrame: Pandas dataframe of the instruments.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The function view_instruments is deprecated. Please use OOI.instruments attribute instead.&#39;</span><span class="p">,</span>
+                      <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">instruments</span></div>
+
+<div class="viewcode-block" id="OOI.view_regions"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.view_regions">[docs]</a>    <span class="k">def</span> <span class="nf">view_regions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        **DEPRECATED.**</span>
+<span class="sd">        Shows the regions within OOI.</span>
+<span class="sd">        Use OOI.regions attribute instead.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DataFrame: Pandas dataframe of the regions.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The function view_regions is deprecated. Please use OOI.regions attribute instead.&#39;</span><span class="p">,</span>
+                      <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span></div>
+
+<div class="viewcode-block" id="OOI.view_sites"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.view_sites">[docs]</a>    <span class="k">def</span> <span class="nf">view_sites</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        **DEPRECATED.**</span>
+<span class="sd">        Shows the sites within OOI.</span>
+<span class="sd">        Use OOI.sites attribute instead.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DataFrame: Pandas dataframe of the sites.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;The function view_sites is deprecated. Please use OOI.sites attribute instead.&#39;</span><span class="p">,</span>
+                      <span class="ne">DeprecationWarning</span><span class="p">,</span> <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sites</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prints out the representation of the OOI object &quot;&quot;&quot;</span>
+        <span class="n">inst_text</span> <span class="o">=</span> <span class="s1">&#39;Instrument Stream&#39;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">data_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
+                <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;reference_designator&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;stream_method&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;stream_rd&#39;</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_length</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">data_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
+                <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;reference_designator&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;stream_method&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;stream_rd&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">data_length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">inst_text</span> <span class="o">=</span> <span class="n">inst_text</span> <span class="o">+</span> <span class="s1">&#39;s&#39;</span>
+
+        <span class="k">return</span> <span class="n">f</span><span class="s1">&#39;&lt;Data Source: </span><span class="si">{self._source_name}</span><span class="s1"> (</span><span class="si">{data_length}</span><span class="s1"> </span><span class="si">{inst_text}</span><span class="s1">)&gt;&#39;</span>  <span class="c1"># noqa</span>
+
+    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prints the length of the object &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
+                <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;reference_designator&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;stream_method&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;stream_rd&#39;</span><span class="p">]</span>
+            <span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Setup the OOI Instance by fetching data catalog ahead of time &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Setting UFrame credentials.&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_use_existing_credentials</span><span class="p">()</span>
+
+        <span class="c1"># Check if ooinet is available</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;https://ooinet.oceanobservatories.org&#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">threads</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;get-data-catalog&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_catalog</span><span class="p">),</span>
+                           <span class="p">(</span><span class="s1">&#39;get-global-ranges&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_global_ranges</span><span class="p">),</span>
+                           <span class="p">(</span><span class="s1">&#39;get-rawdata-filelist&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_rawdata_filelist</span><span class="p">)]</span>  <span class="c1"># noqa</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+                    <span class="n">ft</span> <span class="o">=</span> <span class="n">set_thread</span><span class="p">(</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_thread_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ft</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="n">f</span><span class="s1">&#39;Server not available, please try again later: </span><span class="si">{req.status_code}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Server not available, please try again later: </span><span class="si">{e}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Retrieve datasets info in the s3 bucket.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_s3content</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span>
+                <span class="n">rd</span><span class="p">)</span> <span class="k">for</span> <span class="n">rd</span> <span class="ow">in</span> <span class="n">FILE_SYSTEM</span><span class="o">.</span><span class="n">ls</span><span class="p">(</span><span class="n">BUCKET_DATA</span><span class="p">)]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OOI.request_data"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.request_data">[docs]</a>    <span class="k">def</span> <span class="nf">request_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">begin_date</span><span class="p">,</span> <span class="n">end_date</span><span class="p">,</span>
+                     <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;netcdf&#39;</span><span class="p">,</span> <span class="n">limit</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Request data for filtered instruments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            begin_date (str): Begin date of desired data in ISO-8601 Format.</span>
+<span class="sd">            end_date (str): End date of desired data in ISO-8601 Format.</span>
+<span class="sd">            data_type (str): Desired data type. Either &#39;netcdf&#39; or &#39;json&#39;.</span>
+<span class="sd">            limit (int, optional): Desired data points. Required for &#39;json&#39; ``data_type``. Max is 20000.</span>
+<span class="sd">            **kwargs: Optional Keyword arguments. \n</span>
+<span class="sd">                **time_check** - set to true (default) to ensure the request times fall within the stream data availability \n</span>
+<span class="sd">                **exec_dpa** - boolean value specifying whether to execute all data product algorithms to return L1/L2 parameters (Default is True) \n</span>
+<span class="sd">                **provenance** - boolean value specifying whether provenance information should be included in the data set (Default is True) \n</span>
+<span class="sd">                **email** - provide email.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            self: Modified OOI Object. Use ``raw()`` to see either data url for netcdf or json result for json.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">=</span> <span class="n">data_type</span>
+        <span class="n">begin_dates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">begin_date</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+        <span class="n">end_dates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">end_date</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>
+
+        <span class="n">data_catalog_copy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+
+        <span class="c1"># Limit the number of request</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_catalog_copy</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Too many instruments to request data for! Max is 6, you have {len(data_catalog_copy)}&#39;</span>  <span class="c1"># noqa</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">begin_dates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">end_dates</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">begin_dates</span> <span class="o">=</span> <span class="n">begin_dates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">end_dates</span> <span class="o">=</span> <span class="n">end_dates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">begin_dates</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">end_dates</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;Please provide the same number of begin and end dates&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s1">&#39;Please provide the same number of begin and end dates&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">begin_dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">begin_dates</span><span class="p">)</span>
+            <span class="n">end_dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">end_dates</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_date</span> <span class="o">=</span> <span class="n">begin_date</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_end_date</span> <span class="o">=</span> <span class="n">end_dates</span>
+
+        <span class="n">request_urls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span><span class="p">:</span>
+            <span class="n">data_catalog_copy</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;user_begin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span>
+                <span class="n">begin_dates</span><span class="p">)</span>
+            <span class="n">data_catalog_copy</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;user_end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">end_dates</span><span class="p">)</span>
+            <span class="n">data_catalog_copy</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;full_rd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_catalog_copy</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;reference_designator&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;stream_method&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;stream_rd&#39;</span><span class="p">]]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">data_catalog_copy</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;rd_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_catalog_copy</span><span class="p">[</span><span class="s1">&#39;full_rd&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">BUCKET_DATA</span><span class="p">,</span> <span class="n">row</span><span class="p">]))</span>
+            <span class="n">request_urls</span> <span class="o">=</span> <span class="n">data_catalog_copy</span><span class="p">[</span><span class="s1">&#39;rd_path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data_catalog_copy</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                <span class="n">tempdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">FILE_SYSTEM</span><span class="o">.</span><span class="n">ls</span><span class="p">(</span>
+                    <span class="n">row</span><span class="p">[</span><span class="s1">&#39;rd_path&#39;</span><span class="p">]),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;uri&#39;</span><span class="p">])</span>
+                <span class="n">tempdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tempdf</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s1">&#39;uri&#39;</span><span class="p">])),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">selected</span> <span class="o">=</span> <span class="n">tempdf</span><span class="p">[(</span><span class="n">tempdf</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;user_begin&#39;</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span>
+                    <span class="n">tempdf</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;user_end&#39;</span><span class="p">])]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_q</span><span class="o">.</span><span class="n">put</span><span class="p">([</span><span class="n">selected</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;user_begin&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;user_end&#39;</span><span class="p">]])</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data_catalog_copy</span><span class="p">[</span><span class="s1">&#39;user_begin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">begin_dates</span>
+            <span class="n">data_catalog_copy</span><span class="p">[</span><span class="s1">&#39;user_end&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">end_dates</span>
+            <span class="c1"># For bio-acoustic sonar only</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_zplsc_data_catalog</span> <span class="o">=</span> <span class="n">data_catalog_copy</span><span class="p">[</span><span class="n">data_catalog_copy</span><span class="o">.</span><span class="n">instrument_name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span>
+                <span class="s1">&#39;bio-acoustic sonar&#39;</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
+            <span class="n">data_catalog_copy</span> <span class="o">=</span> <span class="n">data_catalog_copy</span><span class="p">[</span><span class="o">~</span><span class="n">data_catalog_copy</span><span class="o">.</span><span class="n">instrument_name</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span>
+                <span class="s1">&#39;bio-acoustic sonar&#39;</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_catalog_copy</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">request_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">instrument_to_query</span><span class="p">(</span>
+                    <span class="n">ooi_url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_OOI_DATA_URL</span><span class="p">,</span>
+                    <span class="n">site_rd</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">site_rd</span><span class="p">,</span>
+                    <span class="n">infrastructure_rd</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">infrastructure_rd</span><span class="p">,</span>
+                    <span class="n">instrument_rd</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">instrument_rd</span><span class="p">,</span>
+                    <span class="n">stream_method</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">stream_method</span><span class="p">,</span>
+                    <span class="n">stream_rd</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">stream_rd</span><span class="p">,</span>
+                    <span class="n">begin_ts</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">user_begin</span><span class="p">,</span>
+                    <span class="n">end_ts</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">user_end</span><span class="p">,</span>
+                    <span class="n">stream_start</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">begin_date</span><span class="p">,</span>
+                    <span class="n">stream_end</span><span class="o">=</span><span class="n">row</span><span class="o">.</span><span class="n">end_date</span><span class="p">,</span>
+                    <span class="n">application_type</span><span class="o">=</span><span class="n">data_type</span><span class="p">,</span>
+                    <span class="n">limit</span><span class="o">=</span><span class="n">limit</span><span class="p">,</span>
+                    <span class="o">**</span><span class="n">kwargs</span>
+                <span class="p">)</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data_catalog_copy</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()]</span>
+
+                <span class="n">prepared_requests</span> <span class="o">=</span> <span class="p">[</span><span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+                                                    <span class="n">data_url</span><span class="p">,</span>
+                                                    <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span><span class="p">,</span>
+                                                            <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span><span class="p">),</span>
+                                                    <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span> <span class="k">for</span> <span class="n">data_url</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">request_urls</span><span class="p">]</span>  <span class="c1"># noqa</span>
+
+                <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">prepared_requests</span><span class="p">:</span>
+                    <span class="n">prepped</span> <span class="o">=</span> <span class="n">job</span><span class="o">.</span><span class="n">prepare</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_last_m2m_urls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prepped</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">prepped</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_process_request</span><span class="p">()</span>
+
+        <span class="c1"># block until all tasks are done</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_q</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zplsc_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_zplsc_data_catalog</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_zplsc_data_catalog</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;ref&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zplsc_data_catalog</span><span class="o">.</span><span class="n">reference_designator</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">rd</span><span class="p">:</span> <span class="n">rd</span><span class="p">[:</span><span class="mi">14</span><span class="p">])</span>
+                <span class="n">filtered_datadf</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zplsc_data_catalog</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                    <span class="n">filtered_datadf</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;ref&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datadf</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;ref&#39;</span><span class="p">]</span>
+                                                                   <span class="p">][</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;user_begin&#39;</span><span class="p">]:</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;user_end&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                    <span class="n">filtered_rawdata</span> <span class="o">=</span> <span class="n">filtered_datadf</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;ref&#39;</span><span class="p">]]</span>
+                    <span class="n">filtered_rawdata</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;urls&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filtered_rawdata</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                        <span class="k">lambda</span> <span class="n">f</span><span class="p">:</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_data_url</span><span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;ref&#39;</span><span class="p">]],</span> <span class="n">f</span><span class="p">]))</span>
+
+                <span class="n">raw_file_dict</span> <span class="o">=</span> <span class="n">perform_ek60_download</span><span class="p">(</span><span class="n">filtered_datadf</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_file_dict</span> <span class="o">=</span> <span class="n">raw_file_dict</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">raw_file_dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_request_urls</span> <span class="o">=</span> <span class="n">request_urls</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="OOI.search"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.search">[docs]</a>    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">site</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">node</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">stream_type</span><span class="o">=</span><span class="s1">&#39;Science&#39;</span><span class="p">,</span>
+               <span class="n">stream_method</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">stream</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+               <span class="n">parameter</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Perform a search, and filters data catalog</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            region (str): Region name. If multiple use comma separated.</span>
+<span class="sd">            site (str): Site name. If multiple use comma separated.</span>
+<span class="sd">            node (str): Node name. If multiple use comma separated.</span>
+<span class="sd">            instrument (str): Instrument name. If multiple use comma separated.</span>
+<span class="sd">            stream_type (str): Stream type. Either &#39;Science&#39; or &#39;Engineering&#39;. If multiple use comma separated.</span>
+<span class="sd">            stream_method (str): Stream method. If multiple use comma separated.</span>
+<span class="sd">            stream (str): Stream name. If multiple use comma separated.</span>
+<span class="sd">            parameter (str): Parameter name. If multiple use comma separated.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: Modified OOI Object</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_data_catalog</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span> <span class="o">=</span> <span class="n">current_dcat</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span><span class="p">:</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="p">[</span><span class="n">current_dcat</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;reference_designator&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;stream_method&#39;</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;stream_rd&#39;</span><span class="p">]])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_s3content</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">region</span><span class="p">:</span>
+            <span class="n">region_search</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">region</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>  <span class="c1"># noqa</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="p">[</span><span class="n">current_dcat</span><span class="o">.</span><span class="n">array_name</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">region_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">site_rd</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">region_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">reference_designator</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">region_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)]</span>  <span class="c1"># noqa</span>
+        <span class="k">if</span> <span class="n">site</span><span class="p">:</span>
+            <span class="n">site_search</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">site</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>  <span class="c1"># noqa</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="p">[</span><span class="n">current_dcat</span><span class="o">.</span><span class="n">site_name</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">site_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">site_rd</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">site_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">reference_designator</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">site_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)]</span>  <span class="c1"># noqa</span>
+        <span class="k">if</span> <span class="n">node</span><span class="p">:</span>
+            <span class="n">node_search</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">node</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>  <span class="c1"># noqa</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="p">[</span><span class="n">current_dcat</span><span class="o">.</span><span class="n">infrastructure_name</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">infrastructure_rd</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">reference_designator</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">node_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)]</span>  <span class="c1"># noqa</span>
+        <span class="k">if</span> <span class="n">instrument</span><span class="p">:</span>
+            <span class="n">instrument_search</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">instrument</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>  <span class="c1"># noqa</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="p">[</span><span class="n">current_dcat</span><span class="o">.</span><span class="n">instrument_name</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">instrument_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">instrument_rd</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">instrument_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">reference_designator</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">instrument_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)]</span>  <span class="c1"># noqa</span>
+        <span class="k">if</span> <span class="n">parameter</span><span class="p">:</span>
+            <span class="n">parameter_search</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">parameter</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>  <span class="c1"># noqa</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="p">[</span><span class="n">current_dcat</span><span class="o">.</span><span class="n">display_name</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parameter_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span> <span class="o">|</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">parameter_rd</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parameter_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)]</span>  <span class="c1"># noqa</span>
+        <span class="k">if</span> <span class="n">stream_type</span><span class="p">:</span>
+            <span class="n">stream_type_search</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">stream_type</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>  <span class="c1"># noqa</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="p">[</span><span class="n">current_dcat</span><span class="o">.</span><span class="n">stream_type</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stream_type_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)]</span>  <span class="c1"># noqa</span>
+        <span class="k">if</span> <span class="n">stream_method</span><span class="p">:</span>
+            <span class="n">stream_method_search</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">stream_method</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>  <span class="c1"># noqa</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="p">[</span><span class="n">current_dcat</span><span class="o">.</span><span class="n">stream_method</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stream_method_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)]</span>  <span class="c1"># noqa</span>
+        <span class="k">if</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">stream_search</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">stream</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)))</span>  <span class="c1"># noqa</span>
+            <span class="n">current_dcat</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="p">[</span><span class="n">current_dcat</span><span class="o">.</span><span class="n">stream_rd</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">stream_search</span><span class="p">),</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)]</span>  <span class="c1"># noqa</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span> <span class="o">=</span> <span class="n">current_dcat</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span>
+            <span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;reference_designator&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;stream_method&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;stream_rd&#39;</span><span class="p">]</span>
+        <span class="p">)[[</span><span class="s1">&#39;array_name&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;site_name&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;infrastructure_name&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;instrument_name&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;site_rd&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;infrastructure_rd&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;instrument_rd&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;reference_designator&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;stream_method&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;stream_type&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;stream_rd&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;begin_date&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;end_date&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="OOI.clear"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clears the search filter.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            self: Modified OOI Object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="OOI.raw"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.raw">[docs]</a>    <span class="k">def</span> <span class="nf">raw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the raw result from data request in json format &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span></div>
+
+<div class="viewcode-block" id="OOI.download_netcdfs"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.download_netcdfs">[docs]</a>    <span class="k">def</span> <span class="nf">download_netcdfs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">destination</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">curdir</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3600</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Download netcdf files from the catalog created from data request.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            destination (str, optional): Location to save netcdf file. Default will save in current directory.</span>
+<span class="sd">            timeout (int, optional): Expected download time before timing out in seconds. Defaults to 30min or 3600s.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of exported netcdf.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Expected int; {type(int)} given.&#39;</span><span class="p">)</span>
+
+        <span class="n">download_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_download</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Downloading netcdfs ...&#39;</span><span class="p">)</span>
+        <span class="n">jobs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gevent</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="n">download_url</span><span class="p">,</span>
+                             <span class="n">url</span><span class="p">,</span>
+                             <span class="n">destination</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">download_list</span><span class="p">]</span>
+        <span class="n">gevent</span><span class="o">.</span><span class="n">joinall</span><span class="p">(</span><span class="n">jobs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">timeout</span><span class="p">)</span>
+        <span class="n">finished_netcdfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">job</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">finished_netcdfs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_last_downloaded_netcdfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">destination</span><span class="p">),</span> <span class="n">nc</span><span class="p">)</span> <span class="k">for</span> <span class="n">nc</span> <span class="ow">in</span> <span class="n">finished_netcdfs</span><span class="p">]</span>  <span class="c1"># noqa</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_downloaded_netcdfs</span></div>
+
+<div class="viewcode-block" id="OOI.to_xarray"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.to_xarray">[docs]</a>    <span class="k">def</span> <span class="nf">to_xarray</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve the OOI streams data and export to Xarray Datasets, saving in memory.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: Keyword arguments for xarray open_mfdataset.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: List of xarray datasets</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ref_degs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="p">[</span><span class="s1">&#39;reference_designator&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">dataset_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_type</span> <span class="o">==</span> <span class="s1">&#39;netcdf&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_file_dict</span><span class="p">:</span>
+                    <span class="n">mvbsnc_list</span> <span class="o">=</span> <span class="n">perform_ek60_processing</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw_file_dict</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mvbsnc_list</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">resdf</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_mfdataset</span><span class="p">(</span><span class="n">v</span><span class="p">,</span>
+                                                  <span class="n">concat_dim</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ping_time&#39;</span><span class="p">],</span>
+                                                  <span class="n">combine</span><span class="o">=</span><span class="s1">&#39;nested&#39;</span><span class="p">,</span>
+                                                  <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                        <span class="n">dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">resdf</span><span class="p">)</span>
+                <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_perform_check</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">turls</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_netcdf_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_nc_urls</span><span class="p">(</span><span class="n">turl</span><span class="p">)</span> <span class="k">for</span> <span class="n">turl</span> <span class="ow">in</span> <span class="n">turls</span><span class="p">]</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Acquiring data from opendap urls ...&#39;</span><span class="p">)</span>
+                    <span class="n">jobs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gevent</span><span class="o">.</span><span class="n">spawn</span><span class="p">(</span><span class="n">fetch_xr</span><span class="p">,</span> <span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">ref_degs</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">turls</span><span class="p">]</span>
+                    <span class="n">gevent</span><span class="o">.</span><span class="n">joinall</span><span class="p">(</span><span class="n">jobs</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
+                        <span class="n">dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;</span><span class="si">{self._data_type}</span><span class="s1"> cannot be converted to xarray dataset&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+
+        <span class="k">if</span> <span class="n">dataset_list</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_list</span> <span class="o">=</span> <span class="n">dataset_list</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_list</span></div>
+
+<div class="viewcode-block" id="OOI.check_status"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.check_status">[docs]</a>    <span class="k">def</span> <span class="nf">check_status</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Function for user to manually check the status of the data &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">turls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">filtered_data_urls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;allURLs&#39;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="p">()))</span>
+        <span class="k">for</span> <span class="n">durl</span> <span class="ow">in</span> <span class="n">filtered_data_urls</span><span class="p">:</span>
+            <span class="n">turl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_check_data_status</span><span class="p">(</span><span class="n">durl</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">turl</span><span class="p">:</span>
+                <span class="n">turls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">turl</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">turls</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_data_urls</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">turls</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="OOI.data_availability"><a class="viewcode-back" href="../../../../modules.html#yodapy.datasources.ooi.OOI.OOI.data_availability">[docs]</a>    <span class="k">def</span> <span class="nf">data_availability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots data availability of desired instruments.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            pandas.DataFrame: Instrument Stream legend</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+
+        <span class="n">inst</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">da_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inst</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">instrument_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Bio-acoustic Sonar (Coastal)&#39;</span><span class="p">]:</span>
+                        <span class="n">da_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fetch_monthly_stats</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span>
+                            <span class="n">f</span><span class="s1">&#39;</span><span class="si">{i.reference_designator}</span><span class="s1"> not available for data availability&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">da_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">dadf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">da_list</span><span class="p">)</span>
+                    <span class="n">dadf</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;unique_rd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dadf</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+                        <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">row</span><span class="o">.</span><span class="n">reference_designator</span><span class="p">,</span>
+                                              <span class="n">row</span><span class="o">.</span><span class="n">stream_method</span><span class="p">,</span>
+                                              <span class="n">row</span><span class="o">.</span><span class="n">stream_rd</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                    <span class="n">inst</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;unique_rd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">row</span><span class="o">.</span><span class="n">reference_designator</span><span class="p">,</span>
+                                                                                <span class="n">row</span><span class="o">.</span><span class="n">stream_method</span><span class="p">,</span>
+                                                                                <span class="n">row</span><span class="o">.</span><span class="n">stream_rd</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">name_df</span> <span class="o">=</span> <span class="n">inst</span><span class="p">[[</span><span class="s1">&#39;array_name&#39;</span><span class="p">,</span> <span class="s1">&#39;site_name&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;infrastructure_name&#39;</span><span class="p">,</span> <span class="s1">&#39;instrument_name&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;unique_rd&#39;</span><span class="p">]]</span>
+
+                    <span class="n">raw_plotdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">dadf</span><span class="p">,</span> <span class="n">name_df</span><span class="p">)</span>
+                    <span class="n">plotdf</span> <span class="o">=</span> <span class="n">raw_plotdf</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+                        <span class="n">index</span><span class="o">=</span><span class="s1">&#39;unique_rd&#39;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;month&#39;</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="s1">&#39;percentage&#39;</span><span class="p">,)</span>
+
+                    <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+                    <span class="n">_</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+                    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;OOI Data Availability&#39;</span><span class="p">)</span>
+
+                    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">plotdf</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;.2f&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">square</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                <span class="n">cmap</span><span class="o">=</span><span class="n">sns</span><span class="o">.</span><span class="n">light_palette</span><span class="p">(</span><span class="s1">&#39;green&#39;</span><span class="p">),</span>
+                                <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span>
+                                    <span class="s1">&#39;orientation&#39;</span><span class="p">:</span> <span class="s1">&#39;horizontal&#39;</span><span class="p">,</span>
+                                    <span class="s1">&#39;shrink&#39;</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+                                    <span class="s1">&#39;pad&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+                                    <span class="s1">&#39;aspect&#39;</span><span class="p">:</span> <span class="mi">30</span>
+                                <span class="p">})</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Instruments&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Months&#39;</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+                    <span class="n">legend</span> <span class="o">=</span> <span class="n">raw_plotdf</span><span class="p">[</span>
+                        <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">raw_plotdf</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">:])</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;stream_method&#39;</span><span class="p">,</span>
+                                                                 <span class="s1">&#39;stream_rd&#39;</span><span class="p">])</span>
+                    <span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="s1">&#39;unique_rd&#39;</span><span class="p">)</span>
+                    <span class="n">legend</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">legend</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span>
+                                                        <span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">array_name</span><span class="p">,</span>
+                                                            <span class="n">row</span><span class="o">.</span><span class="n">site_name</span><span class="p">,</span>
+                                                            <span class="n">row</span><span class="o">.</span><span class="n">infrastructure_name</span><span class="p">,</span>  <span class="c1"># noqa</span>
+                                                            <span class="n">row</span><span class="o">.</span><span class="n">instrument_name</span><span class="p">,</span>
+                                                            <span class="n">row</span><span class="o">.</span><span class="n">stream_method</span><span class="p">,</span>
+                                                            <span class="n">row</span><span class="o">.</span><span class="n">stream_rd</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">ldct</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">legend</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+                        <span class="n">ldct</span><span class="p">[</span><span class="n">row</span><span class="o">.</span><span class="n">unique_rd</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="o">.</span><span class="n">labels</span>
+                    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">ldct</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+
+            <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;You have {len(inst)} unique streams; too many to fetch deployments. Please filter by performing search.&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Data catalog is empty.&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;Please find your desired instruments by using .search() method.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="k">def</span> <span class="nf">_perform_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Performing data status check every 10 seconds &quot;&quot;&quot;</span>
+        <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_status</span><span class="p">()</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="k">while</span> <span class="n">turls</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Data request time elapsed: </span><span class="si">{delta.seconds}</span><span class="s1">s&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Data request time elapsed: </span><span class="si">{delta.seconds}</span><span class="s1">s&#39;</span><span class="p">)</span>
+            <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_status</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">turls</span>
+
+    <span class="k">def</span> <span class="nf">_prepare_download</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prepare netcdf download by parsing through the resulting raw urls &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">itertools</span>
+        <span class="n">download_urls</span> <span class="o">=</span> <span class="p">[</span><span class="n">rurl</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">rurl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw</span><span class="p">()]</span>
+        <span class="n">download_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">durl</span> <span class="ow">in</span> <span class="n">download_urls</span><span class="p">:</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">durl</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span>
+            <span class="n">nc_urls</span> <span class="o">=</span> <span class="n">get_download_urls</span><span class="p">(</span><span class="n">durl</span><span class="p">)</span>
+            <span class="n">download_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+                            <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;cal_&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">x</span><span class="p">),</span> <span class="n">nc_urls</span><span class="p">))</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_last_download_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">download_list</span><span class="p">))</span>  <span class="c1"># noqa</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_last_download_list</span>
+
+    <span class="k">def</span> <span class="nf">_check_data_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Check if data is ready or not by looking for status.txt&quot;&quot;&quot;</span>
+        <span class="n">urls</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;thredds_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="s1">&#39;status_url&#39;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;allURLs&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="n">check_complete</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">urls</span><span class="p">[</span><span class="s1">&#39;status_url&#39;</span><span class="p">],</span> <span class="s1">&#39;status.txt&#39;</span><span class="p">])</span>
+
+        <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">check_complete</span><span class="p">)</span>
+        <span class="n">status_code</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span>
+        <span class="k">if</span> <span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Your data (</span><span class="si">{urls[&quot;status_url&quot;]}</span><span class="s1">) is still compiling... Please wait.&#39;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Request (</span><span class="si">{urls[&quot;status_url&quot;]}</span><span class="s1">) completed.&#39;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
+        <span class="k">return</span> <span class="n">urls</span><span class="p">[</span><span class="s1">&#39;thredds_url&#39;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_process_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Sets up thread workers, currently set to 5 &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="s1">&#39;process-request&#39;</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_threader</span><span class="p">)</span>
+            <span class="c1"># this ensures the thread will die when the main thread dies</span>
+            <span class="c1"># can set t.daemon to False if you want it to keep running</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_perform_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Function that perform task from queue &quot;&quot;&quot;</span>
+        <span class="c1"># when this exits, the print_lock is released</span>
+        <span class="k">with</span> <span class="n">print_lock</span><span class="p">:</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">prepped_request</span><span class="o">=</span><span class="n">arg</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">():</span>
+                <span class="n">jsonres</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+                <span class="k">if</span> <span class="s1">&#39;status_code&#39;</span> <span class="ow">in</span> <span class="n">jsonres</span><span class="p">:</span>
+                    <span class="n">jsonres</span><span class="p">[</span><span class="s1">&#39;request_url&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">url</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jsonres</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_perform_cloud_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Function that perform task from queue &quot;&quot;&quot;</span>
+        <span class="c1"># when this exits, the print_lock is released</span>
+        <span class="k">with</span> <span class="n">print_lock</span><span class="p">:</span>
+            <span class="n">selected</span><span class="p">,</span> <span class="n">start_dt</span><span class="p">,</span> <span class="n">end_dt</span> <span class="o">=</span> <span class="n">arg</span>
+            <span class="n">total_ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">merge</span><span class="p">([</span><span class="n">xr</span><span class="o">.</span><span class="n">open_zarr</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="n">s3fs</span><span class="o">.</span><span class="n">S3Map</span><span class="p">(</span>
+                <span class="n">sel</span><span class="o">.</span><span class="n">uri</span><span class="p">,</span> <span class="n">s3</span><span class="o">=</span><span class="n">FILE_SYSTEM</span><span class="p">))</span> <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">sel</span> <span class="ow">in</span> <span class="n">selected</span><span class="o">.</span><span class="n">iterrows</span><span class="p">()])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">total_ds</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">total_ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">start_dt</span><span class="p">,</span> <span class="n">end_dt</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{selected.iloc[0].uri}</span><span class="s2"> dates </span><span class="si">{start_dt}</span><span class="s2"> to </span><span class="si">{end_dt}</span><span class="s2"> is empty!&quot;</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_threader</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get job from the front of queue and pass to function &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">nextq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cloud_source</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_perform_cloud_request</span><span class="p">(</span><span class="n">nextq</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_perform_request</span><span class="p">(</span><span class="n">nextq</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_q</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_instruments_catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get instruments catalog &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rtoc</span><span class="p">:</span>
+            <span class="n">rtoc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rtoc</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rtoc</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_TOC</span><span class="p">,</span>
+                                              <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span><span class="p">,</span>
+                                                    <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span><span class="p">))</span><span class="o">.</span><span class="n">prepare</span><span class="p">(),</span>
+                             <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rtoc</span> <span class="o">=</span> <span class="n">rtoc</span>
+
+        <span class="n">toc_json</span> <span class="o">=</span> <span class="n">rtoc</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">instruments_json</span> <span class="o">=</span> <span class="n">toc_json</span><span class="p">[</span><span class="s1">&#39;instruments&#39;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">parse_toc_instruments</span><span class="p">(</span><span class="n">instruments_json</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_vocab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get vocabulary &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvocab</span><span class="p">:</span>
+            <span class="n">rvocab</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvocab</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rvocab</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+                                                <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_VOCAB</span><span class="p">,</span>
+                                                <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span><span class="p">,</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span><span class="p">))</span><span class="o">.</span><span class="n">prepare</span><span class="p">(),</span>
+                               <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvocab</span> <span class="o">=</span> <span class="n">rvocab</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rvocab</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">_get_rawdata_filelist</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">raw_data_url</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;CE04OSPS-PC01B&#39;</span><span class="p">:</span> <span class="s1">&#39;https://rawdata.oceanobservatories.org/files/CE04OSPS/PC01B/ZPLSCB102_10.33.10.143&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;CE02SHBP-MJ01C&#39;</span><span class="p">:</span> <span class="s1">&#39;https://rawdata.oceanobservatories.org/files/CE02SHBP/MJ01C/ZPLSCB101_10.33.13.7&#39;</span>
+        <span class="p">}</span>
+        <span class="n">raw_datadf</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">ref</span><span class="p">,</span> <span class="n">raw_url</span> <span class="ow">in</span> <span class="n">raw_data_url</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">raw_url</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="n">page</span> <span class="o">=</span> <span class="n">html_parser</span><span class="p">(</span><span class="n">req</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">page</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+                <span class="n">files</span> <span class="o">=</span> <span class="p">[(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;href&#39;</span><span class="p">),</span> <span class="s1">&#39;OOI-D%Y%m</span><span class="si">%d</span><span class="s1">-T%H%M%S.raw&#39;</span><span class="p">),</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;href&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">xpath</span><span class="p">(</span><span class="s2">&quot;//a[re:match(@href, &#39;(\w)+\.raw&#39;)]&quot;</span><span class="p">,</span>
+                                                                                                                                   <span class="n">namespaces</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;re&quot;</span><span class="p">:</span> <span class="s2">&quot;http://exslt.org/regular-expressions&quot;</span><span class="p">})]</span>
+
+                <span class="n">file_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+                    <span class="n">files</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;datetime&#39;</span><span class="p">,</span> <span class="s1">&#39;filename&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;datetime&#39;</span><span class="p">)</span>
+
+                <span class="n">raw_datadf</span><span class="p">[</span><span class="n">ref</span><span class="p">]</span> <span class="o">=</span> <span class="n">file_df</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datadf</span> <span class="o">=</span> <span class="n">raw_datadf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data_url</span> <span class="o">=</span> <span class="n">raw_data_url</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_datadf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_data_url</span>
+
+    <span class="k">def</span> <span class="nf">_get_data_catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get Data Catalog &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">instruments_catalog</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_instruments_catalog</span><span class="p">()</span>
+            <span class="n">vocabdf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_vocab</span><span class="p">()</span>
+            <span class="n">streams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_streams</span><span class="p">()</span>
+            <span class="n">parameter_streamdf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_parameter_streams</span><span class="p">()</span>
+
+            <span class="n">raw_data_catalog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                <span class="n">instruments_catalog</span><span class="p">,</span> <span class="n">vocabdf</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;reference_designator&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;refdes&#39;</span><span class="p">)</span>
+            <span class="n">raw_data_catalog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+                <span class="n">raw_data_catalog</span><span class="p">,</span> <span class="n">streams</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;stream&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;stream_rd&#39;</span><span class="p">)</span>
+
+            <span class="n">allcat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">raw_data_catalog</span><span class="p">,</span> <span class="n">parameter_streamdf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span> <span class="o">=</span> <span class="n">parse_raw_data_catalog</span><span class="p">(</span><span class="n">allcat</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span>
+
+    <span class="k">def</span> <span class="nf">_get_global_ranges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get global ranges in OOI &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rglobal_range</span><span class="p">:</span>
+            <span class="n">rglobal_range</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rglobal_range</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rglobal_range</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_GLOBAL_RANGE</span><span class="p">)</span><span class="o">.</span><span class="n">prepare</span><span class="p">(),</span>
+                                      <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rglobal_range</span> <span class="o">=</span> <span class="n">rglobal_range</span>
+        <span class="n">global_ranges</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">StringIO</span><span class="p">(</span><span class="n">rglobal_range</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">parse_global_range_dataframe</span><span class="p">(</span><span class="n">global_ranges</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get OOI Streams &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstreams</span><span class="p">:</span>
+            <span class="n">rstreams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstreams</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rstreams</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_STREAMS</span><span class="p">,</span>
+                                                  <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span><span class="p">))</span><span class="o">.</span><span class="n">prepare</span><span class="p">(),</span>
+                                 <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rstreams</span> <span class="o">=</span> <span class="n">rstreams</span>
+        <span class="n">streamsdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">rstreams</span><span class="o">.</span><span class="n">json</span><span class="p">())</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">parse_streams_dataframe</span><span class="p">(</span><span class="n">streamsdf</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_deployments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get deployment of the inst pandas Series object &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;refdes&#39;</span><span class="p">:</span> <span class="n">inst</span><span class="o">.</span><span class="n">reference_designator</span>
+        <span class="p">}</span>
+        <span class="n">rdeployments</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_DEPLOYMENT_QUERY</span><span class="p">,</span>  <span class="c1"># noqa</span>
+                                                  <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span><span class="p">),</span>
+                                                  <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">prepare</span><span class="p">(),</span>
+                                 <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rdeployments</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parse_deployments_json</span><span class="p">(</span><span class="n">rdeployments</span><span class="o">.</span><span class="n">json</span><span class="p">(),</span> <span class="n">inst</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_get_annotations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get annotations of the inst pandas Series object &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;beginDT&#39;</span><span class="p">:</span> <span class="n">unix_time_millis</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">begin_date</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">pytz</span><span class="o">.</span><span class="n">UTC</span><span class="p">)),</span>  <span class="c1"># noqa</span>
+            <span class="s1">&#39;endDT&#39;</span><span class="p">:</span> <span class="n">unix_time_millis</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">end_date</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">tzinfo</span><span class="o">=</span><span class="n">pytz</span><span class="o">.</span><span class="n">UTC</span><span class="p">)),</span>  <span class="c1"># noqa</span>
+            <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="n">inst</span><span class="o">.</span><span class="n">stream_method</span><span class="p">,</span>
+            <span class="s1">&#39;refdes&#39;</span><span class="p">:</span> <span class="n">inst</span><span class="o">.</span><span class="n">reference_designator</span><span class="p">,</span>
+            <span class="s1">&#39;stream&#39;</span><span class="p">:</span> <span class="n">inst</span><span class="o">.</span><span class="n">stream_rd</span>
+        <span class="p">}</span>
+        <span class="n">rannotations</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_ANNOTATIONS</span><span class="p">,</span>
+                                                  <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span><span class="p">),</span>
+                                                  <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span><span class="o">.</span><span class="n">prepare</span><span class="p">(),</span>
+                                 <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rannotations</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parse_annotations_json</span><span class="p">(</span><span class="n">rannotations</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_get_parameter_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get OOI Parameter Streams &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstreams</span><span class="p">:</span>
+            <span class="n">rstreams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rstreams</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">rstreams</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_M2M_STREAMS</span><span class="p">,</span>
+                                                  <span class="n">auth</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span><span class="p">,</span>
+                                                        <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span><span class="p">))</span><span class="o">.</span><span class="n">prepare</span><span class="p">(),</span>
+                                 <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rstreams</span> <span class="o">=</span> <span class="n">rstreams</span>
+
+        <span class="n">streamsdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">rstreams</span><span class="o">.</span><span class="n">json</span><span class="p">())</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">parse_parameter_streams_dataframe</span><span class="p">(</span><span class="n">streamsdf</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_fetch_monthly_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inst</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Fetched monthly stats for instrument object &quot;&quot;&quot;</span>
+        <span class="n">rmstats</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self._OOI_VISUALOCEAN_M_STATS}</span><span class="s1">/</span><span class="si">{inst.reference_designator}</span><span class="s1">.json&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">prepare</span><span class="p">(),</span>  <span class="c1"># noqa</span>
+                            <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">)</span>
+        <span class="n">mstatsdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rmstats</span><span class="o">.</span><span class="n">json</span><span class="p">())</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">mstatsdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;percentage&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mstatsdf</span><span class="o">.</span><span class="n">percentage</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">)</span>
+        <span class="n">mstatsdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;reference_designator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">reference_designator</span>
+        <span class="k">return</span> <span class="n">mstatsdf</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span>
+            <span class="s1">&#39;stream&#39;</span><span class="p">:</span> <span class="s1">&#39;stream_rd&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;method&#39;</span><span class="p">:</span> <span class="s1">&#39;stream_method&#39;</span>
+        <span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_use_existing_credentials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">CREDENTIALS_FILE</span><span class="p">):</span>
+            <span class="kn">import</span> <span class="nn">json</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CREDENTIALS_FILE</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">creds</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)[</span><span class="s1">&#39;ooi&#39;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ooi_username</span> <span class="o">=</span> <span class="n">creds</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ooi_token</span> <span class="o">=</span> <span class="n">creds</span><span class="p">[</span><span class="s1">&#39;api_key&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s1">&#39;Please authenticate by using yodapy.utils.creds.set_credentials_file&#39;</span><span class="p">)</span>  <span class="c1"># noqa</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">yodapy</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">Developer Interface</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Landung Setiawan.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
