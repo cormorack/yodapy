@@ -50,7 +50,8 @@ class TestOOIDataSource:
         self.site = 'axial base shallow profiler'
         self.node = 'shallow profiler'
         self.instrument = 'CTD'
-        self.start_date, self.end_date = create_start_end()
+        self.start_date = '2019-08-05'
+        self.end_date = '2019-08-05T00:30'
         # self.end_date_ooi = (datetime.datetime.now() - datetime.timedelta(
         #     days=self.date_lookback - self.date_diff + 1)).strftime("%Y-%m-%d")
         self._data_urls = [{'requestUUID': '609c7970-8065-46fa-9fd3-0975c97a1f28',
@@ -85,7 +86,8 @@ class TestOOIDataSource:
         assert len(self.search_results) == 1
 
     def test_instruments(self):
-        while type(self.OOI.instruments) == type(None):
+        inst = None
+        while isinstance(inst, type(None)):
             inst = self.OOI.instruments
 
         assert isinstance(inst, pd.DataFrame)
@@ -110,33 +112,23 @@ class TestOOIDataSource:
         # assert isinstance(self.search_results._get_cloud_thredds_url(
         #     self.search_results._filtered_instruments.iloc[0]), str)
 
-    @patch('builtins.input', side_effect=['yes', 'yes'])
-    def test_to_xarray(self, input):
-        data_request = None
-        while not isinstance(data_request, OOI):
-            try:
-                data_request = self.search_results.request_data(
-                    begin_date=self.start_date,
-                    end_date=self.end_date,
-                    data_type='netcdf'
-                )
-            except:  # noqa
-                self.start_date, self.end_date = create_start_end()
-                continue
+    def test_to_xarray(self):
+        data_request = self.search_results.request_data(
+            begin_date=self.start_date,
+            end_date=self.end_date,
+            data_type='netcdf'
+        )
         # data_request_cloud = self.search_results_cloud.request_data(begin_date=self.start_date,
         #                                                             end_date=self.end_date_ooi,
         #                                                             data_type='netcdf')
         dataset_list = data_request.to_xarray()
         # dataset_list_cloud = data_request_cloud.to_xarray()
-
-        download_nc_dataset_list = data_request.download_netcdfs()
         # download_nc_dataset_cloud_list = data_request_cloud.download_ncfiles()
 
         # assert len(dataset_list[0]['conductivity'].values) == len(
         #     dataset_list_cloud[0]['conductivity'].values)
         # np.testing.assert_array_equal(
         #     dataset_list[0]['conductivity'].values, dataset_list_cloud[0]['conductivity'].values)
-        assert isinstance(download_nc_dataset_list, list)
         # assert isinstance(download_nc_dataset_cloud_list, list)
         assert isinstance(dataset_list, list)
         assert len(dataset_list) > 0
@@ -145,23 +137,27 @@ class TestOOIDataSource:
         assert all(isinstance(data, xr.Dataset) for data in dataset_list)
         # assert all(isinstance(data, xr.Dataset) for data in dataset_list_cloud)
 
-    def test_midnight_check(self):
-        midnight = get_midnight(self.dt_val)
+    def test_download_netcdfs(self):
+        data_request = self.search_results.request_data(
+            begin_date=self.start_date,
+            end_date=self.end_date,
+            data_type='netcdf'
+        )
 
-        assert isinstance(midnight, datetime.datetime)
+        turls = data_request._perform_check()
+
+        if len(turls) > 0:
+            download_nc_dataset_list = data_request.download_netcdfs()
+
+        assert isinstance(download_nc_dataset_list, list)
+        assert all(os.path.exists(p) for p in download_nc_dataset_list) is True
 
     def test_request_data(self):
-        data_request = None
-        while not isinstance(data_request, OOI):
-            try:
-                data_request = self.search_results.request_data(
-                    begin_date=self.start_date,
-                    end_date=self.end_date,
-                    data_type='netcdf'
-                )
-            except:  # noqa
-                self.start_date, self.end_date = create_start_end()
-                continue
+        data_request = self.search_results.request_data(
+            begin_date=self.start_date,
+            end_date=self.end_date,
+            data_type='netcdf'
+        )
 
         assert isinstance(data_request._request_urls, list)
         assert data_request._request_urls
