@@ -73,7 +73,7 @@ def test_get_nc_urls():
         "-RS03AXPS-PC03A-4A-CTDPFA303-streamed-ctdpf_"
         "optode_sample/deployment0004_RS03AXPS-PC03A-4A"
         "-CTDPFA303-streamed-ctdpf_optode_sample_20180101T000000."
-        "596438-20180131T235959.815406.nc"
+        "596438-20180131T235959.815406.nc#fillmismatch"
     ]
 
     assert isinstance(dataset_urls, list)
