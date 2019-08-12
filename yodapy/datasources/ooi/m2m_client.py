@@ -6,51 +6,54 @@ Client module for the M2M Interface, originally developed by John Kerfoot.
 https://github.com/kerfoot/uframe-m2m
 """
 
-from __future__ import (division,
-                        absolute_import,
-                        print_function,
-                        unicode_literals)
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
-import os
-import logging
-import requests
-import re
-from dateutil import parser
-from dateutil.relativedelta import relativedelta as tdelta
 import datetime
-import pytz
-
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import logging
+import os
+import re
 
 import pandas as pd
 import progressbar
+import pytz
+import requests
+
+from dateutil import parser
+from dateutil.relativedelta import relativedelta as tdelta
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from yodapy.utils.files import CREDENTIALS_FILE
-from yodapy.utils.parser import (get_value, 
-                                 split_val_list)
+from yodapy.utils.parser import get_value, split_val_list
+
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
 
 HTTP_STATUS_OK = 200
 HTTP_STATUS_NOT_FOUND = 404
 
-DEPLOYMENT_STATUS_TYPES = ['all',
-                           'active',
-                           'inactive']
+DEPLOYMENT_STATUS_TYPES = ["all", "active", "inactive"]
 
-_valid_relativedeltatypes = ('years',
-                             'months',
-                             'weeks',
-                             'days',
-                             'hours',
-                             'minutes',
-                             'seconds')
+_valid_relativedeltatypes = (
+    "years",
+    "months",
+    "weeks",
+    "days",
+    "hours",
+    "minutes",
+    "seconds",
+)
 
 
 class M2MClient:
-
-    def __init__(self, timeout=120, api_username=None,
-                 api_token=None, **kwargs):
+    def __init__(
+        self, timeout=120, api_username=None, api_token=None, **kwargs
+    ):
         """Lightweight OOI UFrame client for making GET requests to the UFrame API via
         the machine to machine (m2m) API or directly to UFrame.
 
@@ -64,17 +67,19 @@ class M2MClient:
             api_token: API password from the UI user settings
         """
 
-        self._base_url = 'https://ooinet.oceanobservatories.org'
+        self._base_url = "https://ooinet.oceanobservatories.org"
         self._m2m_base_url = None
         self._timeout = timeout
         self._api_username = api_username
         self._api_token = api_token
         self._session = requests.Session()
-        self._pool_connections = kwargs.get('pool_connections', 100)
-        self._pool_maxsize = kwargs.get('pool_maxsize', 100)
-        a = requests.adapters.HTTPAdapter(pool_connections=self._pool_connections,  # noqa
-                                          pool_maxsize=self._pool_maxsize)
-        self._session.mount('https://', a)
+        self._pool_connections = kwargs.get("pool_connections", 100)
+        self._pool_maxsize = kwargs.get("pool_maxsize", 100)
+        a = requests.adapters.HTTPAdapter(
+            pool_connections=self._pool_connections,  # noqa
+            pool_maxsize=self._pool_maxsize,
+        )
+        self._session.mount("https://", a)
         self._is_m2m = True
         self._instruments = []
         self._subsites = []
@@ -94,7 +99,8 @@ class M2MClient:
 
         # Set the base url
         self._logger.info(
-            'Creating M2mClient instance ({:s})'.format(self._base_url))
+            "Creating M2mClient instance ({:s})".format(self._base_url)
+        )
         self.base_url = self._base_url
 
     @property
@@ -113,37 +119,39 @@ class M2MClient:
     def base_url(self, url):
         widgets = [
             progressbar.Percentage(),
-            ' ', progressbar.Bar(),
-            progressbar.FormatLabel('Time elapsed: %(elapsed)s')
+            " ",
+            progressbar.Bar(),
+            progressbar.FormatLabel("Time elapsed: %(elapsed)s"),
         ]
         bar = progressbar.ProgressBar(widgets=widgets, max_value=5).start()
 
-        self._logger.debug('Setting UFrame credentials.')
+        self._logger.debug("Setting UFrame credentials.")
         if not self._api_username or not self._api_token:
             self._use_existing_credentials()
         bar += 1
 
-        self._logger.debug('Setting UFrame base url: {:s}'.format(url))
+        self._logger.debug("Setting UFrame base url: {:s}".format(url))
 
         if not url:
-            self._logger.warning('No UFrame base_url specified')
+            self._logger.warning("No UFrame base_url specified")
             return
-        if not url.startswith('http'):
-            self._logger.warning('base_url must start with http')
+        if not url.startswith("http"):
+            self._logger.warning("base_url must start with http")
             return
 
-        self._base_url = url.strip('/')
-        self._m2m_base_url = '{:s}/api/m2m'.format(self._base_url)
+        self._base_url = url.strip("/")
+        self._m2m_base_url = "{:s}/api/m2m".format(self._base_url)
 
-        self._logger.debug('UFrame base_url: {:s}'.format(self.base_url))
+        self._logger.debug("UFrame base_url: {:s}".format(self.base_url))
         self._logger.debug(
-            'UFrame m2m base_url: {:s}'.format(self.m2m_base_url))
+            "UFrame m2m base_url: {:s}".format(self.m2m_base_url)
+        )
         bar += 1
 
         # Try to get the sensor invetory subsite list to see if we're able to connect
         self.fetch_subsites()
         if self._status_code != HTTP_STATUS_OK:
-            self._logger.critical('Unable to connect to UFrame instance')
+            self._logger.critical("Unable to connect to UFrame instance")
             self._base_url = None
             # self._valid_uframe = False
             return
@@ -165,7 +173,7 @@ class M2MClient:
         """Configures the instance to send requests either via the m2m <Default>
         API or directly to the UFrame API"""
         if type(status) != bool:
-            self._logger.error('status must be True or False')
+            self._logger.error("status must be True or False")
             return
 
         self._is_m2m = status
@@ -181,7 +189,7 @@ class M2MClient:
     @timeout.setter
     def timeout(self, seconds):
         if type(seconds) != int:
-            self._logger.warning('timeout must be an integer')
+            self._logger.warning("timeout must be an integer")
             return
 
         self._timeout = seconds
@@ -216,9 +224,9 @@ class M2MClient:
 
     def fetch_table_of_contents(self):
 
-        toc = self.build_and_send_request(12576, 'sensor/inv/toc')
+        toc = self.build_and_send_request(12576, "sensor/inv/toc")
         if self.last_status_code != HTTP_STATUS_OK:
-            self._logger.error('Failed to create instruments list')
+            self._logger.error("Failed to create instruments list")
             return
 
         # Save the table of contents if we fetch it
@@ -229,13 +237,12 @@ class M2MClient:
     def fetch_subsites(self):
         """Fetch all registered subsites from the /sensor/inv API endpoint"""
 
-        self._logger.debug('Fetching sensor subsites')
+        self._logger.debug("Fetching sensor subsites")
 
         port = 12576
-        end_point = '/sensor/inv'
+        end_point = "/sensor/inv"
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -249,13 +256,12 @@ class M2MClient:
         """Fetch all registered subsites from the /events/deployment/inv API
         endpoint"""
 
-        self._logger.debug('Fetching deployment subsites')
+        self._logger.debug("Fetching deployment subsites")
 
         port = 12587
-        end_point = '/events/deployment/inv'
+        end_point = "/events/deployment/inv"
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -268,24 +274,23 @@ class M2MClient:
     def fetch_instrument_streams(self, ref_des):
         """Fetch all streams produced by the fully-qualified reference designator"""
 
-        self._logger.debug('Fetching {:s} streams'.format(ref_des))
+        self._logger.debug("Fetching {:s} streams".format(ref_des))
 
-        r_tokens = ref_des.split('-')
+        r_tokens = ref_des.split("-")
         if len(r_tokens) != 4:
             self._logger.error(
-                'Incomplete reference designator specified {:s}'.format(
-                    ref_des))
+                "Incomplete reference designator specified {:s}".format(
+                    ref_des
+                )
+            )
             return None
 
         port = 12576
-        end_point = '/sensor/inv/{:s}/{:s}/{:s}-{:s}/metadata/times'.format(
-            r_tokens[0],
-            r_tokens[1],
-            r_tokens[2],
-            r_tokens[3])
+        end_point = "/sensor/inv/{:s}/{:s}/{:s}-{:s}/metadata/times".format(
+            r_tokens[0], r_tokens[1], r_tokens[2], r_tokens[3]
+        )
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -300,19 +305,17 @@ class M2MClient:
         reference designator"""
 
         self._logger.debug(
-            '{:s} - Fetching instrument parameters'.format(ref_des))
+            "{:s} - Fetching instrument parameters".format(ref_des)
+        )
 
-        r_tokens = ref_des.split('-')
+        r_tokens = ref_des.split("-")
 
         port = 12576
-        end_point = '/sensor/inv/{:s}/{:s}/{:s}-{:s}/metadata/parameters'.format(
-            r_tokens[0],
-            r_tokens[1],
-            r_tokens[2],
-            r_tokens[3])
+        end_point = "/sensor/inv/{:s}/{:s}/{:s}-{:s}/metadata/parameters".format(
+            r_tokens[0], r_tokens[1], r_tokens[2], r_tokens[3]
+        )
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -327,24 +330,24 @@ class M2MClient:
         reference designator"""
 
         self._logger.debug(
-            '{:s} - Fetching instrument metadata'.format(ref_des))
+            "{:s} - Fetching instrument metadata".format(ref_des)
+        )
 
-        r_tokens = ref_des.split('-')
+        r_tokens = ref_des.split("-")
         if len(r_tokens) != 4:
             self._logger.error(
-                'Incomplete reference designator specified {:s}'.format(
-                    ref_des))
+                "Incomplete reference designator specified {:s}".format(
+                    ref_des
+                )
+            )
             return None
 
         port = 12576
-        end_point = '/sensor/inv/{:s}/{:s}/{:s}-{:s}/metadata'.format(
-            r_tokens[0],
-            r_tokens[1],
-            r_tokens[2],
-            r_tokens[3])
+        end_point = "/sensor/inv/{:s}/{:s}/{:s}-{:s}/metadata".format(
+            r_tokens[0], r_tokens[1], r_tokens[2], r_tokens[3]
+        )
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -357,13 +360,12 @@ class M2MClient:
     def fetch_instrument_deployments(self, ref_des):
         """Fetch all deployment events for the fully or partially qualified reference designator"""
 
-        self._logger.debug('Fetching {:s} deployments'.format(ref_des))
+        self._logger.debug("Fetching {:s} deployments".format(ref_des))
 
         port = 12587
-        end_point = '/events/deployment/query?refdes={:s}'.format(ref_des)
+        end_point = "/events/deployment/query?refdes={:s}".format(ref_des)
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -383,13 +385,12 @@ class M2MClient:
         Returns:
 
         """
-        self._logger.debug(f'{stream_name} - Fetching stream metadata')
+        self._logger.debug(f"{stream_name} - Fetching stream metadata")
 
         port = 12575
-        end_point = f'/stream/byname/{stream_name}'
+        end_point = f"/stream/byname/{stream_name}"
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -399,36 +400,39 @@ class M2MClient:
         else:
             return None
 
-    def filter_deployments_by_status(self, deployments, status='all'):
+    def filter_deployments_by_status(self, deployments, status="all"):
 
         if status not in DEPLOYMENT_STATUS_TYPES:
             self._logger.error(
-                'Invalid deployment status type specified {:s}'.format(status))
+                "Invalid deployment status type specified {:s}".format(status)
+            )
             return
 
         filtered_deployments = []
 
-        if status == 'all':
+        if status == "all":
             return deployments
 
         now = datetime.datetime.utcnow().replace(tzinfo=pytz.UTC)
-        if status == 'active':
+        if status == "active":
             for d in deployments:
-                if not d['eventStopTime']:
+                if not d["eventStopTime"]:
                     filtered_deployments.append(d)
                     continue
 
                 dt1 = datetime.datetime.utcfromtimestamp(
-                    d['eventStopTime'] / 1000).replace(tzinfo=pytz.UTC)
+                    d["eventStopTime"] / 1000
+                ).replace(tzinfo=pytz.UTC)
                 if dt1 >= now:
                     filtered_deployments.append(d)
         else:
             for d in deployments:
-                if not d['eventStopTime']:
+                if not d["eventStopTime"]:
                     continue
 
                 dt1 = datetime.datetime.utcfromtimestamp(
-                    d['eventStopTime'] / 1000).replace(tzinfo=pytz.UTC)
+                    d["eventStopTime"] / 1000
+                ).replace(tzinfo=pytz.UTC)
                 if dt1 < now:
                     filtered_deployments.append(d)
 
@@ -437,13 +441,12 @@ class M2MClient:
     def fetch_parameters(self):
         """Fetch all parameters from the /parameter API endpoint"""
 
-        self._logger.debug('Fetching all OOI Parameters')
+        self._logger.debug("Fetching all OOI Parameters")
 
         port = 12575
-        end_point = '/parameter'
+        end_point = "/parameter"
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -456,13 +459,12 @@ class M2MClient:
     def fetch_streams(self):
         """Fetch all streams from the /stream API endpoint"""
 
-        self._logger.debug('Fetching all OOI Streams')
+        self._logger.debug("Fetching all OOI Streams")
 
         port = 12575
-        end_point = '/stream'
+        end_point = "/stream"
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -475,13 +477,12 @@ class M2MClient:
     def fetch_vocabs(self):
         """Fetch all vocabs from the /vocab API endpoint"""
 
-        self._logger.debug('Fetching all OOI Vocab')
+        self._logger.debug("Fetching all OOI Vocab")
 
         port = 12586
-        end_point = '/vocab'
+        end_point = "/vocab"
 
-        request_url = self.build_request(port,
-                                         end_point)
+        request_url = self.build_request(port, end_point)
 
         # Send the request
         self.send_request(request_url)
@@ -501,19 +502,25 @@ class M2MClient:
         """Return the list of instruments that produce the specified full or partial
         stream name"""
 
-        return [i for i in self._instrument_streams if
-                i['stream'].find(stream) > -1]
+        return [
+            i
+            for i in self._instrument_streams
+            if i["stream"].find(stream) > -1
+        ]
 
     def _use_existing_credentials(self):
 
         if os.path.exists(CREDENTIALS_FILE):
             import json
+
             with open(CREDENTIALS_FILE) as f:
-                creds = json.load(f)['ooi']
-                self._api_username = creds['username']
-                self._api_token = creds['api_key']
+                creds = json.load(f)["ooi"]
+                self._api_username = creds["username"]
+                self._api_token = creds["api_key"]
         else:
-            self._logger.error('Please authenticate by using yodapy.utils.set_ooi_credentials_file!')  # noqa
+            self._logger.error(
+                "Please authenticate by using yodapy.utils.set_ooi_credentials_file!"
+            )  # noqa
 
     def build_and_send_request(self, port, end_point):
         """Build and send the request url for the specified port and end_point"""
@@ -532,11 +539,13 @@ class M2MClient:
         """Build the request url for the specified port and end_point"""
 
         if self._is_m2m:
-            url = '{:s}/{:0.0f}/{:s}'.format(self._m2m_base_url, port,
-                                             end_point.strip('/'))
+            url = "{:s}/{:0.0f}/{:s}".format(
+                self._m2m_base_url, port, end_point.strip("/")
+            )
         else:
-            url = '{:s}:{:0.0f}/{:s}'.format(self._base_url, port,
-                                             end_point.strip('/'))
+            url = "{:s}:{:0.0f}/{:s}".format(
+                self._base_url, port, end_point.strip("/")
+            )
 
         return url
 
@@ -558,38 +567,46 @@ class M2MClient:
 
         if self.is_m2m and not url.startswith(self.m2m_base_url):
             self._logger.error(
-                'URL does not point to the m2m base url ({:s})'.format(
-                    self.m2m_base_url))
+                "URL does not point to the m2m base url ({:s})".format(
+                    self.m2m_base_url
+                )
+            )
             return
         elif not url.startswith(self.base_url):
             self._logger.error(
-                'URL does not point to the base url ({:s})'.format(
-                    self.base_url))
+                "URL does not point to the base url ({:s})".format(
+                    self.base_url
+                )
+            )
             return
 
         try:
-            self._logger.debug('Sending GET request: {:s}'.format(url))
+            self._logger.debug("Sending GET request: {:s}".format(url))
             if self._api_username and self._api_token:
-                r = self._session.get(url,
-                                      auth=(self._api_username,
-                                            self._api_token),
-                                      timeout=self._timeout,
-                                      verify=False)
+                r = self._session.get(
+                    url,
+                    auth=(self._api_username, self._api_token),
+                    timeout=self._timeout,
+                    verify=False,
+                )
             else:
                 r = self._session.get(url, timeout=self._timeout, verify=False)
         except (
-        requests.exceptions.ReadTimeout, requests.exceptions.MissingSchema,
-        requests.exceptions.ConnectionError) as e:
-            self._logger.error('{:} - {:s}'.format(e, url))
+            requests.exceptions.ReadTimeout,
+            requests.exceptions.MissingSchema,
+            requests.exceptions.ConnectionError,
+        ) as e:
+            self._logger.error("{:} - {:s}".format(e, url))
             return
 
         self._status_code = r.status_code
         self._reason = r.reason
         if self._status_code == HTTP_STATUS_NOT_FOUND:
-            self._logger.warning('{:s}: {:s}'.format(r.reason, url))
+            self._logger.warning("{:s}: {:s}".format(r.reason, url))
         elif self._status_code != HTTP_STATUS_OK:
             self._logger.error(
-                'Request failed {:s} ({:s})'.format(url, r.reason))
+                "Request failed {:s} ({:s})".format(url, r.reason)
+            )
 
         self._response_headers = r.headers
 
@@ -598,76 +615,132 @@ class M2MClient:
             # Return the json response if there was one
             return self._response
         except ValueError as e:
-            self._logger.warning('{:} ({:s})'.format(e, url))
+            self._logger.warning("{:} ({:s})".format(e, url))
             self._response = r.text
             return None
 
     def _create_parameter_index(self):
         # Get parameters
-        self._logger.debug('--- Get Parameters ---')
+        self._logger.debug("--- Get Parameters ---")
         all_params = self.fetch_parameters()
         paramdf = pd.DataFrame.from_records(all_params)
-        paramdf.loc[:, 'data_product_type'] = paramdf.apply(lambda row: get_value(row['data_product_type']), axis=1)
-        productsdf = paramdf[['id', 'name', 'display_name', 'data_product_type']]
-        productsdf.columns = ['parameterid', 'parameter_name', 'display_name', 'data_product_type']
+        paramdf.loc[:, "data_product_type"] = paramdf.apply(
+            lambda row: get_value(row["data_product_type"]), axis=1
+        )
+        productsdf = paramdf[
+            ["id", "name", "display_name", "data_product_type"]
+        ]
+        productsdf.columns = [
+            "parameterid",
+            "parameter_name",
+            "display_name",
+            "data_product_type",
+        ]
 
         # Get streams
-        self._logger.debug('--- Get Streams ---')
+        self._logger.debug("--- Get Streams ---")
         all_stream = self.fetch_streams()
         streamsdf = pd.DataFrame.from_records(all_stream)
-        streamsdf.loc[:, 'stream_type'] = streamsdf.apply(lambda row: get_value(row['stream_type']), axis=1)
-        streamsdf.loc[:, 'stream_content'] = streamsdf.apply(lambda row: get_value(row['stream_content']), axis=1)
-        inststreams = streamsdf[['id', 'name', 'parameters', 'stream_content', 'time_parameter', 'stream_type']]
+        streamsdf.loc[:, "stream_type"] = streamsdf.apply(
+            lambda row: get_value(row["stream_type"]), axis=1
+        )
+        streamsdf.loc[:, "stream_content"] = streamsdf.apply(
+            lambda row: get_value(row["stream_content"]), axis=1
+        )
+        inststreams = streamsdf[
+            [
+                "id",
+                "name",
+                "parameters",
+                "stream_content",
+                "time_parameter",
+                "stream_type",
+            ]
+        ]
 
         # -- Expand parameters in science streams
         science_streams = inststreams.copy()
-        science_streams.loc[:, 'parameterid'] = science_streams.parameters.apply(lambda params: [p['id'] for p in params])
-        science_streams = split_val_list(science_streams, 'parameterid')
-        science_streams.drop('parameters', axis=1, inplace=True)
-        science_streams.columns = ['streamid', 'name', 'stream_content', 'time_parameter', 'stream_type', 'parameterid']
+        science_streams.loc[
+            :, "parameterid"
+        ] = science_streams.parameters.apply(
+            lambda params: [p["id"] for p in params]
+        )
+        science_streams = split_val_list(science_streams, "parameterid")
+        science_streams.drop("parameters", axis=1, inplace=True)
+        science_streams.columns = [
+            "streamid",
+            "name",
+            "stream_content",
+            "time_parameter",
+            "stream_type",
+            "parameterid",
+        ]
 
-        joined_params = pd.merge(productsdf, science_streams, on='parameterid')
+        joined_params = pd.merge(productsdf, science_streams, on="parameterid")
 
         # Get instruments
-        self._logger.debug('--- Get Instruments ---')
+        self._logger.debug("--- Get Instruments ---")
         sensor_inv = self._toc
-        instrumentsdf = pd.DataFrame.from_records(sensor_inv['instruments'])
-        instdf = split_val_list(instrumentsdf, 'streams')
-        instdf.loc[:, 'stream_name'] = instdf.apply(lambda row: row['streams']['stream'], axis=1)
-        instdf.loc[:, 'stream_method'] = instdf.apply(lambda row: row['streams']['method'], axis=1)
-        instdf.drop('streams', axis=1, inplace=True)
-        all_instruments = pd.merge(joined_params, instdf, left_on='name', right_on='stream_name').reset_index(drop='index')
+        instrumentsdf = pd.DataFrame.from_records(sensor_inv["instruments"])
+        instdf = split_val_list(instrumentsdf, "streams")
+        instdf.loc[:, "stream_name"] = instdf.apply(
+            lambda row: row["streams"]["stream"], axis=1
+        )
+        instdf.loc[:, "stream_method"] = instdf.apply(
+            lambda row: row["streams"]["method"], axis=1
+        )
+        instdf.drop("streams", axis=1, inplace=True)
+        all_instruments = pd.merge(
+            joined_params, instdf, left_on="name", right_on="stream_name"
+        ).reset_index(drop="index")
 
         # Get Instrument metada
-        self._logger.info('--- Get Instrument Metadata ---')
+        self._logger.info("--- Get Instrument Metadata ---")
         vocabs = self.fetch_vocabs()
         vocabdf = pd.DataFrame.from_records(vocabs)
-        all_vocabs = vocabdf[['vocabId', 'instrument', 'manufacturer', 'refdes', 'tocL1', 'tocL2', 'tocL3']]
-        es_index = pd.merge(all_instruments, all_vocabs, left_on='reference_designator', right_on='refdes')
-        es_index.drop(['name', 'refdes'], axis=1, inplace=True)
-        column_array = ['parameter_id',
-                        'parameter_name',
-                        'parameter_display_name',
-                        'parameter_product_type',
-                        'stream_id',
-                        'stream_content',
-                        'time_parameter',
-                        'stream_type',
-                        'instrument_code',
-                        'node_code',
-                        'site_code',
-                        'instrument_refdes',
-                        'stream_name',
-                        'stream_method',
-                        'vocabid',
-                        'instrument_name',
-                        'instrument_manufacturer',
-                        'array_name',
-                        'site_name',
-                        'node_name']
+        all_vocabs = vocabdf[
+            [
+                "vocabId",
+                "instrument",
+                "manufacturer",
+                "refdes",
+                "tocL1",
+                "tocL2",
+                "tocL3",
+            ]
+        ]
+        es_index = pd.merge(
+            all_instruments,
+            all_vocabs,
+            left_on="reference_designator",
+            right_on="refdes",
+        )
+        es_index.drop(["name", "refdes"], axis=1, inplace=True)
+        column_array = [
+            "parameter_id",
+            "parameter_name",
+            "parameter_display_name",
+            "parameter_product_type",
+            "stream_id",
+            "stream_content",
+            "time_parameter",
+            "stream_type",
+            "instrument_code",
+            "node_code",
+            "site_code",
+            "instrument_refdes",
+            "stream_name",
+            "stream_method",
+            "vocabid",
+            "instrument_name",
+            "instrument_manufacturer",
+            "array_name",
+            "site_name",
+            "node_name",
+        ]
         es_index.columns = column_array
-        self._logger.debug('--- Exporting es_index ---')
-        self._parameter_index = es_index.reset_index(drop='index')
+        self._logger.debug("--- Exporting es_index ---")
+        self._parameter_index = es_index.reset_index(drop="index")
 
     def _create_instrument_list(self):
 
@@ -675,34 +748,49 @@ class M2MClient:
         self._streams = []
         self._instrument_streams = []
 
-        self._logger.debug('Fetching UFrame table of contents')
+        self._logger.debug("Fetching UFrame table of contents")
         if not self._toc:
             self.fetch_table_of_contents()
 
-        self._logger.debug('Creating instruments list')
+        self._logger.debug("Creating instruments list")
 
         # Create an array of dicts with the instrument name and the stream it produces
         self._instrument_streams = [
-            {'instrument': i['reference_designator'], 'stream': s['stream']}
-            for i in self._toc['instruments'] for s in i['streams']]
+            {"instrument": i["reference_designator"], "stream": s["stream"]}
+            for i in self._toc["instruments"]
+            for s in i["streams"]
+        ]
 
         # Create the unique list of streams
-        streams = list(set([i['stream'] for i in self._instrument_streams]))
+        streams = list(set([i["stream"] for i in self._instrument_streams]))
         streams.sort()
         self._streams = streams
 
         # Create the unique list of instruments
         instruments = list(
-            set([i['instrument'] for i in self._instrument_streams]))
+            set([i["instrument"] for i in self._instrument_streams])
+        )
         instruments.sort()
         self._instruments = instruments
 
-    def instrument_to_query(self, ref_des, user, stream=None, telemetry=None,
-                            time_delta_type=None,
-                            time_delta_value=None, begin_ts=None, end_ts=None,
-                            time_check=True, exec_dpa=True,
-                            application_type='netcdf', provenance=True,
-                            limit=-1, annotations=False, email=None):
+    def instrument_to_query(
+        self,
+        ref_des,
+        user,
+        stream=None,
+        telemetry=None,
+        time_delta_type=None,
+        time_delta_value=None,
+        begin_ts=None,
+        end_ts=None,
+        time_check=True,
+        exec_dpa=True,
+        application_type="netcdf",
+        provenance=True,
+        limit=-1,
+        annotations=False,
+        email=None,
+    ):
         """Return the list of request urls that conform to the UFrame API for the specified
         fully or paritally-qualified reference_designator.  Request urls are formatted
         for either the UFrame m2m API (default) or direct UFrame access, depending
@@ -732,14 +820,14 @@ class M2MClient:
         urls = []
 
         application_type = application_type.lower()
-        if application_type not in ['netcdf', 'json']:
-            text = f'Invalid application type/format: {application_type}'
+        if application_type not in ["netcdf", "json"]:
+            text = f"Invalid application type/format: {application_type}"
             self._logger.error(text)
             raise ValueError(text)
 
-        if application_type == 'json':
+        if application_type == "json":
             if limit <= 0:
-                text = 'Please specify data points limit!'
+                text = "Please specify data points limit!"
                 self._logger.error(text)
                 raise ValueError(text)
 
@@ -749,7 +837,9 @@ class M2MClient:
 
         if time_delta_type and time_delta_value:
             if time_delta_type not in _valid_relativedeltatypes:
-                text = f'Invalid datetutil.relativedelta type: {time_delta_type}'
+                text = (
+                    f"Invalid datetutil.relativedelta type: {time_delta_type}"
+                )
                 self._logger.error(text)
                 raise ValueError(text)
 
@@ -759,14 +849,14 @@ class M2MClient:
             try:
                 begin_dt = parser.parse(begin_ts).replace(tzinfo=pytz.UTC)
             except ValueError as e:
-                self._logger.error(f'Invalid begin_dt: {begin_ts} ({e})')
+                self._logger.error(f"Invalid begin_dt: {begin_ts} ({e})")
                 return urls
 
         if end_ts:
             try:
                 end_dt = parser.parse(end_ts).replace(tzinfo=pytz.UTC)
             except ValueError as e:
-                self._logger.error(f'Invalid end_dt: {end_ts} ({e})')
+                self._logger.error(f"Invalid end_dt: {end_ts} ({e})")
                 return urls
 
         for instrument in instruments:
@@ -775,59 +865,70 @@ class M2MClient:
             instrument_streams = self.fetch_instrument_streams(instrument)
             if not instrument_streams:
                 self._logger.info(
-                    'No streams found for {:s}'.format(instrument))
+                    "No streams found for {:s}".format(instrument)
+                )
                 continue
 
             if stream:
-                stream_names = [s['stream'] for s in instrument_streams]
+                stream_names = [s["stream"] for s in instrument_streams]
                 if stream not in stream_names:
                     self._logger.warning(
-                        'Invalid stream: {:s}-{:s}'.format(instrument, stream))
+                        "Invalid stream: {:s}-{:s}".format(instrument, stream)
+                    )
                     continue
 
-                instrument_streams = [s for s in instrument_streams if
-                                      s['stream'] == stream]
+                instrument_streams = [
+                    s for s in instrument_streams if s["stream"] == stream
+                ]
             #                i = stream_names.index(stream)
             #                instrument_streams = [instrument_streams[i]]
 
             if not instrument_streams:
-                self._logger.info('{:s}: No streams found'.format(instrument))
+                self._logger.info("{:s}: No streams found".format(instrument))
                 continue
 
             # Break the reference designator up
-            r_tokens = instrument.split('-')
+            r_tokens = instrument.split("-")
 
             for instrument_stream in instrument_streams:
 
-                if telemetry and not instrument_stream['method'].startswith(
-                        telemetry):
+                if telemetry and not instrument_stream["method"].startswith(
+                    telemetry
+                ):
                     continue
 
                 # Figure out what we're doing for time
                 try:
-                    stream_dt0 = parser.parse(instrument_stream['beginTime'])
+                    stream_dt0 = parser.parse(instrument_stream["beginTime"])
                 except ValueError:
                     self._logger.error(
-                        '{:s}-{:s}: Invalid beginTime ({:s})'.format(
-                            instrument, instrument_stream['stream'],
-                            instrument_stream['beginTime']))
+                        "{:s}-{:s}: Invalid beginTime ({:s})".format(
+                            instrument,
+                            instrument_stream["stream"],
+                            instrument_stream["beginTime"],
+                        )
+                    )
                     continue
 
                 try:
-                    stream_dt1 = parser.parse(instrument_stream['endTime'])
+                    stream_dt1 = parser.parse(instrument_stream["endTime"])
                     # Add 1 second to stream end time to account for milliseconds
                     stream_dt1 = stream_dt1 + tdelta(seconds=1)
                 except ValueError:
                     self._logger.error(
-                        '{:s}-{:s}: Invalid endTime ({:s})'.format(
-                            'instrument', instrument_stream['stream'],
-                            instrument_stream['endTime']))
+                        "{:s}-{:s}: Invalid endTime ({:s})".format(
+                            "instrument",
+                            instrument_stream["stream"],
+                            instrument_stream["endTime"],
+                        )
+                    )
                     continue
 
                 if time_delta_type and time_delta_value:
                     dt1 = stream_dt1
                     dt0 = dt1 - tdelta(
-                        **dict({time_delta_type: time_delta_value}))
+                        **dict({time_delta_type: time_delta_value})
+                    )
                 else:
                     if begin_dt:
                         dt0 = begin_dt
@@ -841,21 +942,23 @@ class M2MClient:
 
                 # Format the endDT and beginDT values for the query
                 try:
-                    ts1 = dt1.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+                    ts1 = dt1.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
                 except ValueError as e:
-                    self._logger.error('{:s}-{:s}: {:s}'.format(instrument,
-                                                                instrument_stream[
-                                                                    'stream'],
-                                                                e.message))
+                    self._logger.error(
+                        "{:s}-{:s}: {:s}".format(
+                            instrument, instrument_stream["stream"], e.message
+                        )
+                    )
                     continue
 
                 try:
-                    ts0 = dt0.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+                    ts0 = dt0.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
                 except ValueError as e:
-                    self._logger.error('{:s}-{:s}: {:s}'.format(instrument,
-                                                                instrument_stream[
-                                                                    'stream'],
-                                                                e.message))
+                    self._logger.error(
+                        "{:s}-{:s}: {:s}".format(
+                            instrument, instrument_stream["stream"], e.message
+                        )
+                    )
                     continue
 
                 # Make sure the specified or calculated start and end time are within
@@ -863,54 +966,66 @@ class M2MClient:
                 if time_check:
                     if dt1 > stream_dt1:
                         self._logger.warning(
-                            '{:s}-{:s} time check - End time exceeds stream endTime'.format(
-                                ref_des, instrument_stream['stream']))
+                            "{:s}-{:s} time check - End time exceeds stream endTime".format(
+                                ref_des, instrument_stream["stream"]
+                            )
+                        )
                         self._logger.warning(
-                            '{:s}-{:s} time check - Setting request end time to stream endTime'.format(
-                                ref_des, instrument_stream['stream']))
-                        ts1 = instrument_stream['endTime']
+                            "{:s}-{:s} time check - Setting request end time to stream endTime".format(
+                                ref_des, instrument_stream["stream"]
+                            )
+                        )
+                        ts1 = instrument_stream["endTime"]
 
                     if dt0 < stream_dt0:
                         self._logger.warning(
-                            '{:s}-{:s} time check - Start time is earlier than stream beginTime'.format(
-                                ref_des, instrument_stream['stream']))
+                            "{:s}-{:s} time check - Start time is earlier than stream beginTime".format(
+                                ref_des, instrument_stream["stream"]
+                            )
+                        )
                         self._logger.warning(
-                            '{:s}-{:s} time check -  Setting request begin time to stream beginTime'.format(
-                                ref_des, instrument_stream['stream']))
-                        ts0 = instrument_stream['beginTime']
+                            "{:s}-{:s} time check -  Setting request begin time to stream beginTime".format(
+                                ref_des, instrument_stream["stream"]
+                            )
+                        )
+                        ts0 = instrument_stream["beginTime"]
 
                     # Check that ts0 < ts1
                     dt0 = parser.parse(ts0)
                     dt1 = parser.parse(ts1)
                     if dt0 >= dt1:
                         self._logger.warning(
-                            '{:s}-{:s} - Invalid time range specified'.format(
-                                instrument, instrument_stream['stream']))
+                            "{:s}-{:s} - Invalid time range specified".format(
+                                instrument, instrument_stream["stream"]
+                            )
+                        )
                         continue
 
                 # Create the url
-                end_point = 'sensor/inv/{:s}/{:s}/{:s}-{:s}/{:s}/{:s}?beginDT={:s}&endDT={:s}&format=application/{:s}&limit={:d}&execDPA={:s}&include_provenance={:s}&user={:s}'.format(
+                end_point = "sensor/inv/{:s}/{:s}/{:s}-{:s}/{:s}/{:s}?beginDT={:s}&endDT={:s}&format=application/{:s}&limit={:d}&execDPA={:s}&include_provenance={:s}&user={:s}".format(
                     r_tokens[0],
                     r_tokens[1],
                     r_tokens[2],
                     r_tokens[3],
-                    instrument_stream['method'],
-                    instrument_stream['stream'],
+                    instrument_stream["method"],
+                    instrument_stream["stream"],
                     ts0,
                     ts1,
                     application_type,
                     limit,
                     str(exec_dpa).lower(),
                     str(provenance).lower(),
-                    user)
+                    user,
+                )
 
                 if email:
-                    end_point = '{:s}&email={:s}'.format(end_point, email)
+                    end_point = "{:s}&email={:s}".format(end_point, email)
 
                 urls.append(self.build_request(12576, end_point))
 
         return urls
 
     def __repr__(self):
-        return '<UFrameClient(url={:s}, m2m={:s})>'.format(self.base_url,
-                                                           str(self._is_m2m))
+        return "<UFrameClient(url={:s}, m2m={:s})>".format(
+            self.base_url, str(self._is_m2m)
+        )
