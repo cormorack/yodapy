@@ -1,5 +1,7 @@
 alabaster
 autopep8
+black
+check-manifest
 coveralls
 flake8
 flake8-builtins
@@ -11,6 +13,7 @@ flake8-quotes
 ipykernel
 ipython
 ipywidgets
+isort
 nbsphinx
 pytest
 pytest-cov
