@@ -1,14 +1,18 @@
-from __future__ import (absolute_import,
-                        division,
-                        print_function,
-                        unicode_literals)
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
 import os
+
 from codecs import open
+
+from setuptools import find_packages, setup
 
 import versioneer
 
-from setuptools import find_packages, setup
 
 here = os.path.abspath(os.path.dirname(__file__))
 

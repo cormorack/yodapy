@@ -1,29 +1,33 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import (division,
-                        absolute_import,
-                        print_function,
-                        unicode_literals)
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
-import os
-import gc
-import gevent
 import datetime
+import gc
 import logging
-import requests
-from dateutil import parser
-from lxml import html
+import os
 import re
+
+import echopype
+import gevent
 import pytz
+import requests
+import xarray as xr
+
+from dateutil import parser
+from echopype.convert import ConvertEK60
+from lxml import html
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-import xarray as xr
-from yodapy.utils.parser import get_nc_urls
 from yodapy.utils.meta import create_folder
+from yodapy.utils.parser import get_nc_urls
 
-from echopype.convert import ConvertEK60
-import echopype
 
 if echopype.__version__ == '0.1.21':
     from echopype.model import EchoData

@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import (division,
-                        absolute_import,
-                        print_function,
-                        unicode_literals)
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
 import os
 import warnings
 
-from yodapy.utils.files import (YODAPY_DIR, check_file_permissions)
+from yodapy.utils.files import YODAPY_DIR, check_file_permissions
 
 
 def create_folder(source_name):

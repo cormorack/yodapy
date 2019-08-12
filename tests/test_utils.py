@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import (division,
-                        absolute_import,
-                        print_function,
-                        unicode_literals)
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
-import json
 import datetime
+import json
 import os
 import shutil
 import warnings
@@ -16,13 +18,8 @@ import pytz
 
 from requests import Session
 
-from yodapy.utils import (conn,
-                          meta,
-                          parser,
-                          set_credentials_file)
-from yodapy.utils.files import (HOME_DIR,
-                                YODAPY_DIR,
-                                CREDENTIALS_FILE)
+from yodapy.utils import conn, meta, parser, set_credentials_file
+from yodapy.utils.files import CREDENTIALS_FILE, HOME_DIR, YODAPY_DIR
 
 
 def test_request_retry_session():

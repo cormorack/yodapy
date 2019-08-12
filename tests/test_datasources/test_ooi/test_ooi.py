@@ -1,17 +1,20 @@
-from __future__ import (absolute_import,
-                        division,
-                        print_function,
-                        unicode_literals)
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
 import datetime
-
 import os
-import pandas as pd
-import pytest
 import random
 import unittest.mock as mock
-import numpy as np
 
+from unittest.mock import patch
+
+import numpy as np
+import pandas as pd
+import pytest
 import xarray as xr
 
 from yodapy.datasources import OOI
@@ -19,7 +22,6 @@ from yodapy.datasources.ooi import helpers
 from yodapy.datasources.ooi.m2m_client import M2MClient
 from yodapy.utils.creds import set_credentials_file
 from yodapy.utils.parser import get_midnight, get_nc_urls
-from unittest.mock import patch
 
 
 def create_start_end():

@@ -6,30 +6,34 @@ Client module for the M2M Interface, originally developed by John Kerfoot.
 https://github.com/kerfoot/uframe-m2m
 """
 
-from __future__ import (division,
-                        absolute_import,
-                        print_function,
-                        unicode_literals)
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
-import os
-import logging
-import requests
-import re
-from dateutil import parser
-from dateutil.relativedelta import relativedelta as tdelta
 import datetime
-import pytz
-
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+import logging
+import os
+import re
 
 import pandas as pd
 import progressbar
+import pytz
+import requests
+
+from dateutil import parser
+from dateutil.relativedelta import relativedelta as tdelta
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 from yodapy.utils.files import CREDENTIALS_FILE
-from yodapy.utils.parser import (get_value, 
-                                 split_val_list)
+from yodapy.utils.parser import get_value, split_val_list
+
+
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+
 
 HTTP_STATUS_OK = 200
 HTTP_STATUS_NOT_FOUND = 404

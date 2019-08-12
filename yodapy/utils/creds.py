@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import (division,
-                        absolute_import,
-                        print_function,
-                        unicode_literals)
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
+import json
 import os
 import warnings
-import json
 
-from yodapy.utils.files import (CREDENTIALS_FILE,
-                                FILE_CONTENT,
-                                check_file_permissions)
+from yodapy.utils.files import (
+    CREDENTIALS_FILE,
+    FILE_CONTENT,
+    check_file_permissions,
+)
 
 
 def set_credentials_file(data_source, username, token):

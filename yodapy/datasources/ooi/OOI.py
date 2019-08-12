@@ -1,51 +1,52 @@
 """ OOI Object """
 
-import os
 import datetime
-from io import StringIO
+import logging
+import os
 import re
+import threading
+import time
+import warnings
+
+from io import StringIO
 from queue import Queue
 
 import gevent
-
 import pandas as pd
-
-import requests
-
-import threading
-import time
-import logging
-import warnings
-
-from lxml.html import fromstring as html_parser
-
-from dateutil import parser
 import pytz
+import requests
 import s3fs
 import urllib3
 import xarray as xr
 
-from yodapy.datasources.ooi.CAVA import CAVA
+from dateutil import parser
+from lxml.html import fromstring as html_parser
 
-from yodapy.utils.files import CREDENTIALS_FILE
+from yodapy.datasources.ooi.CAVA import CAVA
 from yodapy.datasources.ooi.helpers import set_thread
-from yodapy.utils.conn import (fetch_url,
-                               instrument_to_query,
-                               fetch_xr,
-                               get_download_urls,
-                               download_url,
-                               perform_ek60_download,
-                               perform_ek60_processing)
-from yodapy.utils.parser import (parse_toc_instruments,
-                                 parse_streams_dataframe,
-                                 parse_raw_data_catalog,
-                                 parse_parameter_streams_dataframe,
-                                 parse_global_range_dataframe,
-                                 parse_deployments_json,
-                                 parse_annotations_json,
-                                 get_instrument_list,
-                                 unix_time_millis,
-                                 get_nc_urls)
+from yodapy.utils.conn import (
+    download_url,
+    fetch_url,
+    fetch_xr,
+    get_download_urls,
+    instrument_to_query,
+    perform_ek60_download,
+    perform_ek60_processing,
+)
+from yodapy.utils.files import CREDENTIALS_FILE
+from yodapy.utils.parser import (
+    get_instrument_list,
+    get_nc_urls,
+    parse_annotations_json,
+    parse_deployments_json,
+    parse_global_range_dataframe,
+    parse_parameter_streams_dataframe,
+    parse_raw_data_catalog,
+    parse_streams_dataframe,
+    parse_toc_instruments,
+    unix_time_millis,
+)
+
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 

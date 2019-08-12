@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import (division,
-                        absolute_import,
-                        print_function,
-                        unicode_literals)
+from __future__ import (
+    absolute_import,
+    division,
+    print_function,
+    unicode_literals,
+)
 
 import datetime
+import logging
 
 import netCDF4 as nc
-import pandas as pd
 import numpy as np
-from dateutil import parser
-
-from siphon.catalog import TDSCatalog
+import pandas as pd
 import pytz
 
-import logging
+from dateutil import parser
+from siphon.catalog import TDSCatalog
+
 
 logger = logging.getLogger(__name__)
 

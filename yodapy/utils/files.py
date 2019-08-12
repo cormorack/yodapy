@@ -2,6 +2,7 @@
 
 import os
 
+
 # file structure
 HOME_DIR = os.path.expanduser('~')
 YODAPY_DIR = os.path.join(HOME_DIR, ".yodapy")

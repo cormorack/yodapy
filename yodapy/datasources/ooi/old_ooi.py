@@ -1,24 +1,21 @@
 # -*- coding: utf-8 -*-
 
-import gevent
-import grequests
-
+import datetime
 import logging
 import os
 import re
-
 import time
-import datetime
-import pytz
 
+import gevent
+import grequests
 import pandas as pd
-
+import pytz
 import requests
 
 from yodapy.datasources.datasource import DataSource
-from yodapy.datasources.ooi.helpers import fetch_xr, download_all_nc
-from yodapy.utils.parser import get_nc_urls
+from yodapy.datasources.ooi.helpers import download_all_nc, fetch_xr
 from yodapy.datasources.ooi.m2m_client import M2MClient
+from yodapy.utils.parser import get_nc_urls
 
 
 SOURCE_NAME = 'OOI'
