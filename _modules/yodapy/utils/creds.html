@@ -33,18 +33,22 @@
   <h1>Source code for yodapy.utils.creds</h1><div class="highlight"><pre>
 <span></span><span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span><span class="n">division</span><span class="p">,</span>
-                        <span class="n">absolute_import</span><span class="p">,</span>
-                        <span class="n">print_function</span><span class="p">,</span>
-                        <span class="n">unicode_literals</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">absolute_import</span><span class="p">,</span>
+    <span class="n">division</span><span class="p">,</span>
+    <span class="n">print_function</span><span class="p">,</span>
+    <span class="n">unicode_literals</span><span class="p">,</span>
+<span class="p">)</span>
 
+<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">import</span> <span class="nn">json</span>
 
-<span class="kn">from</span> <span class="nn">yodapy.utils.files</span> <span class="k">import</span> <span class="p">(</span><span class="n">CREDENTIALS_FILE</span><span class="p">,</span>
-                                <span class="n">FILE_CONTENT</span><span class="p">,</span>
-                                <span class="n">check_file_permissions</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">yodapy.utils.files</span> <span class="k">import</span> <span class="p">(</span>
+    <span class="n">CREDENTIALS_FILE</span><span class="p">,</span>
+    <span class="n">FILE_CONTENT</span><span class="p">,</span>
+    <span class="n">check_file_permissions</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="set_credentials_file"><a class="viewcode-back" href="../../../modules.html#yodapy.utils.creds.set_credentials_file">[docs]</a><span class="k">def</span> <span class="nf">set_credentials_file</span><span class="p">(</span><span class="n">data_source</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
@@ -58,22 +62,28 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">data_source</span><span class="p">:</span>
         <span class="n">data_source</span> <span class="o">=</span> <span class="n">data_source</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">data_source</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;ooi&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">data_source</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ooi&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">username</span> <span class="ow">and</span> <span class="n">token</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">check_file_permissions</span><span class="p">():</span>
-                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CREDENTIALS_FILE</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                        <span class="n">FILE_CONTENT</span><span class="p">[</span><span class="n">CREDENTIALS_FILE</span><span class="p">][</span><span class="n">data_source</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>  <span class="c1"># noqa</span>
-                                                                       <span class="s1">&#39;api_key&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">}</span>  <span class="c1"># noqa</span>
+                    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">CREDENTIALS_FILE</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                        <span class="n">FILE_CONTENT</span><span class="p">[</span><span class="n">CREDENTIALS_FILE</span><span class="p">][</span><span class="n">data_source</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>  <span class="c1"># noqa</span>
+                            <span class="s2">&quot;api_key&quot;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+                        <span class="p">}</span>  <span class="c1"># noqa</span>
                         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">FILE_CONTENT</span><span class="p">[</span><span class="n">CREDENTIALS_FILE</span><span class="p">]))</span>
-                <span class="k">else</span><span class="p">:</span>   <span class="c1"># pragma: no cover</span>
-                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;You don</span><span class="se">\&#39;</span><span class="s1">t have a read-write permission &#39;</span>
-                                  <span class="s1">&#39;to your home (</span><span class="se">\&#39;</span><span class="s1">~</span><span class="se">\&#39;</span><span class="s1">) directory!&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>   <span class="c1"># pragma: no cover</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Please enter your username and token!&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>   <span class="c1"># pragma: no cover</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Datasource: </span><span class="si">{data_source}</span><span class="s1"> is not valid. Available: ooi&#39;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>   <span class="c1"># pragma: no cover</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Please specify a data_source. Available: ooi&#39;</span><span class="p">)</span></div>
+                <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                        <span class="s2">&quot;You don&#39;t have a read-write permission &quot;</span>
+                        <span class="s2">&quot;to your home (&#39;~&#39;) directory!&quot;</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Please enter your username and token!&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="n">f</span><span class="s2">&quot;Datasource: </span><span class="si">{data_source}</span><span class="s2"> is not valid. Available: ooi&quot;</span>
+            <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Please specify a data_source. Available: ooi&quot;</span><span class="p">)</span></div>
 </pre></div>
 
           </div>
