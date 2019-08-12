@@ -112,15 +112,14 @@ def get_nc_urls(thredds_url, download=False, cloud_source=False, **kwargs):
                 f"Data not found for specified date range: {strbd} - {stred}"
             )
     else:
-        ncfiles = list(
-            filter(
-                lambda d: not any(
-                    w in d.name for w in ["json", "txt", "ncml"]
-                ),  # noqa
-                [cat.datasets[i] for i, d in enumerate(datasets)],
-            )
-        )  # noqa
-        dataset_urls = [d.access_urls[urltype] for d in ncfiles]
+        ncfiles = list(filter(lambda d: not any(w in d.name for w in ['json', 'txt', 'ncml']),  # noqa
+                        [cat.datasets[i] for i, d in enumerate(datasets)]))  # noqa
+
+        # Note: `#fillmismatch` addition to dataset netcdf url is currently a workaround.
+        # This needs to be fixed in the data provider end.
+        dataset_urls = [f'{d.access_urls[urltype]}#fillmismatch' if urltype ==  # noqa
+                        'OPENDAP' else d.access_urls[urltype] for d in ncfiles]
+
     return dataset_urls
 
 

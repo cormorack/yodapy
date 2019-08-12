@@ -9,9 +9,8 @@ gspread
 siphon
 dask
 seaborn
-# Hardcoded because the latest 1.4.2 giving OSError when reading opendap.
-# OSError: [Errno -45] NetCDF: Not a valid data type or _FillValue type mismatch
-netcdf4==1.4.1
+# Current fix to _fillmismatch problem described in https://github.com/cormorack/yodapy/issues/111
+netcdf4
 oauth2client
 progressbar2
 s3fs
