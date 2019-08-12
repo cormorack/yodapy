@@ -24,11 +24,10 @@ from yodapy.utils.parser import get_nc_urls
 logger = logging.getLogger(__name__)
 
 
-def set_thread(name='', target=''):
+def set_thread(name="", target=""):
     try:
-        logger.debug(f'Setting thread: {name}')
-        dc = threading.Thread(name=name,
-                              target=target)
+        logger.debug(f"Setting thread: {name}")
+        dc = threading.Thread(name=name, target=target)
         dc.setDaemon(True)
         dc.start()
         return dc
@@ -38,42 +37,46 @@ def set_thread(name='', target=''):
 
 def check_data_status(session, data, **kwargs):
     urls = {
-        'thredds_url': data['allURLs'][0],
-        'status_url': data['allURLs'][1]
+        "thredds_url": data["allURLs"][0],
+        "status_url": data["allURLs"][1],
     }
-    check_complete = '/'.join([urls['status_url'], 'status.txt'])
+    check_complete = "/".join([urls["status_url"], "status.txt"])
 
     req = None
-    print('\nYour data ({}) is still compiling... Please wait.'.format(
-        os.path.basename(urls['status_url'])))
+    print(
+        "\nYour data ({}) is still compiling... Please wait.".format(
+            os.path.basename(urls["status_url"])
+        )
+    )
     while not req:
         req = requests_retry_session(session=session, **kwargs).get(
-            check_complete)
-    print('\nRequest completed.')  # noqa
+            check_complete
+        )
+    print("\nRequest completed.")  # noqa
 
-    return urls['thredds_url']
+    return urls["thredds_url"]
 
 
 def preprocess_ds(ds):
-    cleaned_ds = ds.swap_dims({'obs': 'time'})
-    logger.debug('DIMS SWAPPED')
+    cleaned_ds = ds.swap_dims({"obs": "time"})
+    logger.debug("DIMS SWAPPED")
     return cleaned_ds
 
 
 def write_nc(fname, r, folder):
-    with open(os.path.join(folder, fname), 'wb') as f:
-        logger.info(f'Writing {fname}...')
+    with open(os.path.join(folder, fname), "wb") as f:
+        logger.info(f"Writing {fname}...")
         # TODO: Add download progressbar?
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:
                 f.write(chunk)
-    logger.info(f'{fname} successfully downloaded ---')
+    logger.info(f"{fname} successfully downloaded ---")
 
 
 def download_nc(url, folder=os.path.curdir):
     name = os.path.basename(url)
 
-    logger.info(f'Downloading {name}...')
+    logger.info(f"Downloading {name}...")
     r = requests.get(url, stream=True)
     write_nc(name, r, folder)
 
@@ -91,33 +94,37 @@ def download_all_nc(turl, folder):
 
 def fetch_xr(params, **kwargs):
     turl, ref_degs = params
-    if kwargs.get('cloud_source'):
-        filt_ds = get_nc_urls(turl,
-                              cloud_source=True,
-                              begin_date=kwargs.get('begin_date'),
-                              end_date=kwargs.get('end_date'))
+    if kwargs.get("cloud_source"):
+        filt_ds = get_nc_urls(
+            turl,
+            cloud_source=True,
+            begin_date=kwargs.get("begin_date"),
+            end_date=kwargs.get("end_date"),
+        )
         # cleanup kwargs
-        kwargs.pop('begin_date')
-        kwargs.pop('end_date')
-        kwargs.pop('cloud_source')
+        kwargs.pop("begin_date")
+        kwargs.pop("end_date")
+        kwargs.pop("cloud_source")
     else:
         datasets = get_nc_urls(turl)
         # only include instruments where ref_deg appears twice (i.e. was in original filter)
-        filt_ds = list(filter(lambda x: any(
-            x.count(ref) > 1 for ref in ref_degs), datasets))
+        filt_ds = list(
+            filter(
+                lambda x: any(x.count(ref) > 1 for ref in ref_degs), datasets
+            )
+        )
 
     # TODO: Place some chunking here
-    return xr.open_mfdataset(
-        filt_ds,
-        engine='netcdf4',
-        **kwargs)
+    return xr.open_mfdataset(filt_ds, engine="netcdf4", **kwargs)
 
 
 def create_range_df(row):
-    dr = pd.date_range(row.start_date,
-                       row.end_date,
-                       freq='D').to_period(freq='D').to_timestamp()
+    dr = (
+        pd.date_range(row.start_date, row.end_date, freq="D")
+        .to_period(freq="D")
+        .to_timestamp()
+    )
     bdf = pd.DataFrame()
-    bdf.loc[:, 'time'] = dr
-    bdf.loc[:, 'ncurl'] = row.ncurl
+    bdf.loc[:, "time"] = dr
+    bdf.loc[:, "ncurl"] = row.ncurl
     return bdf

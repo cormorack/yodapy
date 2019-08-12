@@ -10,4 +10,4 @@ from __future__ import (
 from yodapy.utils.creds import set_credentials_file
 
 
-__all__ = ['conn', 'creds', 'files', 'meta', 'parser']
+__all__ = ["conn", "creds", "files", "meta", "parser"]

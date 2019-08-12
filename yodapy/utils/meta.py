@@ -25,6 +25,8 @@ def create_folder(source_name):
             os.mkdir(fold_path)
 
         return fold_path
-    else:   # pragma: no cover
-        warnings.warn('You don\'t have a read-write permission '
-                      'to your home (\'~\') directory!')
+    else:  # pragma: no cover
+        warnings.warn(
+            "You don't have a read-write permission "
+            "to your home ('~') directory!"
+        )
