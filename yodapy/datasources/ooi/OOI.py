@@ -601,16 +601,18 @@ class OOI(CAVA):
                 )
                 filtered_datadf = {}
                 for idx, row in self._zplsc_data_catalog.iterrows():
-                    filtered_datadf[row["ref"]] = self._raw_datadf[row["ref"]][
+                    fullref = "-".join(
+                        [row["reference_designator"], row["stream_rd"]]
+                    )
+                    filtered_datadf[fullref] = self._raw_datadf[row["ref"]][
                         row["user_begin"] : row["user_end"]
                     ].copy()
-                    filtered_rawdata = filtered_datadf[row["ref"]]
+                    filtered_rawdata = filtered_datadf[fullref]
                     filtered_rawdata.loc[
                         :, "urls"
                     ] = filtered_rawdata.filename.apply(
                         lambda f: "/".join([self._raw_data_url[row["ref"]], f])
                     )
-
                 raw_file_dict = perform_ek60_download(filtered_datadf)
                 self._raw_file_dict = raw_file_dict
                 self._raw_data.append(raw_file_dict)
@@ -856,6 +858,7 @@ class OOI(CAVA):
                             combine="nested",
                             **kwargs,
                         )
+                        resdf.attrs["id"] = k
                         dataset_list.append(resdf)
                 turls = self._perform_check()
 
