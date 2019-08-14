@@ -34,6 +34,7 @@ from yodapy.utils.conn import (
     perform_ek60_processing,
 )
 from yodapy.utils.files import CREDENTIALS_FILE
+from yodapy.utils.meta import delete_all_cache
 from yodapy.utils.parser import (
     get_instrument_list,
     get_nc_urls,
@@ -448,6 +449,10 @@ class OOI(CAVA):
         except Exception as e:
             logger.error(e)
 
+    def clear_cache(self):
+        # TODO: This should also delete netcdf urls from Uframe!
+        delete_all_cache(self._source_name)
+
     def request_data(
         self, begin_date, end_date, data_type="netcdf", limit=-1, **kwargs
     ):
@@ -602,7 +607,11 @@ class OOI(CAVA):
                 filtered_datadf = {}
                 for idx, row in self._zplsc_data_catalog.iterrows():
                     fullref = "-".join(
-                        [row["reference_designator"], row["stream_rd"]]
+                        [
+                            row["reference_designator"],
+                            row["stream_method"],
+                            row["stream_rd"],
+                        ]
                     )
                     filtered_datadf[fullref] = self._raw_datadf[row["ref"]][
                         row["user_begin"] : row["user_end"]
@@ -863,6 +872,7 @@ class OOI(CAVA):
                 turls = self._perform_check()
 
                 if len(turls) > 0:
+                    # TODO: Cache netcdf urls so that no need to re-request data
                     self._netcdf_urls = [get_nc_urls(turl) for turl in turls]
                     logger.info("Acquiring data from opendap urls ...")
                     jobs = [
