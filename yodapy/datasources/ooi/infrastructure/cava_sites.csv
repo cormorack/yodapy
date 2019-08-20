@@ -1,9 +1,18 @@
-reference_designator,site_name,site_url,site_area
-RS01SBPS,Oregon Slope Base Shallow Profiler,/research-sites/oregon-slope-base/,Oregon Slope Base
-CE04OSPS,Oregon Offshore Shallow Profiler,/research-sites/oregon-offshore/,Oregon Offshore
-RS03AXPS,Axial Base Shallow Profiler,/research-sites/axial-base/,Axial Base
-CE02SHBP,Oregon Shelf Cabled Benthic Experiment Package,/research-sites/oregon-shelf/,Oregon Shelf
-CE04OSBP,Oregon Offshore Cabled Benthic Experiment Package,/research-sites/oregon-offshore/,Oregon Offshore
-RS01SLBS,Oregon Slope Base Seafloor,/research-sites/oregon-slope-base/,Oregon Slope Base
-RS03ASHS,ASHES Vent Field,/research-sites/axial-caldera/ashes/,Axial Caldera
-RS03AXBS,Axial Base Seafloor,/research-sites/axial-base/,Axial Base
+reference_designator,site_name,site_url,site_area,wp_mapping,map_icon_mapping,in_progress_status
+RS01SBPS,Oregon Slope Base Shallow Profiler,/research-sites/oregon-slope-base/,Oregon Slope Base,518,shallow-profiler,FALSE
+CE04OSPS,Oregon Offshore Shallow Profiler,/research-sites/oregon-offshore/,Oregon Offshore,518,shallow-profiler,FALSE
+RS03AXPS,Axial Base Shallow Profiler,/research-sites/axial-base/,Axial Base,518,shallow-profiler,FALSE
+CE02SHBP,Oregon Shelf Cabled Benthic Experiment Package,/research-sites/oregon-shelf/,Oregon Shelf,512,low-power-jbox,FALSE
+CE04OSBP,Oregon Offshore Cabled Benthic Experiment Package,/research-sites/oregon-offshore/,Oregon Offshore,512,low-power-jbox,FALSE
+RS01SLBS,Oregon Slope Base Seafloor,/research-sites/oregon-slope-base/,Oregon Slope Base,512,low-power-jbox,FALSE
+RS03ASHS,ASHES Vent Field,/research-sites/axial-caldera/ashes/,Axial Caldera,512,medium-power-jbox,FALSE
+RS03AXBS,Axial Base Seafloor,/research-sites/axial-base/,Axial Base,512,low-power-jbox,FALSE
+RS01SBPD,Oregon Slope Base Deep Profiler,/research-sites/oregon-slope-base/,Oregon Slope Base,516,deep-profiler,TRUE
+RS01SUM1,Southern Hydrate Summit 2 Seafloor,/research-sites/southern-hydrate-ridge/,Southern Hydrate Ridge,429,low-power-jbox,TRUE
+RS01SUM2,Southern Hydrate Summit 2 Seafloor,/research-sites/southern-hydrate-ridge/,Southern Hydrate Ridge,429,low-power-jbox,TRUE
+RS03AXPD,Axial Base Deep Profiler,/research-sites/axial-base/,Axial Base,516,deep-profiler,TRUE
+RS03CCAL,Central Caldera,/research-sites/axial-caldera/central/,Axial Caldera,444,medium-power-jbox,TRUE
+RS03ECAL,Eastern Caldera,/research-sites/axial-caldera/eastern/,Axial Caldera,446,medium-power-jbox,TRUE
+RS03INT1,International District Vent Field 1,/research-sites/axial-caldera/international-district/,Axial Caldera,442,medium-power-jbox,TRUE
+RS03INT2,International District Vent Field 2,/research-sites/axial-caldera/international-district/,Axial Caldera,442,medium-power-jbox,TRUE
+CE04OSPD,Oregon Offshore Cabled Deep Profiler,/research-sites/oregon-offshore/,Oregon Offshore,516,deep-profiler,TRUE
