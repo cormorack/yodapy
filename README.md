@@ -20,6 +20,23 @@ For developers and testers:
 pip install git+https://github.com/cormorack/yodapy.git
 ```
 
+
+## Implication of installing `yodapy` in a Jupyter notebook environment
+
+
+In a Jupyter environment the operating system is a static image; which has a certain set of packages installed.
+Let's assume this does not include `yodapy` or that it includes an older version of `yodapy` and I am
+interested in a more recent version. 
+If I install a new (say `yodapy`) package during a notebook session: That does not register in the stored static image. The 
+only thing that persists in my computing environment is my home directory. This includes code, repos, data, 
+ancillary files and so on; but it does not include Python packages that I install *on the fly*.
+
+
+This suggests a question: Can I put some installation commands in my `.cshrc` file so that it runs automatically
+whenever I start up a new image?
+
+
+
 ## Development
 ```bash
 git clone https://github.com/cormorack/yodapy.git
