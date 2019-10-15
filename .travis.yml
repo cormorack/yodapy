@@ -31,6 +31,8 @@ before_install:
     conda config --set channel_priority strict
     conda create --name TEST python=$PY --file requirements.txt --file requirements-dev.txt
     source activate TEST
+    # Use latest echopype
+    pip install git+https://github.com/OSOceanAcoustics/echopype.git
     conda info --all
 
 install:

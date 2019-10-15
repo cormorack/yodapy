@@ -13,7 +13,6 @@ import logging
 import os
 import re
 
-import echopype
 import gevent
 import pytz
 import requests
@@ -29,10 +28,7 @@ from yodapy.utils.meta import create_folder
 from yodapy.utils.parser import get_nc_urls
 
 
-if echopype.__version__ == "0.1.21":
-    from echopype.model import EchoData
-else:
-    from echopype.model import EchoDataEK60 as EchoData
+from echopype.model import EchoData
 
 logger = logging.getLogger(__name__)
 
