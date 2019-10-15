@@ -14,5 +14,4 @@ netcdf4
 oauth2client
 progressbar2
 s3fs
-# Use latest echopype
-git+https://github.com/OSOceanAcoustics/echopype.git
+echopype
