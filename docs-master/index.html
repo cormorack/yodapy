@@ -63,12 +63,12 @@ used in what follows.</p>
 <p>To start using yodapy for the ooi datasource,
 you will need to setup your credential file.
 <em>This will only need be set one time.</em>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yodapy.utils.creds</span> <span class="k">import</span> <span class="n">set_credentials_file</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yodapy.utils.creds</span> <span class="kn">import</span> <span class="n">set_credentials_file</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">set_credentials_file</span><span class="p">(</span><span class="n">data_source</span><span class="o">=</span><span class="s1">&#39;ooi&#39;</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="s1">&#39;MyName&#39;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s1">&#39;My secret token&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>Example running the program</strong>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yodapy.datasources</span> <span class="k">import</span> <span class="n">OOI</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">yodapy.datasources</span> <span class="kn">import</span> <span class="n">OOI</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ooi</span> <span class="o">=</span> <span class="n">OOI</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ooi</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">region</span><span class="o">=</span><span class="s1">&#39;cabled&#39;</span><span class="p">,</span> <span class="n">site</span><span class="o">=</span><span class="s1">&#39;axial base shallow profiler&#39;</span><span class="p">,</span> <span class="n">node</span><span class="o">=</span><span class="s1">&#39;shallow profiler&#39;</span><span class="p">,</span> <span class="n">instrument</span><span class="o">=</span><span class="s1">&#39;CTD&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ooi</span><span class="o">.</span><span class="n">view_instruments</span><span class="p">()</span>

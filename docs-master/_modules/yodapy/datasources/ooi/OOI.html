@@ -41,8 +41,8 @@
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
-<span class="kn">from</span> <span class="nn">io</span> <span class="k">import</span> <span class="n">StringIO</span>
-<span class="kn">from</span> <span class="nn">queue</span> <span class="k">import</span> <span class="n">Queue</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Queue</span>
 
 <span class="kn">import</span> <span class="nn">gevent</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -52,12 +52,12 @@
 <span class="kn">import</span> <span class="nn">urllib3</span>
 <span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
 
-<span class="kn">from</span> <span class="nn">dateutil</span> <span class="k">import</span> <span class="n">parser</span>
-<span class="kn">from</span> <span class="nn">lxml.html</span> <span class="k">import</span> <span class="n">fromstring</span> <span class="k">as</span> <span class="n">html_parser</span>
+<span class="kn">from</span> <span class="nn">dateutil</span> <span class="kn">import</span> <span class="n">parser</span>
+<span class="kn">from</span> <span class="nn">lxml.html</span> <span class="kn">import</span> <span class="n">fromstring</span> <span class="k">as</span> <span class="n">html_parser</span>
 
-<span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.CAVA</span> <span class="k">import</span> <span class="n">CAVA</span>
-<span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.helpers</span> <span class="k">import</span> <span class="n">set_thread</span>
-<span class="kn">from</span> <span class="nn">yodapy.utils.conn</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.CAVA</span> <span class="kn">import</span> <span class="n">CAVA</span>
+<span class="kn">from</span> <span class="nn">yodapy.datasources.ooi.helpers</span> <span class="kn">import</span> <span class="n">set_thread</span>
+<span class="kn">from</span> <span class="nn">yodapy.utils.conn</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">download_url</span><span class="p">,</span>
     <span class="n">fetch_url</span><span class="p">,</span>
     <span class="n">fetch_xr</span><span class="p">,</span>
@@ -66,9 +66,9 @@
     <span class="n">perform_ek60_download</span><span class="p">,</span>
     <span class="n">perform_ek60_processing</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">yodapy.utils.files</span> <span class="k">import</span> <span class="n">CREDENTIALS_FILE</span>
-<span class="kn">from</span> <span class="nn">yodapy.utils.meta</span> <span class="k">import</span> <span class="n">delete_all_cache</span>
-<span class="kn">from</span> <span class="nn">yodapy.utils.parser</span> <span class="k">import</span> <span class="p">(</span>
+<span class="kn">from</span> <span class="nn">yodapy.utils.files</span> <span class="kn">import</span> <span class="n">CREDENTIALS_FILE</span>
+<span class="kn">from</span> <span class="nn">yodapy.utils.meta</span> <span class="kn">import</span> <span class="n">delete_all_cache</span>
+<span class="kn">from</span> <span class="nn">yodapy.utils.parser</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">get_instrument_list</span><span class="p">,</span>
     <span class="n">get_nc_urls</span><span class="p">,</span>
     <span class="n">parse_annotations_json</span><span class="p">,</span>
@@ -125,7 +125,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">ooi_username</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ooi_token</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cloud_source</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -157,9 +157,9 @@
 
         <span class="c1"># From GitHub</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_PORTAL_REGIONS</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="n">f</span><span class="s2">&quot;</span><span class="si">{DATA_TEAM_GITHUB_INFRASTRUCTURE}</span><span class="s2">/regions.csv&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{DATA_TEAM_GITHUB_INFRASTRUCTURE}</span><span class="s2">/regions.csv&quot;</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_PORTAL_SITES</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{DATA_TEAM_GITHUB_INFRASTRUCTURE}</span><span class="s2">/sites.csv&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_OOI_PORTAL_SITES</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{DATA_TEAM_GITHUB_INFRASTRUCTURE}</span><span class="s2">/sites.csv&quot;</span>
         <span class="c1"># Not used</span>
         <span class="c1"># self._OOI_VOCAB = &#39;https://raw.githubusercontent.com/ooi-integration/asset-management/master/vocab/vocab.csv&#39;</span>
 
@@ -275,7 +275,7 @@
             <span class="n">instrument_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">instrument_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">50</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;Fetching deployments from {len(instrument_list)} unique instrument streams...&quot;</span>  <span class="c1"># noqa</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Fetching deployments from {len(instrument_list)} unique instrument streams...&quot;</span>  <span class="c1"># noqa</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
@@ -286,7 +286,7 @@
             <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dflist</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="n">f</span><span class="s2">&quot;You have {len(instrument_list)} unique streams; too many to fetch deployments. Please filter by performing search.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;You have {len(instrument_list)} unique streams; too many to fetch deployments. Please filter by performing search.&quot;</span>
             <span class="p">)</span>  <span class="c1"># noqa</span>
 
     <span class="nd">@property</span>
@@ -297,7 +297,7 @@
             <span class="n">instrument_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">instrument_list</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">20</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;Fetching annotations from {len(instrument_list)} unique instrument streams...&quot;</span>  <span class="c1"># noqa</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Fetching annotations from {len(instrument_list)} unique instrument streams...&quot;</span>  <span class="c1"># noqa</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
@@ -308,7 +308,7 @@
             <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dflist</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="s2">&quot;index&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="n">f</span><span class="s2">&quot;You have {len(instrument_list)} unique streams; too many to fetch annotations. Please filter by performing search.&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;You have {len(instrument_list)} unique streams; too many to fetch annotations. Please filter by performing search.&quot;</span>
             <span class="p">)</span>  <span class="c1"># noqa</span>
 
     <span class="nd">@property</span>
@@ -400,7 +400,7 @@
         <span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sites</span></div>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Prints out the representation of the OOI object &quot;&quot;&quot;</span>
         <span class="n">inst_text</span> <span class="o">=</span> <span class="s2">&quot;Instrument Stream&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_current_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
@@ -430,10 +430,10 @@
             <span class="n">inst_text</span> <span class="o">=</span> <span class="n">inst_text</span> <span class="o">+</span> <span class="s2">&quot;s&quot;</span>
 
         <span class="k">return</span> <span class="p">(</span>
-            <span class="n">f</span><span class="s2">&quot;&lt;Data Source: </span><span class="si">{self._source_name}</span><span class="s2"> (</span><span class="si">{data_length}</span><span class="s2"> </span><span class="si">{inst_text}</span><span class="s2">)&gt;&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;&lt;Data Source: </span><span class="si">{self._source_name}</span><span class="s2"> (</span><span class="si">{data_length}</span><span class="s2"> </span><span class="si">{inst_text}</span><span class="s2">)&gt;&quot;</span>
         <span class="p">)</span>  <span class="c1"># noqa</span>
 
-    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Prints the length of the object &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_filtered_data_catalog</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
             <span class="k">return</span> <span class="nb">len</span><span class="p">(</span>
@@ -469,10 +469,10 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_thread_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ft</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                    <span class="n">f</span><span class="s2">&quot;Server not available, please try again later: </span><span class="si">{req.status_code}</span><span class="s2">&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;Server not available, please try again later: </span><span class="si">{req.status_code}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Server not available, please try again later: </span><span class="si">{e}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Server not available, please try again later: </span><span class="si">{e}</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Retrieve datasets info in the s3 bucket.</span>
         <span class="k">try</span><span class="p">:</span>
@@ -517,7 +517,7 @@
 
         <span class="c1"># Limit the number of request</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_catalog_copy</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">6</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;Too many instruments to request data for! Max is 6, you have {len(data_catalog_copy)}&quot;</span>  <span class="c1"># noqa</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Too many instruments to request data for! Max is 6, you have {len(data_catalog_copy)}&quot;</span>  <span class="c1"># noqa</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
@@ -860,7 +860,7 @@
 <span class="sd">            list: List of exported netcdf.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Expected int; {type(int)} given.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected int; {type(int)} given.&quot;</span><span class="p">)</span>
 
         <span class="n">download_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_download</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Downloading netcdfs ...&quot;</span><span class="p">)</span>
@@ -917,7 +917,7 @@
                         <span class="n">dataset_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
-                <span class="n">f</span><span class="s2">&quot;</span><span class="si">{self._data_type}</span><span class="s2"> cannot be converted to xarray dataset&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self._data_type}</span><span class="s2"> cannot be converted to xarray dataset&quot;</span>
             <span class="p">)</span>  <span class="c1"># noqa</span>
 
         <span class="k">if</span> <span class="n">dataset_list</span><span class="p">:</span>
@@ -966,7 +966,7 @@
                         <span class="n">da_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fetch_monthly_stats</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="nb">print</span><span class="p">(</span>
-                            <span class="n">f</span><span class="s2">&quot;</span><span class="si">{i.reference_designator}</span><span class="s2"> not available for data availability&quot;</span>
+                            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{i.reference_designator}</span><span class="s2"> not available for data availability&quot;</span>
                         <span class="p">)</span>
                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">da_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                     <span class="n">dadf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">da_list</span><span class="p">)</span>
@@ -1056,7 +1056,7 @@
 
             <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                    <span class="n">f</span><span class="s2">&quot;You have {len(inst)} unique streams; too many to fetch deployments. Please filter by performing search.&quot;</span>
+                    <span class="sa">f</span><span class="s2">&quot;You have {len(inst)} unique streams; too many to fetch deployments. Please filter by performing search.&quot;</span>
                 <span class="p">)</span>  <span class="c1"># noqa</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Data catalog is empty.&quot;</span><span class="p">)</span>
@@ -1074,8 +1074,8 @@
             <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
             <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
             <span class="n">delta</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">start</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Data request time elapsed: </span><span class="si">{delta.seconds}</span><span class="s2">s&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Data request time elapsed: </span><span class="si">{delta.seconds}</span><span class="s2">s&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data request time elapsed: </span><span class="si">{delta.seconds}</span><span class="s2">s&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Data request time elapsed: </span><span class="si">{delta.seconds}</span><span class="s2">s&quot;</span><span class="p">)</span>
             <span class="n">turls</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_status</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">turls</span>
 
@@ -1112,11 +1112,11 @@
         <span class="n">req</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">check_complete</span><span class="p">)</span>
         <span class="n">status_code</span> <span class="o">=</span> <span class="n">req</span><span class="o">.</span><span class="n">status_code</span>
         <span class="k">if</span> <span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Your data (</span><span class="si">{urls[&quot;status_url&quot;]}</span><span class="s1">) is still compiling... Please wait.&#39;</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Your data (</span><span class="si">{urls[&quot;status_url&quot;]}</span><span class="s1">) is still compiling... Please wait.&#39;</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="n">text</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;Request (</span><span class="si">{urls[&quot;status_url&quot;]}</span><span class="s1">) completed.&#39;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;Request (</span><span class="si">{urls[&quot;status_url&quot;]}</span><span class="s1">) completed.&#39;</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>  <span class="c1"># noqa</span>
         <span class="k">return</span> <span class="n">urls</span><span class="p">[</span><span class="s2">&quot;thredds_url&quot;</span><span class="p">]</span>
@@ -1161,7 +1161,7 @@
                     <span class="n">total_ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">start_dt</span><span class="p">,</span> <span class="n">end_dt</span><span class="p">))</span>
                 <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">message</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;</span><span class="si">{selected.iloc[0].uri}</span><span class="s2"> dates </span><span class="si">{start_dt}</span><span class="s2"> to </span><span class="si">{end_dt}</span><span class="s2"> is empty!&quot;</span>
+                <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{selected.iloc[0].uri}</span><span class="s2"> dates </span><span class="si">{start_dt}</span><span class="s2"> to </span><span class="si">{end_dt}</span><span class="s2"> is empty!&quot;</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
 
@@ -1372,7 +1372,7 @@
         <span class="n">rmstats</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span>
             <span class="n">requests</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
                 <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
-                <span class="n">f</span><span class="s2">&quot;</span><span class="si">{self._OOI_VISUALOCEAN_M_STATS}</span><span class="s2">/</span><span class="si">{inst.reference_designator}</span><span class="s2">.json&quot;</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{self._OOI_VISUALOCEAN_M_STATS}</span><span class="s2">/</span><span class="si">{inst.reference_designator}</span><span class="s2">.json&quot;</span><span class="p">,</span>
             <span class="p">)</span><span class="o">.</span><span class="n">prepare</span><span class="p">(),</span>  <span class="c1"># noqa</span>
             <span class="n">session</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">,</span>
         <span class="p">)</span>
